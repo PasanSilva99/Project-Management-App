@@ -33,6 +33,9 @@ namespace PCClient
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            // Navigate to login Page
+            mainFrame.Navigate(typeof(Login));
         }
     }
 }

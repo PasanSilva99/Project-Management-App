@@ -129,6 +129,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\DataStore.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="NavigationBase.xaml.cs">
       <DependentUpon>NavigationBase.xaml</DependentUpon>
     </Compile>

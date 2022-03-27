@@ -35,7 +35,12 @@ namespace PCClient
             coreTitleBar.ExtendViewIntoTitleBar = true;
 
             // Navigate to login Page
-            mainFrame.Navigate(typeof(Login));
+            mainFrame.Navigate(typeof(Login), this);
+        }
+
+        internal void NavigateToNavigationBase()
+        {
+            mainFrame.Navigate(typeof(NavigationBase), this);
         }
     }
 }

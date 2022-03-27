@@ -1,0 +1,83 @@
+﻿<Page x:Class="PCClient.RegistrationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:PCClient"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      RequestedTheme="Light">
+
+    <ScrollViewer>
+        <Grid MinWidth="500">
+            <StackPanel Margin="10,10,10,10"
+                        Spacing="10">
+
+                <Grid HorizontalAlignment="Center"
+                      VerticalAlignment="Center" CornerRadius="10 10 10 10">
+                    <Image Height="200"
+                           Source="/Assets/Images/image.png"
+                           Stretch="Uniform"/>
+                    <Button HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            CornerRadius="0 5 0 10"
+                            Background="#33FF0000" Click="RemoveImage_Click">
+                        <Button.Content>
+                            <SymbolIcon Symbol="Delete" />
+                        </Button.Content>
+                    </Button>
+                    <Button Content="Add Image"
+                            x:Name="btn_imgReset"
+                            CornerRadius="0 0 10 10"
+                            Width="215"
+                            Margin="0 -16 0 0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Bottom"
+                            Padding="20,4,20,5"
+                            Click="AddImage_Click" />
+                </Grid>
+
+                
+                <TextBox Header="Email Address"
+                         PlaceholderText="someone@example.com"
+                         CornerRadius="10 10 10 10"
+                         BorderThickness="0 0 0 2" x:Name="tb_email"/>
+                <TextBlock x:Name="lbl_EmailError"
+                           Foreground="red"
+                           Text="* Password Error Text" Visibility="Collapsed"/>
+                <TextBox Header="User Name"
+                         PlaceholderText="username"
+                         CornerRadius="10 10 10 10"
+                         BorderThickness="0 0 0 2" x:Name="tb_username"/>
+                <TextBlock x:Name="lbl_usernameError"
+                           Foreground="red"
+                           Text="* Username Error Text"
+                           Visibility="Collapsed" />
+
+                <PasswordBox Header="Password"
+                             x:Name="tb_password"
+                             CornerRadius="10 10 10 10"
+                             BorderThickness="0 0 0 2" PasswordChanging="tb_password_PasswordChanging"/>
+                <TextBlock x:Name="lbl_passwordError"
+                           Foreground="red"
+                           Text="* Password Error Text"
+                           Visibility="Collapsed" />
+                <PasswordBox Header="Retype-Password"
+                             x:Name="tb_rePassword"
+                             CornerRadius="10 10 10 10"
+                             BorderThickness="0 0 0 2" PasswordChanging="tb_rePassword_PasswordChanging"/>
+                <TextBlock x:Name="lbl_rePasswordError"
+                           Foreground="red"
+                           Text="* Re Password Error Text"
+                           Visibility="Collapsed" />
+                <Button Content="Register"
+                        x:Name="btn_register"
+                        CornerRadius="10 10 10 10"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Right"
+                        Padding="20,4,20,5"
+                        Background="{ThemeResource SystemAccentColor}"
+                        Foreground="White" Click="btn_register_Click"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

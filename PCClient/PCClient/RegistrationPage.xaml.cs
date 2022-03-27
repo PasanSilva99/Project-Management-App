@@ -1,5 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Controls;
 using PCClient.Model;
+using static PCClient.Model.DataStore;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,10 +32,27 @@ namespace PCClient
     /// </summary>
     public sealed partial class RegistrationPage : Page
     {
-        public RegistrationPage(string email)
+        public RegistrationPage(string email, string password)
         {
             this.InitializeComponent();
             btn_register.IsEnabled = false;
+            tb_email.Text = email;
+            tb_password.Password = password;
+
+            SetDefaultPic();  //  sets the default prifile pic in the temporary profile selection
+        }
+
+        private async void SetDefaultPic()
+        {
+            // Get the path to the app's Assets folder.
+            string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            string path = root + @"\Assets\Images";
+
+            // Get the folder object that corresponds to this absolute path in the file system.
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
+            StorageFile file = await folder.GetFileAsync("image.png");
+
+            profileImage = file;
         }
 
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
@@ -45,14 +64,18 @@ namespace PCClient
 
         private async void AddImage_Click(object sender, RoutedEventArgs e)
         {
+
+            // The file picker dialog
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;  
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;  //  this is the suggested location
+
+            // adds the below filters to filterout image files
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
             picker.FileTypeFilter.Add(".png");
-
-            StorageFile file = await picker.PickSingleFileAsync();
+             
+            StorageFile file = await picker.PickSingleFileAsync();  // saved the picked file into the file variable
             if (file != null)
             {
                 // Application now has read/write access to the picked file
@@ -60,22 +83,19 @@ namespace PCClient
 
                 using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    BitmapImage bitmapImage = new BitmapImage();    
-                    await bitmapImage.SetSourceAsync(fileStream);
-                    img_profielPhoto.Source = bitmapImage;
-                    await ImageCropper.LoadImageFromFile(file);
-                    profileImage = file;
+                    BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                    await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                    img_profielPhoto.Source = bitmapImage;  // sets the created bitmap as an image source
+                    await ImageCropper.LoadImageFromFile(file);  // send that file to the image crooper 
+                    profileImage = file;  // save the loaded file to the global variable for other functions use
 
-                    ImageCropper.CropShape = CropShape.Rectangular;
-                    ImageCropper.AspectRatio = 1;
-                    FlyoutBase.ShowAttachedFlyout(img_profielPhoto);
-                    ImageCropper.AspectRatio = 1;
+                    ImageCropper.CropShape = CropShape.Rectangular;  // sets the cropper as rectangular mask
+                    ImageCropper.AspectRatio = 1;  // sets the masks aspect ratio as square
+                    FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // show the flyout
+                    ImageCropper.AspectRatio = 1;  // sets the mask aspect ratio again incase of imeediate reload
 
                 }
 
-                //img_profielPhoto.Source = new BitmapImage(new Uri(file.Path));
-                //img_cropImage.Source = img_profielPhoto.Source;
-                //
             }
             else
             {
@@ -87,13 +107,44 @@ namespace PCClient
 
         }
 
-        private void btn_register_Click(object sender, RoutedEventArgs e)
+        private async void btn_register_Click(object sender, RoutedEventArgs e)
         {
             var email = tb_email.Text;
             var username = tb_username.Text;
             var password = DataStore.GetHashString(tb_password.Password);
             var re_password = DataStore.GetHashString(tb_rePassword.Password);
+            var filename = profileImage.Name;
 
+            if (DataStore.GlobalServiceType == ServiceType.Online)
+            {
+                if (DataStore.CheckConnectivity())
+                {
+
+                    DataStore.RegisterUser(email, username, filename, password);
+                }
+                else
+                {
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Connectivity Lost";
+                    dialog.PrimaryButtonText = "Retry";
+                    dialog.CloseButtonText = "Ok";
+                    dialog.DefaultButton = ContentDialogButton.Primary;
+                    dialog.Content = "Your account will only be created locally. This will be synced with the server when you connect to the network again.";
+
+                    var result = await dialog.ShowAsync();
+
+                    if(result == ContentDialogResult.Primary)
+                        btn_register_Click(sender, e);
+                    else
+                        DataStore.RegisterUser(email, username, filename, password);
+
+
+                }
+            }
+            else
+            {
+                DataStore.RegisterUser(email, username, filename, password);
+            }
             
         }
 
@@ -197,24 +248,27 @@ namespace PCClient
 
             using (var fileStream = await croppedfile.OpenAsync(FileAccessMode.ReadWrite))
             {
-                await ImageCropper.SaveAsync(fileStream, BitmapFileFormat.Png);
-                croppedImage = croppedfile;
+                await ImageCropper.SaveAsync(fileStream, BitmapFileFormat.Png);  // Saves the Cropped image to file
+                croppedImage = croppedfile;  // Set the global variable for use of other functions
 
-                SetImage();
+                SetImage();   // Set image to the imageview
                 
             }
-            var fly = FlyoutBase.GetAttachedFlyout(img_profielPhoto);
-            fly.Hide();
+            var fly = FlyoutBase.GetAttachedFlyout(img_profielPhoto);  // get the flyout object from the image
+            fly.Hide();  // Hide the flyout from the view
         }
 
+        /// <summary>
+        /// Sets the image to the image box in the registrer form
+        /// </summary>
         private async void SetImage()
         {
 
             using (IRandomAccessStream fileStream = await croppedImage.OpenAsync(FileAccessMode.Read))
             {
-                BitmapImage bitmapImage = new BitmapImage();
-                await bitmapImage.SetSourceAsync(fileStream);
-                img_profielPhoto.Source = bitmapImage;
+                BitmapImage bitmapImage = new BitmapImage();  // Creates anew Bitmap Image
+                await bitmapImage.SetSourceAsync(fileStream);  // Loads the file in to the created bitmap
+                img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource 
 
             }
             
@@ -222,9 +276,7 @@ namespace PCClient
 
         private async void img_profielPhoto_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            // Check wther the user is selected a picture
-            if (profileImage != null)
-            {
+
                 // If selected
                 // Load that file to the image cropper
                 await ImageCropper.LoadImageFromFile(profileImage);
@@ -234,30 +286,7 @@ namespace PCClient
                 ImageCropper.AspectRatio = 1;  // Cropper Aspect Ratio 1 means Square
                 FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // Show the cropping flyout
                 ImageCropper.AspectRatio = 1;  // Reset the Aspect ratio incase of reload
-            }
-            else
-            {
-                // Get the path to the app's Assets folder.
-                string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-                string path = root + @"\Assets\Images";
 
-                // Get the folder object that corresponds to this absolute path in the file system.
-                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-                StorageFile file = await folder.GetFileAsync("image.png");
-
-                profileImage = file;
-
-                // Load that file to the image cropper
-                await ImageCropper.LoadImageFromFile(profileImage);
-
-                // Set the image cropper as Square
-                ImageCropper.CropShape = CropShape.Rectangular;  // Cropper Shape set to rectangular
-                ImageCropper.AspectRatio = 1;  // Cropper Aspect Ratio 1 means Square
-                FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // Show the cropping flyout
-                ImageCropper.AspectRatio = 1;  // Reset the Aspect ratio incase of reload
-
-                Debug.WriteLine(file.Path);
-            }
         }
     }
 }

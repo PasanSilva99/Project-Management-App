@@ -35,7 +35,7 @@ namespace PCClient.Model
             return sb.ToString();
         }
 
-        public ServiceType GlobalServiceType { get; set; }
+        public static ServiceType GlobalServiceType { get; set; }
 
         public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
         public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
@@ -87,6 +87,28 @@ namespace PCClient.Model
                 Debug.WriteLine(ex.ToString(), "ERROR");
             }
 
+        }
+
+        /// <summary>
+        /// Sync the local database with the server
+        /// </summary>
+        public static void SyncWithTheServer()
+        {
+
+        }
+
+        /// <summary>
+        /// Add the user to the database - With the server and locally
+        /// </summary>
+        /// <param name="email">Email Address</param>
+        /// <param name="name">Name of the user</param>
+        /// <param name="image">Image path for the reference image</param>
+        /// <param name="password">Password Hash</param>
+        /// <returns></returns>
+        public static bool RegisterUser(string email, string name, string image, string password)
+        {
+            // Will be replaced after stabilize the server
+            return Server_RegisterUser(email, name, image, password);
         }
 
         /// <summary>
@@ -170,7 +192,7 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static bool RegisterUser(string email, string name, string image, string password)
+        public static bool Server_RegisterUser(string email, string name, string image, string password)
         {
             if (!string.IsNullOrEmpty(email) && 
                 !string.IsNullOrEmpty(name) &&
@@ -179,18 +201,18 @@ namespace PCClient.Model
             {
                 string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
 
-                using (SqliteConnection con = new SqliteConnection(pathToDB))
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
                 {
                     try
                     {
                         con.Open();
 
                         SqliteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "INSERT INTO Item VALUES(@email, @name, @image, @password);";
-                        cmd.Parameters.AddWithValue("@emal", email);
+                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
+                        cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@name", name);
                         cmd.Parameters.AddWithValue("@image", image);
-                        cmd.Parameters.AddWithValue("@password", password);
+                        cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
                         return true;
@@ -249,8 +271,11 @@ namespace PCClient.Model
             FetchUsers();
             foreach (User user in lodedUsers)
             {
-                if (user.Email == email && user.Password == password.ToUpper())
+                if (user.Email == email && user.Password.ToUpper() == password.ToUpper())
+                {
+                    Debug.WriteLine(user.Password + " :: " + password);
                     return true;
+                }
             }
 
             return false;

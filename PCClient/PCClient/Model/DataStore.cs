@@ -70,8 +70,16 @@ namespace PCClient.Model
         /// <returns></returns>
         public static bool ValidateUser(string email, string password)
         {
-            // Replace with this the server function
-            return Server_ValidateUser(email, password);
+            if (CheckConnectivity())
+            {                 
+                // Replace with this the server function
+                return Server_ValidateUser(email, password);
+            }
+            else
+            {
+                Debug.WriteLine("Connectivity Error", "ERROR");
+                return false;
+            }
         }
 
         /// <summary>
@@ -82,7 +90,17 @@ namespace PCClient.Model
         /// <returns></returns>
         public static User FindUser(string email, string password)
         {
-
+            if (CheckConnectivity())
+            {
+                if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+                {
+                    return Server_GetUser(email, password);
+                }
+                else
+                {
+                    Debug.WriteLine("Error in the input data", "ERROR");
+                }
+            }
             return null;
         }
 
@@ -93,7 +111,16 @@ namespace PCClient.Model
         /// <returns></returns>
         public static bool IsUserRegistered(string email)
         {
-            return Server_IsUserRegistered(email);
+            if (CheckConnectivity())
+            {
+                //Debug.WriteLine("Checking User");
+                return Server_IsUserRegistered(email);
+            }
+            else
+            {
+                Debug.WriteLine("Connectivity Error", "ERROR");
+                return false;
+            }
         }
 
 
@@ -225,7 +252,7 @@ namespace PCClient.Model
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static User GetUSer(string email, string password)
+        public static User Server_GetUser(string email, string password)
         {
             FetchUsers();
             foreach (User user in lodedUsers)

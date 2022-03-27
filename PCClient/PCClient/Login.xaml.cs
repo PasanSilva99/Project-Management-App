@@ -68,6 +68,7 @@ namespace PCClient
                 {
                     Debug.WriteLine("Application Set to Offline Mode");
                     serviceType = ServiceType.Offline;
+                    GlobalServiceType = ServiceType.Offline;
                 }
 
             }
@@ -75,7 +76,7 @@ namespace PCClient
             {
                 Debug.WriteLine("Application Set to Online Mode");
                 serviceType= ServiceType.Online;
-
+                GlobalServiceType= ServiceType.Online;
 
             }
         }
@@ -117,7 +118,7 @@ namespace PCClient
                         dialog.CloseButtonText = "Done";
                         dialog.DefaultButton = ContentDialogButton.Close;
 
-                        dialog.Content = new RegistrationPage(email);
+                        dialog.Content = new RegistrationPage(email, tb_password.Password);
 
                         var result = await dialog.ShowAsync();
                     }

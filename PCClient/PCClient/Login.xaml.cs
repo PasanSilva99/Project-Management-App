@@ -1,9 +1,12 @@
-﻿using System;
+﻿using PCClient.Model;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -13,6 +16,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using static PCClient.Model.DataStore;
+
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,9 +28,56 @@ namespace PCClient
     /// </summary>
     public sealed partial class Login : Page
     {
+        private ServiceType serviceType = ServiceType.Online;
+
+        MainPage mainPage;
+
         public Login()
         {
             this.InitializeComponent();
+            IntializeLocalDatabase(); // comes from dataStore Class
+            CheckConnectionAsync();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            mainPage = e.Parameter as MainPage;
+        }
+
+        private async void CheckConnectionAsync()
+        {
+            // Connectivity check is coming from DataStore Class
+            if (!CheckConnectivity()) 
+            {
+                ContentDialog dialog = new ContentDialog();
+                dialog.Title = "Connectivity Lost";
+                dialog.PrimaryButtonText = "Retry";
+                dialog.CloseButtonText = "Continue with limited functions";
+                dialog.DefaultButton = ContentDialogButton.Primary;
+                dialog.Content = "Connection to ther server is not available. Please connect to the same network which is with the servers. If you continue without the connection, this app will swith to the offline mode.";
+
+                var result = await dialog.ShowAsync();
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    CheckConnectionAsync();
+                }
+                else
+                {
+                    Debug.WriteLine("Application Set to Offline Mode");
+                    serviceType = ServiceType.Offline;
+                }
+
+            }
+            else
+            {
+                Debug.WriteLine("Application Set to Online Mode");
+                serviceType= ServiceType.Online;
+
+
+            }
         }
 
         private void chb_rememberme_Click(object sender, RoutedEventArgs e)
@@ -33,9 +85,44 @@ namespace PCClient
 
         }
 
-        private void btn_login_Click(object sender, RoutedEventArgs e)
+        private async void btn_login_Click(object sender, RoutedEventArgs e)
         {
+            CheckConnectionAsync();
+            var email = tb_email.Text;
+            var password = GetHashString(tb_password.Password);
 
+            if (email != null && password != null)
+            {
+                if(ValidateUser(email, password))
+                {
+                    mainPage.NavigateToNavigationBase();
+                }
+                else
+                {
+                    if (IsUserRegistered(email))
+                    {
+                        ContentDialog dialog = new ContentDialog();
+                        dialog.Title = "Passwords Do Not Match";
+                        dialog.CloseButtonText = "Retry";
+                        dialog.DefaultButton = ContentDialogButton.Close;
+                        dialog.Content = "The passowrd you entered is wrong. Please try again. ";
+
+                        var result = await dialog.ShowAsync();
+
+                    }
+                    else
+                    {
+                        ContentDialog dialog = new ContentDialog();
+                        dialog.Title = "Register";
+                        dialog.CloseButtonText = "Done";
+                        dialog.DefaultButton = ContentDialogButton.Close;
+
+                        dialog.Content = new RegistrationPage(email);
+
+                        var result = await dialog.ShowAsync();
+                    }
+                }
+            }
         }
 
         /// <summary>

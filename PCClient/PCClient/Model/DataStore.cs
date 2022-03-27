@@ -8,15 +8,42 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Security.Cryptography;
 
 namespace PCClient.Model
 {
     public class DataStore
     {
+        public enum ServiceType
+        {
+            Online,
+            Offline
+        }
 
-        public static String ApplicationName_Acronym { get; set; } = "Projent";
-        public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";
+        private static byte[] GetHash(string inputString)
+        {
+            using (HashAlgorithm algorithm = SHA256.Create())
+                return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
 
+        public static string GetHashString(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
+        }
+
+        public ServiceType GlobalServiceType { get; set; }
+
+        public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
+        public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
+
+        /// <summary>
+        /// Checks wether the computer is connected to any network
+        /// </summary>
+        /// <returns></returns>
         public static bool CheckConnectivity()
         {
             if (NetworkInterface.GetIsNetworkAvailable())

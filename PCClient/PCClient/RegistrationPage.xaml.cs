@@ -57,7 +57,9 @@ namespace PCClient
 
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
         {
-            UnlockRegister();
+            SetDefaultPic();  // Resets the image to the default image
+            SetImage();  // Sets that pic to the view
+            UnlockRegister();  // unlock the register button 
         }
 
         StorageFile profileImage = null;
@@ -67,14 +69,14 @@ namespace PCClient
 
             // The file picker dialog
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;  
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;  //  this is the suggested location
 
             // adds the below filters to filterout image files
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
             picker.FileTypeFilter.Add(".png");
-             
+
             StorageFile file = await picker.PickSingleFileAsync();  // saved the picked file into the file variable
             if (file != null)
             {
@@ -109,7 +111,7 @@ namespace PCClient
 
         private async void btn_register_Click(object sender, RoutedEventArgs e)
         {
-            var email = tb_email.Text;
+            var email = tb_email.Text.Trim(' ');
             var username = tb_username.Text;
             var password = DataStore.GetHashString(tb_password.Password);
             var re_password = DataStore.GetHashString(tb_rePassword.Password);
@@ -121,6 +123,9 @@ namespace PCClient
                 {
 
                     DataStore.RegisterUser(email, username, filename, password);
+                    SaveImage();
+                    registerBase.Visibility = Visibility.Collapsed;
+                    RigistrationDone.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -133,24 +138,30 @@ namespace PCClient
 
                     var result = await dialog.ShowAsync();
 
-                    if(result == ContentDialogResult.Primary)
+                    if (result == ContentDialogResult.Primary)
                         btn_register_Click(sender, e);
                     else
                         DataStore.RegisterUser(email, username, filename, password);
-
+                    SaveImage();
+                    RigistrationDone.Visibility = Visibility.Visible;
+                    registerBase.Visibility = Visibility.Collapsed;
 
                 }
             }
             else
             {
                 DataStore.RegisterUser(email, username, filename, password);
+                SaveImage();
+                RigistrationDone.Visibility = Visibility.Visible;
+                registerBase.Visibility = Visibility.Collapsed;
+
             }
-            
+
         }
 
         private void tb_rePassword_PasswordChanging(PasswordBox sender, PasswordBoxPasswordChangingEventArgs args)
         {
-            UnlockRegister();
+
 
             if (tb_rePassword.Password != tb_password.Password)
             {
@@ -161,11 +172,12 @@ namespace PCClient
             {
                 lbl_rePasswordError.Visibility = Visibility.Collapsed;
             }
+            UnlockRegister();
         }
 
         private void tb_password_PasswordChanging(PasswordBox sender, PasswordBoxPasswordChangingEventArgs args)
         {
-            UnlockRegister();
+
 
             lbl_passwordError.Visibility = Visibility.Collapsed;
             if (tb_rePassword.Password != tb_password.Password && !string.IsNullOrWhiteSpace(tb_rePassword.Password))
@@ -177,11 +189,12 @@ namespace PCClient
             {
                 lbl_passwordError.Visibility = Visibility.Collapsed;
             }
+            UnlockRegister();
         }
 
         private void tb_rePassword_LostFocus(object sender, RoutedEventArgs e)
         {
-            UnlockRegister();
+
 
             if (string.IsNullOrWhiteSpace(tb_rePassword.Password))
             {
@@ -192,11 +205,12 @@ namespace PCClient
             {
                 lbl_rePasswordError.Visibility = Visibility.Collapsed;
             }
+            UnlockRegister();
         }
 
         private void tb_password_LostFocus(object sender, RoutedEventArgs e)
         {
-            UnlockRegister();
+
 
             if (string.IsNullOrWhiteSpace(tb_password.Password))
             {
@@ -212,6 +226,7 @@ namespace PCClient
             {
                 lbl_passwordError.Visibility = Visibility.Collapsed;
             }
+            UnlockRegister();
         }
 
         private void UnlockRegister()
@@ -225,7 +240,7 @@ namespace PCClient
                 lbl_EmailError.Visibility == Visibility.Collapsed &&
                 lbl_passwordError.Visibility == Visibility.Collapsed &&
                 lbl_usernameError.Visibility == Visibility.Collapsed &&
-                lbl_rePasswordError.Visibility == Visibility.Collapsed 
+                lbl_rePasswordError.Visibility == Visibility.Collapsed
                 )
             {
                 btn_register.IsEnabled = true;
@@ -252,7 +267,7 @@ namespace PCClient
                 croppedImage = croppedfile;  // Set the global variable for use of other functions
 
                 SetImage();   // Set image to the imageview
-                
+
             }
             var fly = FlyoutBase.GetAttachedFlyout(img_profielPhoto);  // get the flyout object from the image
             fly.Hide();  // Hide the flyout from the view
@@ -271,21 +286,34 @@ namespace PCClient
                 img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource 
 
             }
-            
+
         }
 
         private async void img_profielPhoto_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
-                // If selected
-                // Load that file to the image cropper
-                await ImageCropper.LoadImageFromFile(profileImage);
+            // If selected
+            // Load that file to the image cropper
+            await ImageCropper.LoadImageFromFile(profileImage);
 
-                // Set the image cropper as Square
-                ImageCropper.CropShape = CropShape.Rectangular;  // Cropper Shape set to rectangular
-                ImageCropper.AspectRatio = 1;  // Cropper Aspect Ratio 1 means Square
-                FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // Show the cropping flyout
-                ImageCropper.AspectRatio = 1;  // Reset the Aspect ratio incase of reload
+            // Set the image cropper as Square
+            ImageCropper.CropShape = CropShape.Rectangular;  // Cropper Shape set to rectangular
+            ImageCropper.AspectRatio = 1;  // Cropper Aspect Ratio 1 means Square
+            FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // Show the cropping flyout
+            ImageCropper.AspectRatio = 1;  // Reset the Aspect ratio incase of reload
+
+        }
+
+
+        /// <summary>
+        /// Save the image to file
+        /// </summary>
+        private async void SaveImage()
+        {
+
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+
+            await profileImage.CopyAsync(storageFolder, tb_email.Text + ".png");
 
         }
     }

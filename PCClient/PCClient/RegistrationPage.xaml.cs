@@ -63,6 +63,7 @@ namespace PCClient
         }
 
         StorageFile profileImage = null;
+        StorageFile originalImage = null;
 
         private async void AddImage_Click(object sender, RoutedEventArgs e)
         {
@@ -90,6 +91,7 @@ namespace PCClient
                     img_profielPhoto.Source = bitmapImage;  // sets the created bitmap as an image source
                     await ImageCropper.LoadImageFromFile(file);  // send that file to the image crooper 
                     profileImage = file;  // save the loaded file to the global variable for other functions use
+                    originalImage = file;
 
                     ImageCropper.CropShape = CropShape.Rectangular;  // sets the cropper as rectangular mask
                     ImageCropper.AspectRatio = 1;  // sets the masks aspect ratio as square
@@ -229,6 +231,12 @@ namespace PCClient
             UnlockRegister();
         }
 
+        /// <summary>
+        /// This function will unlock(Enable) the Register button if the following criterias met
+        /// Email, Username, Password and Repeat Password is not null
+        /// and all error messages are hidden (No errors in the input)
+        /// 
+        /// </summary>
         private void UnlockRegister()
         {
             if (
@@ -243,29 +251,35 @@ namespace PCClient
                 lbl_rePasswordError.Visibility == Visibility.Collapsed
                 )
             {
-                btn_register.IsEnabled = true;
+                btn_register.IsEnabled = true;  // Enable the button
             }
             else
             {
-                btn_register.IsEnabled = false;
+                btn_register.IsEnabled = false;  // Dissable the button
             }
         }
 
-        StorageFile croppedImage = null;
+        StorageFile croppedImage = null;  // Store the cropped images globally
 
+
+        /// <summary>
+        /// The save button on the image cropper
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void btn_save_Click(object sender, RoutedEventArgs e)
         {
 
             // Create sample file; replace if exists.
-            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);
-            StorageFile croppedfile = await storageFolder.CreateFileAsync("crop.png", CreationCollisionOption.ReplaceExisting);
-            Debug.WriteLine("File Path " + storageFolder.Path);
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);  // Create Temp folder in the Local Folder
+            StorageFile croppedfile = await storageFolder.CreateFileAsync("crop.png", CreationCollisionOption.ReplaceExisting);  // Create an empty image
+            Debug.WriteLine("File Path " + storageFolder.Path);  // Show the file path for debuggin purposses
 
             using (var fileStream = await croppedfile.OpenAsync(FileAccessMode.ReadWrite))
             {
                 await ImageCropper.SaveAsync(fileStream, BitmapFileFormat.Png);  // Saves the Cropped image to file
                 croppedImage = croppedfile;  // Set the global variable for use of other functions
-
+                profileImage = croppedfile;
                 SetImage();   // Set image to the imageview
 
             }
@@ -294,7 +308,7 @@ namespace PCClient
 
             // If selected
             // Load that file to the image cropper
-            await ImageCropper.LoadImageFromFile(profileImage);
+            await ImageCropper.LoadImageFromFile(originalImage!=null ? originalImage : profileImage);
 
             // Set the image cropper as Square
             ImageCropper.CropShape = CropShape.Rectangular;  // Cropper Shape set to rectangular

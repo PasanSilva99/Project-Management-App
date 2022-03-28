@@ -24,6 +24,7 @@ namespace PCClient
     {
         public NavigationBase()
         {
+            // hi
             this.InitializeComponent();
         }
     }

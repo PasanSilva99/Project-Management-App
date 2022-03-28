@@ -28,6 +28,8 @@ namespace PCClient
         public MainPage()
         {
             this.InitializeComponent();
+
+            // Expand the view into the titlebar
             ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonBackgroundColor = Colors.Transparent;
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;

@@ -255,7 +255,6 @@ namespace PCClient
 
         private async void btn_save_Click(object sender, RoutedEventArgs e)
         {
-
             // Create sample file; replace if exists.
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);
             StorageFile croppedfile = await storageFolder.CreateFileAsync("crop.png", CreationCollisionOption.ReplaceExisting);
@@ -283,8 +282,7 @@ namespace PCClient
             {
                 BitmapImage bitmapImage = new BitmapImage();  // Creates anew Bitmap Image
                 await bitmapImage.SetSourceAsync(fileStream);  // Loads the file in to the created bitmap
-                img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource 
-
+                img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
             }
 
         }

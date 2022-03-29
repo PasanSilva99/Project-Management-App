@@ -111,11 +111,11 @@ namespace PCClient
 
         private async void btn_register_Click(object sender, RoutedEventArgs e)
         {
-            var email = tb_email.Text.Trim(' ');
+            var email = tb_email.Text.Trim();
             var username = tb_username.Text;
             var password = DataStore.GetHashString(tb_password.Password);
             var re_password = DataStore.GetHashString(tb_rePassword.Password);
-            var filename = profileImage.Name;
+            var filename = tb_email.Text + ".png";
 
             if (DataStore.GlobalServiceType == ServiceType.Online)
             {
@@ -264,6 +264,8 @@ namespace PCClient
             {
                 await ImageCropper.SaveAsync(fileStream, BitmapFileFormat.Png);  // Saves the Cropped image to file
                 croppedImage = croppedfile;  // Set the global variable for use of other functions
+
+                profileImage = croppedfile;
 
                 SetImage();   // Set image to the imageview
 

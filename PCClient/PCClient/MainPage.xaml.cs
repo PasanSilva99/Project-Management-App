@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCClient.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace PCClient
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        internal User LoggedUser;
         public MainPage()
         {
             this.InitializeComponent();
@@ -43,6 +45,11 @@ namespace PCClient
         internal void NavigateToNavigationBase()
         {
             mainFrame.Navigate(typeof(NavigationBase), this);
+        }
+
+        internal void NavigateToLoginPage()
+        {
+            mainFrame.Navigate(typeof(Login), this);
         }
     }
 }

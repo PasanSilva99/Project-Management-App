@@ -576,7 +576,7 @@
                         Height="100"
                         HorizontalAlignment="Center"
                         CornerRadius="10 10 10 10"
-                        Background="Transparent">
+                        Background="Transparent" Tag="Dashboard" Click="NavigateTo">
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/DashboardIcon.png" />
@@ -590,7 +590,9 @@
                         Height="100"
                         HorizontalAlignment="Center"
                         CornerRadius="10 10 10 10"
-                        Background="Transparent">
+                        Background="Transparent"
+                        Tag="Projects"
+                        Click="NavigateTo">
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/ProjectsIcon.png" />
@@ -604,7 +606,9 @@
                         Height="100"
                         HorizontalAlignment="Center"
                         CornerRadius="10 10 10 10"
-                        Background="Transparent">
+                        Background="Transparent"
+                        Tag="Reports"
+                        Click="NavigateTo">
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/AnalysisIcon.png" />
@@ -618,7 +622,9 @@
                         Height="100"
                         HorizontalAlignment="Center"
                         CornerRadius="10 10 10 10"
-                        Background="Transparent">
+                        Background="Transparent"
+                        Tag="People"
+                        Click="NavigateTo">
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/PeopleIcon.png" />
@@ -643,7 +649,7 @@
                 <ColumnDefinition Width="85" />
             </Grid.ColumnDefinitions>
 
-            <Frame Margin="10 10 10 10"
+            <Frame x:Name="frame_page" Margin="10 10 10 10"
                    Grid.Column="0" />
 
             <controls:DropShadowPanel Grid.Column="1"
@@ -666,10 +672,12 @@
                                 Height="70"
                                 HorizontalAlignment="Center"
                                 CornerRadius="10 10 10 10"
-                                Background="Transparent">
+                                Background="Transparent"
+                                Tag="StickyNotes"
+                                Click="NavigateTo">
                             <Button.Content>
                                 <StackPanel>
-                                    <Image Source="/Assets/Icons/AnalysisIcon.png" />
+                                    <Image Source="/Assets/Icons/StickyNoteIcon.png" />
                                 </StackPanel>
                             </Button.Content>
                         </Button>
@@ -678,7 +686,9 @@
                                 Height="70"
                                 HorizontalAlignment="Center"
                                 CornerRadius="10 10 10 10"
-                                Background="Transparent">
+                                Background="Transparent"
+                                Tag="Bookmarks"
+                                Click="NavigateTo">
                             <Button.Content>
                                 <StackPanel>
                                     <Image Source="/Assets/Icons/BookmarkIcon.png" />
@@ -690,7 +700,9 @@
                                 Height="70"
                                 HorizontalAlignment="Center"
                                 CornerRadius="10 10 10 10"
-                                Background="Transparent">
+                                Background="Transparent"
+                                Tag="Chat"
+                                Click="NavigateTo">
                             <Button.Content>
                                 <StackPanel>
                                     <Image Source="/Assets/Icons/ChatIcon.png" />
@@ -706,7 +718,9 @@
                         <Button Style="{StaticResource CloudButton}" HorizontalAlignment="Center"
                                 Width="40"
                                 Height="40"
-                                Padding="0,0,0,0">
+                                Padding="0,0,0,0"
+                                Tag="Cloud"
+                                Click="NavigateTo">
                             <Button.Content>
                                 <Image x:Name="img_cloudStatus"
                                        Source="/Assets/Icons/Cloud_onlineIcon.png" />
@@ -715,7 +729,10 @@
                         <Button HorizontalAlignment="Center"
                                 Width="40"
                                 Height="40"
-                                Padding="0,0,0,0" CornerRadius="40 40 40 40">
+                                Padding="0,0,0,0"
+                                CornerRadius="40 40 40 40"
+                                Tag="User"
+                                Click="NavigateTo">
                             <Button.Content>
                                 <Image x:Name="img_profilePicture"
                                            Source="/Assets/Images/image.png"

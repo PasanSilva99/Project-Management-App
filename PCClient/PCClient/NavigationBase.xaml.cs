@@ -34,21 +34,13 @@ namespace PCClient
     /// </summary>
     public sealed partial class NavigationBase : Page
     {
-        private MainPage mainPage;
-        private User LoggedUser;
+        internal MainPage mainPage;
+
 
         public NavigationBase()
         {
             this.InitializeComponent();
             TopNavStack.Children.Clear();
-
-            ToggleButton topNavItem = new ToggleButton();
-            topNavItem.Tag = new DashboardPage();
-            topNavItem.Content = "Dashboard";
-            topNavItem.Style = (Style)Resources["TopNavLink"];
-            topNavItem.Click += TopNavItem_Click;
-
-            TopNavStack.Children.Add(topNavItem);
         }
 
         internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
@@ -70,12 +62,13 @@ namespace PCClient
         {
             Type type = (sender as ToggleButton).Tag.GetType();
 
-            frame_page.Navigate(type);
+            if (frame_page.SourcePageType != type)
+                frame_page.Navigate(type, this);
         }
 
         private async void ValidateLoggedUser()
         {
-            if (LoggedUser == null && !ValidateUser(LoggedUser.Email, LoggedUser.Password))
+            if (mainPage.LoggedUser == null && !ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
             {
                 ContentDialog dialog = new ContentDialog();
                 dialog.Title = "Verification Faild";
@@ -91,7 +84,7 @@ namespace PCClient
             {
                 // Get the user image
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                StorageFile profilePicture = await storageFolder.GetFileAsync(LoggedUser.Image);
+                StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
                 Debug.WriteLine("File Path " + storageFolder.Path);
 
                 using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
@@ -110,7 +103,6 @@ namespace PCClient
             base.OnNavigatedTo(e);
 
             mainPage = e.Parameter as MainPage;
-            LoggedUser = mainPage.LoggedUser;
 
             ValidateLoggedUser();
         }

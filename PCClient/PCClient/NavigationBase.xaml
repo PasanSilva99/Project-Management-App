@@ -21,7 +21,7 @@
             <Setter Property="BorderThickness"
                     Value="{ThemeResource ToggleButtonBorderThemeThickness}" />
             <Setter Property="Padding"
-                    Value="{StaticResource ButtonPadding}" />
+                    Value="35,0,35,1" />
             <Setter Property="HorizontalAlignment"
                     Value="Left" />
             <Setter Property="VerticalAlignment"
@@ -36,6 +36,9 @@
                     Value="{StaticResource UseSystemFocusVisuals}" />
             <Setter Property="FocusVisualMargin"
                     Value="-3" />
+            <Setter Property="CornerRadius"
+                    Value="10 10 0 0" />
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
@@ -512,51 +515,30 @@
         <!--\/ Top Navigation \/-->
         <StackPanel Grid.Row="1"
                     Grid.Column="1"
-                    Margin="58,0,0,0"
-                    Orientation="Horizontal">
+                    Margin="60,0,130,0"
+                    Orientation="Horizontal" x:Name="TopNavStack" ScrollViewer.HorizontalScrollMode="Enabled">
 
             <!--\/ Test Buttons \/-->
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Overview"
-                          x:Name="topNavItem1"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="True" />
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Discussion"
-                          x:Name="topNavItem2"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="False" />
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Tasks"
-                          x:Name="topNavItem3"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="False" />
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Gantt"
-                          x:Name="topNavItem4"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="False" />
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Calendar"
-                          x:Name="topNavItem5"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="False" />
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Notes"
-                          x:Name="topNavItem6"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="False" />
             <ToggleButton Style="{StaticResource TopNavLink}"
                           Content="Files"
-                          x:Name="topNavItem7"
-                          Padding="35,0,35,1"
-                          CornerRadius="10 10 0 0"
                           IsChecked="False" />
             <!--/\ Test Buttons /\-->
 

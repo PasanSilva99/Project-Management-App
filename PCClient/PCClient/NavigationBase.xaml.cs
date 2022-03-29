@@ -22,6 +22,13 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace PCClient
 {
+    public class NavigatorTag
+    {
+        public string Name { get; set; }
+        public Type TagetPage { get; set; }
+    }
+
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -33,7 +40,37 @@ namespace PCClient
         public NavigationBase()
         {
             this.InitializeComponent();
-            
+            TopNavStack.Children.Clear();
+
+            ToggleButton topNavItem = new ToggleButton();
+            topNavItem.Tag = new DashboardPage();
+            topNavItem.Content = "Dashboard";
+            topNavItem.Style = (Style)Resources["TopNavLink"];
+            topNavItem.Click += TopNavItem_Click;
+
+            TopNavStack.Children.Add(topNavItem);
+        }
+
+        internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
+        {
+            TopNavStack.Children.Clear();
+            foreach (NavigatorTag navigatorTag in navigatorTags)
+            {
+                ToggleButton topNavItem = new ToggleButton();
+                topNavItem.Tag = navigatorTag.TagetPage;
+                topNavItem.Content = navigatorTag.Name;
+                topNavItem.Style = (Style)Resources["TopNavLink"];
+                topNavItem.Click += TopNavItem_Click;
+
+                TopNavStack.Children.Add(topNavItem);
+            }
+        }
+
+        private void TopNavItem_Click(object sender, RoutedEventArgs e)
+        {
+            Type type = (sender as ToggleButton).Tag.GetType();
+
+            frame_page.Navigate(type);
         }
 
         private async void ValidateLoggedUser()

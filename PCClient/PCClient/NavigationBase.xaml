@@ -761,13 +761,18 @@
                     </StackPanel>
                 </Grid>
             </controls:DropShadowPanel>
-
             
+            <!--\/ Sticky Notes Panel \/-->
+            <controls:DropShadowPanel Grid.Column="0"
+                                      MinWidth="500"
+                                      HorizontalAlignment="Right">
+                
+            </controls:DropShadowPanel>
+            <!--/\ Sticky Notes Panel /\-->
+
         </Grid>
         <!-- /\ Page Frame and left navigation /\-->
 
-        <!--\/ Sticky Notes Panel \/-->
-        <!--/\ Sticky Notes Panel /\-->
         
         <!--\/ Bookmarks Panel \/-->
         <!--/\ Bookmarks Panel /\-->

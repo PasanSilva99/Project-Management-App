@@ -113,11 +113,11 @@ namespace PCClient
 
         private async void btn_register_Click(object sender, RoutedEventArgs e)
         {
-            var email = tb_email.Text.Trim(' ');
+            var email = tb_email.Text.Trim();
             var username = tb_username.Text;
             var password = DataStore.GetHashString(tb_password.Password);
             var re_password = DataStore.GetHashString(tb_rePassword.Password);
-            var filename = profileImage.Name;
+            var filename = tb_email.Text + ".png";
 
             if (DataStore.GlobalServiceType == ServiceType.Online)
             {
@@ -269,7 +269,6 @@ namespace PCClient
         /// <param name="e"></param>
         private async void btn_save_Click(object sender, RoutedEventArgs e)
         {
-
             // Create sample file; replace if exists.
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);  // Create Temp folder in the Local Folder
             StorageFile croppedfile = await storageFolder.CreateFileAsync("crop.png", CreationCollisionOption.ReplaceExisting);  // Create an empty image
@@ -297,8 +296,7 @@ namespace PCClient
             {
                 BitmapImage bitmapImage = new BitmapImage();  // Creates anew Bitmap Image
                 await bitmapImage.SetSourceAsync(fileStream);  // Loads the file in to the created bitmap
-                img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource 
-
+                img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
             }
 
         }

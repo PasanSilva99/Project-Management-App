@@ -30,7 +30,7 @@ namespace PCClient
     {
         private ServiceType serviceType = ServiceType.Online;
 
-        MainPage mainPage;
+        internal MainPage mainPage;
 
         public Login()
         {
@@ -96,6 +96,7 @@ namespace PCClient
             {
                 if(ValidateUser(email, password))
                 {
+                    mainPage.LoggedUser = FindUser(email, password);
                     mainPage.NavigateToNavigationBase();
                 }
                 else

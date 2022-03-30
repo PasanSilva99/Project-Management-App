@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -124,13 +125,13 @@ namespace PCClient
                     NavigateToPeople();
                     break;
                 case "StickyNotes":
-                    OpenStickyNotes(true);
+                    OpenStickyNotes();
                     break;
                 case "Bookmarks":
-                    OpenBookmarks(true);
+                    OpenBookmarks();
                     break;
                 case "Chat":
-                    OpenChat(true);
+                    OpenChat();
                     break;
                 case "Cloud":
                     OpenCloudInformation(true);
@@ -170,31 +171,36 @@ namespace PCClient
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="isOpen"></param>
-        internal void OpenChat(bool isOpen)
+        internal void OpenChat()
         {
-            
 
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="isOpen"></param>
-        internal void OpenBookmarks(bool isOpen)
+        internal void OpenBookmarks()
         {
-            
 
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="isOpen"></param>
-        internal void OpenStickyNotes(bool isOpen)
+        internal void OpenStickyNotes()
         {
-            
+            Debug.WriteLine("StickyNoteOpen");
+            if (RightPanel.Translation.X == 500)
+            {
+                Debug.WriteLine("Expanded RP");
+                RightPanelExpand.Begin();
+            }
+            else
+            {
+                Debug.WriteLine("Minimized RP");
 
+                RightPanelMinimize.Begin();
+            }
         }
 
         #endregion

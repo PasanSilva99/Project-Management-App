@@ -766,6 +766,7 @@
             <controls:DropShadowPanel Grid.Column="0"
                                       MinWidth="500"
                                       HorizontalAlignment="Right">
+              
                 
             </controls:DropShadowPanel>
             <!--/\ Sticky Notes Panel /\-->

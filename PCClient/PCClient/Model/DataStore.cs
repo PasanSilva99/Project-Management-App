@@ -74,7 +74,15 @@ namespace PCClient.Model
                         "Email TEXT, " +
                         "Name TEXT, " +
                         "ImagePath TEXT, " +
-                        "Password TEXT );";
+                        "Password TEXT );" +
+                    "CREATE TABLE IF NOT EXISTS " +
+                    "chat (" +
+                    "SentOn TEXT, " +
+                    "Sender TEXT, " +
+                    "ProjectID TEXT, " +
+                    "ReceiverID TEXT, " +
+                    "Content TEXT, " +
+                    "IsEmogi INTEGER );";
 
                     SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                     sqliteCommand.ExecuteNonQuery();

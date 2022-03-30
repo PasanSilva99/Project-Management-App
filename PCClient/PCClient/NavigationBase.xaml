@@ -620,7 +620,7 @@
         </Grid>
         <!--/\ Left Navigation /\-->
 
-        <!--\/ Page Frame and left navigation \/-->
+        <!--\/ Page Frame and Right navigation \/-->
         <Grid Grid.Column="1"
               Grid.Row="2"
               Background="{ThemeResource SystemColorWindowColor}"
@@ -707,6 +707,19 @@
                                 <Image x:Name="img_cloudStatus"
                                        Source="/Assets/Icons/Cloud_onlineIcon.png" />
                             </Button.Content>
+                            <Button.Flyout>
+                                <Flyout Placement="Left">
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="CornerRadius"
+                                                    Value="10" />
+                                            <Setter Property="Background"
+                                                    Value="white" />
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+                                    <TextBlock Text="Synced With the Server" x:Name="lbl_serverStatus" />
+                                </Flyout>
+                            </Button.Flyout>
                         </Button>
                         <Button HorizontalAlignment="Center"
                                 Width="40"
@@ -714,19 +727,59 @@
                                 Padding="0,0,0,0"
                                 CornerRadius="40 40 40 40"
                                 Tag="User"
-                                Click="NavigateTo">
+                                Click="NavigateTo" BorderThickness="3" BorderBrush="LimeGreen">
                             <Button.Content>
                                 <Image x:Name="img_profilePicture"
                                            Source="/Assets/Images/image.png"
                                        Margin="-5,-5,-5,-5" />
                             </Button.Content>
+                            <Button.Flyout>
+                                <MenuFlyout Placement="Left">
+                                    <MenuFlyout.MenuFlyoutPresenterStyle>
+                                        <Style TargetType="MenuFlyoutPresenter">
+                                            <Setter Property="CornerRadius"
+                                                    Value="10" />
+
+                                            <Setter Property="Background"
+                                                    Value="{ThemeResource SystemControlAcrylicElementBrush}" />
+                                        </Style>
+                                    </MenuFlyout.MenuFlyoutPresenterStyle>
+                                    <MenuFlyoutItem Text="My Account"
+                                                    Tag="account" />
+                                    <MenuFlyoutSubItem Text="Set Status">
+                                        <MenuFlyoutItem Text="🟢 Online" />
+                                        <MenuFlyoutItem Text="🟡 Idle" />
+                                        <MenuFlyoutItem Text="🔴 Busy" />
+                                        <MenuFlyoutItem Text="⚫ Invisible" />
+                                    </MenuFlyoutSubItem>
+                                    <MenuFlyoutItem Text="Logout"
+                                                    Tag="logout" />
+                                </MenuFlyout>
+
+                            </Button.Flyout>
                         </Button>
                     </StackPanel>
                 </Grid>
             </controls:DropShadowPanel>
-
+            
+            <!--\/ Sticky Notes Panel \/-->
+            <controls:DropShadowPanel Grid.Column="0"
+                                      MinWidth="500"
+                                      HorizontalAlignment="Right">
+              
+                
+            </controls:DropShadowPanel>
+            <!--/\ Sticky Notes Panel /\-->
 
         </Grid>
         <!-- /\ Page Frame and left navigation /\-->
+
+        
+        <!--\/ Bookmarks Panel \/-->
+        <!--/\ Bookmarks Panel /\-->
+        
+        <!--\/ Chat Panel \/-->
+        <!--/\ Chat Panel /\-->
+        
     </Grid>
 </Page>

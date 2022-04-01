@@ -1,0 +1,192 @@
+﻿<Page x:Class="PCClient.ChatPanel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:PCClient"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      d:Width="450">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="75" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Direct Messages"
+                   Grid.ColumnSpan="2"
+                   Grid.Column="0"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10" />
+        <!--\/ Users Stack \/-->
+
+        <ScrollViewer Grid.Column="0"
+                      Grid.Row="1"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Padding="0,10,0,0"
+                      VerticalScrollBarVisibility="Hidden"
+                      CornerRadius="10 10 10 10">
+            <ScrollViewer.Background>
+                <LinearGradientBrush EndPoint="0.5,1"
+                                     StartPoint="0.5,0">
+                    <GradientStop Color="#FFF9EAFD" />
+                    <GradientStop Color="#6FD8E0FF"
+                                  Offset="1" />
+                </LinearGradientBrush>
+            </ScrollViewer.Background>
+
+            <StackPanel x:Name="stack_users"
+                        Spacing="15">
+
+                <!-- Sample User \/-->
+
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Name="img_profileImage"
+                               Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderBrush="#FF08FF00"
+                        BorderThickness="3">
+                    <Button.Content>
+                        <Image Source="/Assets/Images/image.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+
+                <!-- Sample User /\-->
+
+            </StackPanel>
+        </ScrollViewer>
+        <!--/\ Users Stack /\-->
+
+
+    </Grid>
+</Page>

@@ -119,6 +119,12 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BookmarkPanel.xaml.cs">
+      <DependentUpon>BookmarkPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChatPanel.xaml.cs">
+      <DependentUpon>ChatPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DashboardPage.xaml.cs">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Compile>
@@ -148,6 +154,9 @@
     </Compile>
     <Compile Include="SighUpPage.xaml.cs">
       <DependentUpon>SighUpPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StickyNotePanel.xaml.cs">
+      <DependentUpon>StickyNotePanel.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +237,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="BookmarkPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChatPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DashboardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -261,6 +278,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SighUpPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StickyNotePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

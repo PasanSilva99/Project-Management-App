@@ -524,9 +524,13 @@
         </Style>
 
         <Storyboard x:Name="RightPanelExpand">
-            <DoubleAnimation Storyboard.TargetName="targ" Storyboard.TargetProperty="X" To="0" From="500" Duration="0:0:0.5">
+            <DoubleAnimation Storyboard.TargetName="targ"
+                             Storyboard.TargetProperty="X"
+                             To="0"
+                             From="500"
+                             Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
-                    <BackEase />
+                    <CircleEase />
                 </DoubleAnimation.EasingFunction>
 
             </DoubleAnimation>
@@ -538,7 +542,7 @@
                              From="0"
                              Duration="0:0:0.5">
                 <DoubleAnimation.EasingFunction>
-                    <BackEase />
+                    <CircleEase />
                 </DoubleAnimation.EasingFunction>
 
             </DoubleAnimation>
@@ -705,25 +709,30 @@
                    Margin="10 10 10 10"
                    Grid.Column="0" />
 
-            <!--\/ Sticky Notes Panel \/-->
-            <controls:DropShadowPanel x:Name="RightPanel" Grid.Column="0"
+            <!--\/ Right Panel \/-->
+            <controls:DropShadowPanel x:Name="RightPanel"
+                                      Grid.Column="0"
                                       HorizontalAlignment="Right"
                                       Color="#33000000"
                                       Margin="0,0,-30,0"
                                       BlurRadius="20"
                                       HorizontalContentAlignment="Stretch">
                 <controls:DropShadowPanel.RenderTransform>
-                    <TranslateTransform x:Name="targ" X="500"/>
+                    <TranslateTransform x:Name="targ"
+                                        X="500" />
                 </controls:DropShadowPanel.RenderTransform>
-                <Grid 
-                      Background="green"
+                <Grid Background="white"
                       CornerRadius="10 10 10 10"
-                      HorizontalAlignment="Stretch" Width="500">
-                    
+                      HorizontalAlignment="Stretch"
+                      Width="500">
+
+                    <Frame x:Name="frame_tools"
+                           Margin="10 10 40 10" />
+
                 </Grid>
 
             </controls:DropShadowPanel>
-            <!--/\ Sticky Notes Panel /\-->
+            <!--/\ Right Panel /\-->
 
             <controls:DropShadowPanel Grid.Column="1"
                                       CornerRadius="10 10 10 10"
@@ -822,7 +831,8 @@
                                 Tag="User"
                                 Click="NavigateTo"
                                 BorderThickness="3"
-                                BorderBrush="LimeGreen">
+                                BorderBrush="LimeGreen"
+                                x:Name="btn_profile">
                             <Button.Content>
                                 <Image x:Name="img_profilePicture"
                                        Source="/Assets/Images/image.png"
@@ -842,10 +852,18 @@
                                     <MenuFlyoutItem Text="My Account"
                                                     Tag="account" />
                                     <MenuFlyoutSubItem Text="Set Status">
-                                        <MenuFlyoutItem Text="🟢 Online" />
-                                        <MenuFlyoutItem Text="🟡 Idle" />
-                                        <MenuFlyoutItem Text="🔴 Busy" />
-                                        <MenuFlyoutItem Text="⚫ Invisible" />
+                                        <MenuFlyoutItem Text="🟢 Online"
+                                                        Tag="Online"
+                                                        Click="MenuFlyoutItem_Click" />
+                                        <MenuFlyoutItem Text="🟡 Idle"
+                                                        Tag="Idle"
+                                                        Click="MenuFlyoutItem_Click" />
+                                        <MenuFlyoutItem Text="🔴 Busy"
+                                                        Tag="Busy"
+                                                        Click="MenuFlyoutItem_Click" />
+                                        <MenuFlyoutItem Text="⚫ Invisible"
+                                                        Tag="Invisible"
+                                                        Click="MenuFlyoutItem_Click" />
                                     </MenuFlyoutSubItem>
                                     <MenuFlyoutItem Text="Logout"
                                                     Tag="logout" />

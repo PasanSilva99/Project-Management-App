@@ -9,11 +9,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using System.Security.Cryptography;
+using Windows.UI.Xaml;
 
 namespace PCClient.Model
 {
     public class DataStore
     {
+        public enum Status
+        {
+            Offline,
+            Online,
+            Idle,
+            Busy,
+            Invisible
+        }
         public enum ServiceType
         {
             Online,
@@ -39,6 +48,12 @@ namespace PCClient.Model
 
         public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
         public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
+
+        public static bool SetUserStatus(User user, Status status)
+        {
+            Server_SetUserStatus(user, status);
+            return true;
+        }
 
         /// <summary>
         /// Checks wether the computer is connected to any network
@@ -77,12 +92,17 @@ namespace PCClient.Model
                         "Password TEXT );" +
                     "CREATE TABLE IF NOT EXISTS " +
                     "chat (" +
-                    "SentOn TEXT, " +
-                    "Sender TEXT, " +
-                    "ProjectID TEXT, " +
-                    "ReceiverID TEXT, " +
-                    "Content TEXT, " +
-                    "IsEmogi INTEGER );";
+                    "SentOn TEXT, " +       // The date sent
+                    "Sender TEXT, " +       // Auther of the message
+                    "ProjectID TEXT, " +    // if the message is on the project discussion, the project id
+                    "ReceiverID TEXT, " +   // If it is a direct message, the ID of the receiver (Email)
+                    "Content TEXT, " +      // Message body
+                    "IsEmogi INTEGER ); " + // is this a emogi / Sticker
+                    "CREATE TABLE IF NOT EXISTS " +  
+                    "DirectUsers (" +   // Saved Direct users
+                    "Email TEXT, " +    
+                    "Name TEXT, " +
+                    "ImagePath TEXT); ";
 
                     SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                     sqliteCommand.ExecuteNonQuery();
@@ -95,6 +115,8 @@ namespace PCClient.Model
                 Debug.WriteLine(ex.ToString(), "ERROR");
             }
 
+            // This should be in the server constructor
+            StartUserTimers();
         }
 
         /// <summary>
@@ -128,7 +150,7 @@ namespace PCClient.Model
         public static bool ValidateUser(string email, string password)
         {
             if (CheckConnectivity())
-            {                 
+            {
                 // Replace with this the server function
                 return Server_ValidateUser(email, password);
             }
@@ -190,7 +212,56 @@ namespace PCClient.Model
 
         public static String UserDBName { get; set; } = "PMUser.db"; // Server
         private static List<User> lodedUsers = new List<User>();
+        private static List<UserStatus> undedUsers = new List<UserStatus>();
 
+        struct UserStatus
+        {
+            public User User { get; set; }
+            public Status Status { get; set; }
+        }
+
+        public static void StartUserTimers()
+        {
+            DispatcherTimer UserTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(30.0) };
+            UserTimer.Tick += UserTimer_Tick;
+            UserTimer.Start();
+        }
+
+        private static void UserTimer_Tick(object sender, object e)
+        {
+            FetchUsers();
+            foreach (User user in lodedUsers)
+            {
+                undedUsers.Add(new UserStatus() { User = user, Status = Status.Offline });
+            }
+        }
+
+        public static bool Server_SetUserStatus(User user, Status status)
+        {
+            FetchUsers();
+            foreach (UserStatus ustatus in undedUsers)
+            {
+                if (ustatus.User == user)
+                {
+                    undedUsers.Remove(ustatus);
+                    undedUsers.Add(new UserStatus() { User = user, Status = status });
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static Status? Server_GetUserStatus(string email)
+        {
+            foreach(UserStatus ustatus in undedUsers)
+            {
+                if (ustatus.User.Email == email)
+                {
+                    return ustatus.Status;
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Add the user to the database
@@ -202,7 +273,7 @@ namespace PCClient.Model
         /// <returns></returns>
         public static bool Server_RegisterUser(string email, string name, string image, string password)
         {
-            if (!string.IsNullOrEmpty(email) && 
+            if (!string.IsNullOrEmpty(email) &&
                 !string.IsNullOrEmpty(name) &&
                 !string.IsNullOrEmpty(image) &&
                 !string.IsNullOrEmpty(password))
@@ -228,7 +299,7 @@ namespace PCClient.Model
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.Message);
-                        
+
                     }
                 }
             }

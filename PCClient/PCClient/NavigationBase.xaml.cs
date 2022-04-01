@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media.Animation;
+using System.Threading;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -37,11 +39,21 @@ namespace PCClient
     {
         internal MainPage mainPage;
 
+        Status userStatus = Status.Online;
+
 
         public NavigationBase()
         {
             this.InitializeComponent();
             TopNavStack.Children.Clear();
+            DispatcherTimer timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0)};
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, object e)
+        {
+            DataStore.SetUserStatus(mainPage.LoggedUser, userStatus);
         }
 
         internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
@@ -125,13 +137,13 @@ namespace PCClient
                     NavigateToPeople();
                     break;
                 case "StickyNotes":
-                    OpenStickyNotes();
+                    OpenStickyNotes(sender);
                     break;
                 case "Bookmarks":
-                    OpenBookmarks();
+                    OpenBookmarks(sender);
                     break;
                 case "Chat":
-                    OpenChat();
+                    OpenChat(sender);
                     break;
                 case "Cloud":
                     OpenCloudInformation(true);
@@ -168,40 +180,90 @@ namespace PCClient
 
         }
 
+
+
         /// <summary>
-        /// 
+        /// This will open the chat panel
+        /// </summary>
+        internal void OpenChat(object sender)
+        {
+            OpenRightPanel(typeof(ChatPanel));
+        }
+
+        /// <summary>
+        /// This will open the chat panel with user
+        /// </summary>
+        internal void OpenChat(string email)
+        {
+            if (targ.X == 500)
+            {
+                frame_tools.Navigate(typeof(ChatPanel), email);
+                RightPanelExpand.Begin();
+            }
+        }
+
+        /// <summary>
+        /// This will open the chat panel without user
         /// </summary>
         internal void OpenChat()
         {
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void OpenBookmarks()
-        {
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void OpenStickyNotes()
-        {
-            Debug.WriteLine("StickyNoteOpen");
-            if (RightPanel.Translation.X == 500)
+            if (targ.X == 500)
             {
-                Debug.WriteLine("Expanded RP");
+                frame_tools.Navigate(typeof(ChatPanel));
                 RightPanelExpand.Begin();
+            }
+        }
+
+        /// <summary>
+        /// This will open the Bookmarks Panel
+        /// </summary>
+        internal void OpenBookmarks(object sender)
+        {
+            OpenRightPanel(typeof(BookmarkPanel));
+        }
+
+        /// <summary>
+        /// Opens the sticky notes 
+        /// </summary>
+        internal void OpenStickyNotes(object sender)
+        {
+            OpenRightPanel(typeof(StickyNotePanel));
+        }
+
+        /// <summary>
+        /// This page opens the right pannel with the target page
+        /// </summary>
+        /// <param name="target">The page that you want to show in the panel</param>
+        private void OpenRightPanel(Type target)
+        {
+            if (frame_tools.SourcePageType != null)
+            {
+                if (frame_tools.SourcePageType != target)
+                {
+                    frame_tools.Navigate(target);
+                    if (targ.X == 500)
+                        RightPanelExpand.Begin();
+                }
+                else
+                {
+                    if (targ.X != 500)
+                    {
+                        RightPanelMinimize.Begin();
+                    }
+                    else
+                    {
+                        RightPanelExpand.Begin();
+                    }
+                }
             }
             else
             {
-                Debug.WriteLine("Minimized RP");
-
-                RightPanelMinimize.Begin();
+                frame_tools.Navigate(target);
+                if (targ.X == 500)
+                    RightPanelExpand.Begin();
             }
         }
+
 
         #endregion
 
@@ -244,5 +306,38 @@ namespace PCClient
         }
 
         #endregion
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var tag = (sender as MenuFlyoutItem).Tag as string;
+            
+            if (tag != null)
+            {
+                if (tag == "Online")
+                {
+                    btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)28, (byte)255, (byte)21));
+                    userStatus = Status.Online;
+                    SetUserStatus(mainPage.LoggedUser, Status.Online);
+                }
+                if (tag == "Idle")
+                {
+                    btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)242, (byte)255, (byte)15));
+                    userStatus = Status.Idle;
+                    SetUserStatus(mainPage.LoggedUser, Status.Idle);
+                }
+                if (tag == "Busy")
+                {
+                    btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)255, (byte)16, (byte)16));
+                    userStatus = Status.Busy;
+                    SetUserStatus(mainPage.LoggedUser, Status.Busy);
+                }
+                if (tag == "Invisible")
+                {
+                    btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)36, (byte)35, (byte)35));
+                    userStatus = Status.Busy;
+                    SetUserStatus(mainPage.LoggedUser, Status.Busy);
+                }
+            }
+        }
     }
 }

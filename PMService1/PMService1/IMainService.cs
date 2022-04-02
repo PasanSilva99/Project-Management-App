@@ -1,9 +1,11 @@
-﻿using System;
+﻿using PMService1.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using static PMService1.Model.DataStore;
 
 namespace PMService1
 {
@@ -13,5 +15,15 @@ namespace PMService1
     {
         [OperationContract]
         bool ValidateLogin(String email, String password);
+
+        [OperationContract]
+        bool SetUserStatus(User user, Status status);
+
+        [OperationContract]
+        Status? GetUserStatus(string email);
+
+        [OperationContract]
+        bool RegisterUser(string email, string name, string password, byte[] image);
+        
     }
 }

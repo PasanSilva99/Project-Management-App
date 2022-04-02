@@ -7,6 +7,21 @@ namespace PMService1.Model
 {
     public class DataStore
     {
+        public enum Status
+        {
+            Offline,
+            Online,
+            Idle,
+            Busy,
+            Invisible
+        }
+
+        struct UserStatus
+        {
+            public User User { get; set; }
+            public Status Status { get; set; }
+        }
+
         static List<User> lodedUsers = new List<User>();
 
         public static void InitializeDatabase()

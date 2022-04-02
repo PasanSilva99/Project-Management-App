@@ -53,7 +53,7 @@
                         Padding="0,0,0,0"
                         HorizontalAlignment="Center"
                         BorderThickness="3"
-                        Margin="0,0,0,15">
+                        Margin="0,0,0,15" x:Name="NewDirectUser" Click="NewDirectUser_Click">
                     <Button.Content>
                         <Image Source="/Assets/Icons/add.png"
                                Margin="-5 -5 -5 -5" />

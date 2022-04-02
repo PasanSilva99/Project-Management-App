@@ -135,10 +135,10 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static bool RegisterUser(string email, string name, string image, string password)
+        public static async Task<bool> RegisterUserAsync(string email, string name, byte[] image, string imageName, string password)
         {
             // Will be replaced after stabilize the server
-            return Server_RegisterUser(email, name, image, password);
+            return await Server_RegisterUserAsync(email, name, image, imageName, password);
         }
 
         /// <summary>
@@ -271,14 +271,19 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static bool Server_RegisterUser(string email, string name, string image, string password)
+        public static async Task<bool> Server_RegisterUserAsync(string email, string name, byte[] imageBuffer, string image, string password)
         {
             if (!string.IsNullOrEmpty(email) &&
                 !string.IsNullOrEmpty(name) &&
-                !string.IsNullOrEmpty(image) &&
+                image!=null &&
                 !string.IsNullOrEmpty(password))
             {
                 string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
+
+                var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(image + ".png", CreationCollisionOption.ReplaceExisting);
+
+                await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
 
                 using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
                 {

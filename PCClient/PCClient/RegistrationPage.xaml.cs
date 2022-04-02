@@ -64,6 +64,8 @@ namespace PCClient
 
         StorageFile profileImage = null;
         StorageFile originalImage = null;
+        ImageSource profileImageSource = null;
+
 
         private async void AddImage_Click(object sender, RoutedEventArgs e)
         {
@@ -92,6 +94,7 @@ namespace PCClient
                     await ImageCropper.LoadImageFromFile(file);  // send that file to the image crooper 
                     profileImage = file;  // save the loaded file to the global variable for other functions use
                     originalImage = file;
+                    profileImageSource = bitmapImage;
 
                     ImageCropper.CropShape = CropShape.Rectangular;  // sets the cropper as rectangular mask
                     ImageCropper.AspectRatio = 1;  // sets the masks aspect ratio as square
@@ -117,14 +120,15 @@ namespace PCClient
             var username = tb_username.Text;
             var password = DataStore.GetHashString(tb_password.Password);
             var re_password = DataStore.GetHashString(tb_rePassword.Password);
-            var filename = tb_email.Text + ".png";
+            var imageName = profileImage.Name + ".png";
+            var imageBuffer = await SaveToBytesAsync(profileImageSource);
 
             if (DataStore.GlobalServiceType == ServiceType.Online)
             {
                 if (DataStore.CheckConnectivity())
                 {
 
-                    DataStore.RegisterUser(email, username, filename, password);
+                    await DataStore.RegisterUserAsync(email, username, imageBuffer, imageName, password);
                     SaveImage();
                     registerBase.Visibility = Visibility.Collapsed;
                     RigistrationDone.Visibility = Visibility.Visible;
@@ -143,7 +147,7 @@ namespace PCClient
                     if (result == ContentDialogResult.Primary)
                         btn_register_Click(sender, e);
                     else
-                        DataStore.RegisterUser(email, username, filename, password);
+                        await DataStore.RegisterUserAsync(email, username, imageBuffer, imageName, password);
                     SaveImage();
                     RigistrationDone.Visibility = Visibility.Visible;
                     registerBase.Visibility = Visibility.Collapsed;
@@ -152,7 +156,7 @@ namespace PCClient
             }
             else
             {
-                DataStore.RegisterUser(email, username, filename, password);
+                await DataStore.RegisterUserAsync(email, username, imageBuffer, imageName, password);
                 SaveImage();
                 RigistrationDone.Visibility = Visibility.Visible;
                 registerBase.Visibility = Visibility.Collapsed;
@@ -297,6 +301,7 @@ namespace PCClient
                 BitmapImage bitmapImage = new BitmapImage();  // Creates anew Bitmap Image
                 await bitmapImage.SetSourceAsync(fileStream);  // Loads the file in to the created bitmap
                 img_profielPhoto.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
+                profileImageSource = bitmapImage;
             }
 
         }
@@ -326,7 +331,34 @@ namespace PCClient
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
 
             await profileImage.CopyAsync(storageFolder, tb_email.Text + ".png");
+           
 
         }
+
+        public async Task<byte[]> SaveToBytesAsync(ImageSource profileImageSource)
+        {
+            byte[] imageBuffer;
+            var localFolder = ApplicationData.Current.LocalFolder;
+            var tempprofilefile = await localFolder.CreateFileAsync("temp.jpg", CreationCollisionOption.ReplaceExisting);
+            using (var ras = await tempprofilefile.OpenAsync(FileAccessMode.ReadWrite, StorageOpenOptions.None))
+            {
+                WriteableBitmap bitmap = profileImageSource as WriteableBitmap;
+                var stream = bitmap.PixelBuffer.AsStream();
+                byte[] buffer = new byte[stream.Length];
+                await stream.ReadAsync(buffer, 0, buffer.Length);
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, ras);
+                encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96.0, 96.0, buffer);
+                await encoder.FlushAsync();
+
+                var imageStream = ras.AsStream();
+                imageStream.Seek(0, SeekOrigin.Begin);
+                imageBuffer = new byte[imageStream.Length];
+                var re = await imageStream.ReadAsync(imageBuffer, 0, imageBuffer.Length);
+
+            }
+            await tempprofilefile.DeleteAsync(StorageDeleteOption.Default);
+            return imageBuffer;
+        }
+
     }
 }

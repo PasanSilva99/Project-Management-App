@@ -89,20 +89,20 @@ namespace PCClient.Model
                         "Email TEXT, " +
                         "Name TEXT, " +
                         "ImagePath TEXT, " +
-                        "Password TEXT );" +
+                        "Password TEXT ); " +
                     "CREATE TABLE IF NOT EXISTS " +
-                    "chat (" +
-                    "SentOn TEXT, " +       // The date sent
-                    "Sender TEXT, " +       // Auther of the message
-                    "ProjectID TEXT, " +    // if the message is on the project discussion, the project id
-                    "ReceiverID TEXT, " +   // If it is a direct message, the ID of the receiver (Email)
-                    "Content TEXT, " +      // Message body
-                    "IsEmogi INTEGER ); " + // is this a emogi / Sticker
-                    "CREATE TABLE IF NOT EXISTS " +  
+                        "chat (" +
+                        "SentOn TEXT, " +       // The date sent
+                        "Sender TEXT, " +       // Auther of the message
+                        "ProjectID TEXT, " +    // if the message is on the project discussion, the project id
+                        "ReceiverID TEXT, " +   // If it is a direct message, the ID of the receiver (Email)
+                        "Content TEXT, " +      // Message body
+                        "IsEmogi INTEGER ); " + // is this a emogi / Sticker
+                        "CREATE TABLE IF NOT EXISTS " +  
                     "DirectUsers (" +   // Saved Direct users
-                    "Email TEXT, " +    
-                    "Name TEXT, " +
-                    "ImagePath TEXT); ";
+                        "Email TEXT, " +    
+                        "Name TEXT, " +
+                        "ImagePath TEXT); ";
 
                     SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                     sqliteCommand.ExecuteNonQuery();

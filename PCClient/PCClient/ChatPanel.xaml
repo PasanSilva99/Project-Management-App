@@ -36,153 +36,171 @@
             <ScrollViewer.Background>
                 <LinearGradientBrush EndPoint="0.5,1"
                                      StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <CompositeTransform CenterY="0.5"
+                                            CenterX="0.5"
+                                            Rotation="-54.462" />
+                    </LinearGradientBrush.RelativeTransform>
                     <GradientStop Color="#FFF9EAFD" />
                     <GradientStop Color="#6FD8E0FF"
                                   Offset="1" />
                 </LinearGradientBrush>
             </ScrollViewer.Background>
+            <StackPanel>
+                <Button Width="55"
+                        Height="55"
+                        CornerRadius="55 55 55 55"
+                        Padding="0,0,0,0"
+                        HorizontalAlignment="Center"
+                        BorderThickness="3"
+                        Margin="0,0,0,15">
+                    <Button.Content>
+                        <Image Source="/Assets/Icons/add.png"
+                               Margin="-5 -5 -5 -5" />
+                    </Button.Content>
+                </Button>
+                <StackPanel x:Name="stack_users"
+                            Spacing="15">
 
-            <StackPanel x:Name="stack_users"
-                        Spacing="15">
+                    <!-- Sample Users \/-->
 
-                <!-- Sample User \/-->
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Name="img_profileImage"
+                                   Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
+                    <Button Width="55"
+                            Height="55"
+                            CornerRadius="55 55 55 55"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            BorderBrush="#FF08FF00"
+                            BorderThickness="3">
+                        <Button.Content>
+                            <Image Source="/Assets/Images/image.png"
+                                   Margin="-5 -5 -5 -5" />
+                        </Button.Content>
+                    </Button>
 
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Name="img_profileImage"
-                               Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
-                <Button Width="55"
-                        Height="55"
-                        CornerRadius="55 55 55 55"
-                        Padding="0,0,0,0"
-                        HorizontalAlignment="Center"
-                        BorderBrush="#FF08FF00"
-                        BorderThickness="3">
-                    <Button.Content>
-                        <Image Source="/Assets/Images/image.png"
-                               Margin="-5 -5 -5 -5" />
-                    </Button.Content>
-                </Button>
+                    <!-- Sample Users /\-->
 
-                <!-- Sample User /\-->
-
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
         <!--/\ Users Stack /\-->

@@ -137,8 +137,50 @@ namespace PCClient.Model
         /// <returns></returns>
         public static async Task<bool> RegisterUserAsync(string email, string name, byte[] image, string imageName, string password)
         {
-            // Will be replaced after stabilize the server
-            return await Server_RegisterUserAsync(email, name, image, imageName, password);
+            try
+            {
+                // Will be replaced after stabilize the server
+                return await Server_RegisterUserAsync(email, name, image, imageName, password);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return false;
+        }
+
+        public static bool RegisterUserLocalAsync(string email, string name, string imageName, string password)
+        {
+            if (!string.IsNullOrEmpty(email) &&
+                !string.IsNullOrEmpty(name) &&
+                !string.IsNullOrEmpty(imageName) &&
+                !string.IsNullOrEmpty(password))
+            {
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
+
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+                {
+                    try
+                    {
+                        con.Open();
+
+                        SqliteCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
+                        cmd.Parameters.AddWithValue("@email", email);
+                        cmd.Parameters.AddWithValue("@name", name);
+                        cmd.Parameters.AddWithValue("@image", imageName);
+                        cmd.Parameters.AddWithValue("@password", password.ToUpper());
+                        cmd.Connection = con;
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -280,7 +322,7 @@ namespace PCClient.Model
             {
                 string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
 
-                var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
                 var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(image + ".png", CreationCollisionOption.ReplaceExisting);
 
                 await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);

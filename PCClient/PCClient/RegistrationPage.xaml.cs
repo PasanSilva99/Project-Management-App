@@ -32,6 +32,11 @@ namespace PCClient
     /// </summary>
     public sealed partial class RegistrationPage : Page
     {
+        StorageFile profileImage = null;
+        StorageFile originalImage = null;
+        byte[] ProfileImageStream = null;
+        StorageFile croppedImage = null;  // Store the cropped images globally
+
         public RegistrationPage(string email, string password)
         {
             this.InitializeComponent();
@@ -40,125 +45,6 @@ namespace PCClient
             tb_password.Password = password;
 
             SetDefaultPic();  //  sets the default prifile pic in the temporary profile selection
-        }
-
-        private async void SetDefaultPic()
-        {
-            // Get the path to the app's Assets folder.
-            string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
-            string path = root + @"\Assets\Images";
-
-            // Get the folder object that corresponds to this absolute path in the file system.
-            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
-            StorageFile file = await folder.GetFileAsync("image.png");
-
-            profileImage = file;
-        }
-
-        private void RemoveImage_Click(object sender, RoutedEventArgs e)
-        {
-            SetDefaultPic();  // Resets the image to the default image
-            SetImage();  // Sets that pic to the view
-            UnlockRegister();  // unlock the register button 
-        }
-
-        StorageFile profileImage = null;
-        StorageFile originalImage = null;
-
-        private async void AddImage_Click(object sender, RoutedEventArgs e)
-        {
-
-            // The file picker dialog
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;  //  this is the suggested location
-
-            // adds the below filters to filterout image files
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".jpeg");
-            picker.FileTypeFilter.Add(".png");
-
-            StorageFile file = await picker.PickSingleFileAsync();  // saved the picked file into the file variable
-            if (file != null)
-            {
-                // Application now has read/write access to the picked file
-                Debug.WriteLine("Picked photo: " + file.Path);
-
-                using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
-                    await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
-                    img_profielPhoto.Source = bitmapImage;  // sets the created bitmap as an image source
-                    await ImageCropper.LoadImageFromFile(file);  // send that file to the image crooper 
-                    profileImage = file;  // save the loaded file to the global variable for other functions use
-                    originalImage = file;
-
-                    ImageCropper.CropShape = CropShape.Rectangular;  // sets the cropper as rectangular mask
-                    ImageCropper.AspectRatio = 1;  // sets the masks aspect ratio as square
-                    FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // show the flyout
-                    ImageCropper.AspectRatio = 1;  // sets the mask aspect ratio again incase of imeediate reload
-
-                }
-
-            }
-            else
-            {
-                Debug.WriteLine("Operation cancelled.");
-            }
-
-            UnlockRegister();
-
-
-        }
-
-        private async void btn_register_Click(object sender, RoutedEventArgs e)
-        {
-            var email = tb_email.Text.Trim();
-            var username = tb_username.Text;
-            var password = DataStore.GetHashString(tb_password.Password);
-            var re_password = DataStore.GetHashString(tb_rePassword.Password);
-            var filename = tb_email.Text + ".png";
-
-            if (DataStore.GlobalServiceType == ServiceType.Online)
-            {
-                if (DataStore.CheckConnectivity())
-                {
-
-                    DataStore.RegisterUser(email, username, filename, password);
-                    SaveImage();
-                    registerBase.Visibility = Visibility.Collapsed;
-                    RigistrationDone.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    ContentDialog dialog = new ContentDialog();
-                    dialog.Title = "Connectivity Lost";
-                    dialog.PrimaryButtonText = "Retry";
-                    dialog.CloseButtonText = "Ok";
-                    dialog.DefaultButton = ContentDialogButton.Primary;
-                    dialog.Content = "Your account will only be created locally. This will be synced with the server when you connect to the network again.";
-
-                    var result = await dialog.ShowAsync();
-
-                    if (result == ContentDialogResult.Primary)
-                        btn_register_Click(sender, e);
-                    else
-                        DataStore.RegisterUser(email, username, filename, password);
-                    SaveImage();
-                    RigistrationDone.Visibility = Visibility.Visible;
-                    registerBase.Visibility = Visibility.Collapsed;
-
-                }
-            }
-            else
-            {
-                DataStore.RegisterUser(email, username, filename, password);
-                SaveImage();
-                RigistrationDone.Visibility = Visibility.Visible;
-                registerBase.Visibility = Visibility.Collapsed;
-
-            }
-
         }
 
         private void tb_rePassword_PasswordChanging(PasswordBox sender, PasswordBoxPasswordChangingEventArgs args)
@@ -231,6 +117,157 @@ namespace PCClient
             UnlockRegister();
         }
 
+
+        private async void AddImage_Click(object sender, RoutedEventArgs e)
+        {
+
+            // The file picker dialog
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;  //  this is the suggested location
+
+            // adds the below filters to filterout image files
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".png");
+
+            StorageFile file = await picker.PickSingleFileAsync();  // saved the picked file into the file variable
+            if (file != null)
+            {
+                // Application now has read/write access to the picked file
+                Debug.WriteLine("Picked photo: " + file.Path);
+
+                using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                    await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                    img_profielPhoto.Source = bitmapImage;  // sets the created bitmap as an image source
+                    await ImageCropper.LoadImageFromFile(file);  // send that file to the image crooper 
+                    profileImage = file;  // save the loaded file to the global variable for other functions use
+                    originalImage = file;
+
+                    ImageCropper.CropShape = CropShape.Rectangular;  // sets the cropper as rectangular mask
+                    ImageCropper.AspectRatio = 1;  // sets the masks aspect ratio as square
+                    FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // show the flyout
+                    ImageCropper.AspectRatio = 1;  // sets the mask aspect ratio again incase of imeediate reload
+
+                }
+
+            }
+            else
+            {
+                Debug.WriteLine("Operation cancelled.");
+            }
+
+            UnlockRegister();
+
+
+        }
+
+        private void RemoveImage_Click(object sender, RoutedEventArgs e)
+        {
+            SetDefaultPic();  // Resets the image to the default image
+            SetImage();  // Sets that pic to the view
+            UnlockRegister();  // unlock the register button 
+        }
+
+        /// <summary>
+        /// The save button on the image cropper
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void btn_save_Click(object sender, RoutedEventArgs e)
+        {
+            // Create sample file; replace if exists.
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);  // Create Temp folder in the Local Folder
+            StorageFile croppedfile = await storageFolder.CreateFileAsync("crop.png", CreationCollisionOption.ReplaceExisting);  // Create an empty image
+            Debug.WriteLine("File Path " + storageFolder.Path);  // Show the file path for debuggin purposses
+
+            using (var fileStream = await croppedfile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                await ImageCropper.SaveAsync(fileStream, BitmapFileFormat.Png);  // Saves the Cropped image to file
+                croppedImage = croppedfile;  // Set the global variable for use of other functions
+                profileImage = croppedfile;
+                SetImage();   // Set image to the imageview
+
+            }
+            var fly = FlyoutBase.GetAttachedFlyout(img_profielPhoto);  // get the flyout object from the image
+            fly.Hide();  // Hide the flyout from the view
+        }
+
+        private async void img_profielPhoto_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+
+            // If selected
+            // Load that file to the image cropper
+            await ImageCropper.LoadImageFromFile(originalImage != null ? originalImage : profileImage);
+
+            // Set the image cropper as Square
+            ImageCropper.CropShape = CropShape.Rectangular;  // Cropper Shape set to rectangular
+            ImageCropper.AspectRatio = 1;  // Cropper Aspect Ratio 1 means Square
+            FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // Show the cropping flyout
+            ImageCropper.AspectRatio = 1;  // Reset the Aspect ratio incase of reload
+
+        }
+
+        private async void btn_register_Click(object sender, RoutedEventArgs e)
+        {
+            var email = tb_email.Text.Trim();
+            var username = tb_username.Text;
+            var password = DataStore.GetHashString(tb_password.Password);
+            var re_password = DataStore.GetHashString(tb_rePassword.Password);
+            var imageBuffer = await SaveToBytesAsync(profileImage);
+
+
+            if (DataStore.GlobalServiceType == ServiceType.Online)
+            {
+                if (DataStore.CheckConnectivity())
+                {
+                    SaveImage();
+                    await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
+
+
+
+                    registerBase.Visibility = Visibility.Collapsed;
+                    RigistrationDone.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Connectivity Lost";
+                    dialog.PrimaryButtonText = "Retry";
+                    dialog.CloseButtonText = "Ok";
+                    dialog.DefaultButton = ContentDialogButton.Primary;
+                    dialog.Content = "Your account will only be created locally. This will be synced with the server when you connect to the network again.";
+
+                    var result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                        btn_register_Click(sender, e);
+                    else
+                    {
+                        SaveImage();
+                        await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
+                    }
+                    RigistrationDone.Visibility = Visibility.Visible;
+                    registerBase.Visibility = Visibility.Collapsed;
+
+                }
+            }
+            else
+            {
+                SaveImage();
+                await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
+                RigistrationDone.Visibility = Visibility.Visible;
+                registerBase.Visibility = Visibility.Collapsed;
+
+            }
+
+        }
+
+
+
+
         /// <summary>
         /// This function will unlock(Enable) the Register button if the following criterias met
         /// Email, Username, Password and Repeat Password is not null
@@ -259,33 +296,6 @@ namespace PCClient
             }
         }
 
-        StorageFile croppedImage = null;  // Store the cropped images globally
-
-
-        /// <summary>
-        /// The save button on the image cropper
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void btn_save_Click(object sender, RoutedEventArgs e)
-        {
-            // Create sample file; replace if exists.
-            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Temp", CreationCollisionOption.OpenIfExists);  // Create Temp folder in the Local Folder
-            StorageFile croppedfile = await storageFolder.CreateFileAsync("crop.png", CreationCollisionOption.ReplaceExisting);  // Create an empty image
-            Debug.WriteLine("File Path " + storageFolder.Path);  // Show the file path for debuggin purposses
-
-            using (var fileStream = await croppedfile.OpenAsync(FileAccessMode.ReadWrite))
-            {
-                await ImageCropper.SaveAsync(fileStream, BitmapFileFormat.Png);  // Saves the Cropped image to file
-                croppedImage = croppedfile;  // Set the global variable for use of other functions
-                profileImage = croppedfile;
-                SetImage();   // Set image to the imageview
-
-            }
-            var fly = FlyoutBase.GetAttachedFlyout(img_profielPhoto);  // get the flyout object from the image
-            fly.Hide();  // Hide the flyout from the view
-        }
-
         /// <summary>
         /// Sets the image to the image box in the registrer form
         /// </summary>
@@ -301,22 +311,6 @@ namespace PCClient
 
         }
 
-        private async void img_profielPhoto_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-
-            // If selected
-            // Load that file to the image cropper
-            await ImageCropper.LoadImageFromFile(originalImage!=null ? originalImage : profileImage);
-
-            // Set the image cropper as Square
-            ImageCropper.CropShape = CropShape.Rectangular;  // Cropper Shape set to rectangular
-            ImageCropper.AspectRatio = 1;  // Cropper Aspect Ratio 1 means Square
-            FlyoutBase.ShowAttachedFlyout(img_profielPhoto);  // Show the cropping flyout
-            ImageCropper.AspectRatio = 1;  // Reset the Aspect ratio incase of reload
-
-        }
-
-
         /// <summary>
         /// Save the image to file
         /// </summary>
@@ -325,8 +319,42 @@ namespace PCClient
 
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
 
-            await profileImage.CopyAsync(storageFolder, tb_email.Text + ".png");
+            await profileImage.CopyAsync(storageFolder, tb_email.Text + ".png", NameCollisionOption.ReplaceExisting);
+           
 
         }
+        private async void SetDefaultPic()
+        {
+            // Get the path to the app's Assets folder.
+            string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            string path = root + @"\Assets\Images";
+
+            // Get the folder object that corresponds to this absolute path in the file system.
+            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
+            StorageFile file = await folder.GetFileAsync("image.png");
+
+            profileImage = file;
+        }
+        public async Task<byte[]> SaveToBytesAsync(StorageFile file)
+        {
+            IRandomAccessStream filestream = await file.OpenAsync(FileAccessMode.Read);
+            var reader = new DataReader(filestream.GetInputStreamAt(0));
+            await reader.LoadAsync((uint)filestream.Size);
+
+            byte[] pixels = new byte[filestream.Size];
+
+            reader.ReadBytes(pixels);
+
+            return pixels;
+        }
+
+        public async Task<StorageFile> BytesToStorageFile(byte[] imageBuffer, string fileName)
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile sampleFile = await storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(sampleFile, imageBuffer);
+            return sampleFile;
+        }
+
     }
 }

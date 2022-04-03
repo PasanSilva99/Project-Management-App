@@ -26,5 +26,10 @@ namespace PCClient
         {
             this.InitializeComponent();
         }
+
+        private void NewDirectUser_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

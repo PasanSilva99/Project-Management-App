@@ -165,6 +165,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\add.png" />
     <Content Include="Assets\Icons\AnalysisIcon.png" />
     <Content Include="Assets\Icons\BookmarkIcon.png" />
     <Content Include="Assets\Icons\ChatIcon.png" />

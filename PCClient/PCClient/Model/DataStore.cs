@@ -89,20 +89,20 @@ namespace PCClient.Model
                         "Email TEXT, " +
                         "Name TEXT, " +
                         "ImagePath TEXT, " +
-                        "Password TEXT );" +
+                        "Password TEXT ); " +
                     "CREATE TABLE IF NOT EXISTS " +
-                    "chat (" +
-                    "SentOn TEXT, " +       // The date sent
-                    "Sender TEXT, " +       // Auther of the message
-                    "ProjectID TEXT, " +    // if the message is on the project discussion, the project id
-                    "ReceiverID TEXT, " +   // If it is a direct message, the ID of the receiver (Email)
-                    "Content TEXT, " +      // Message body
-                    "IsEmogi INTEGER ); " + // is this a emogi / Sticker
-                    "CREATE TABLE IF NOT EXISTS " +  
+                        "chat (" +
+                        "SentOn TEXT, " +       // The date sent
+                        "Sender TEXT, " +       // Auther of the message
+                        "ProjectID TEXT, " +    // if the message is on the project discussion, the project id
+                        "ReceiverID TEXT, " +   // If it is a direct message, the ID of the receiver (Email)
+                        "Content TEXT, " +      // Message body
+                        "IsEmogi INTEGER ); " + // is this a emogi / Sticker
+                        "CREATE TABLE IF NOT EXISTS " +  
                     "DirectUsers (" +   // Saved Direct users
-                    "Email TEXT, " +    
-                    "Name TEXT, " +
-                    "ImagePath TEXT); ";
+                        "Email TEXT, " +    
+                        "Name TEXT, " +
+                        "ImagePath TEXT); ";
 
                     SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                     sqliteCommand.ExecuteNonQuery();
@@ -135,10 +135,52 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static bool RegisterUser(string email, string name, string image, string password)
+        public static async Task<bool> RegisterUserAsync(string email, string name, byte[] image, string password)
         {
-            // Will be replaced after stabilize the server
-            return Server_RegisterUser(email, name, image, password);
+            try
+            {
+                // Will be replaced after stabilize the server
+                return await Server_RegisterUserAsync(email, name, image, password);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+            return false;
+        }
+
+        public static bool RegisterUserLocalAsync(string email, string name, string imageName, string password)
+        {
+            if (!string.IsNullOrEmpty(email) &&
+                !string.IsNullOrEmpty(name) &&
+                !string.IsNullOrEmpty(imageName) &&
+                !string.IsNullOrEmpty(password))
+            {
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
+
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+                {
+                    try
+                    {
+                        con.Open();
+
+                        SqliteCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
+                        cmd.Parameters.AddWithValue("@email", email);
+                        cmd.Parameters.AddWithValue("@name", name);
+                        cmd.Parameters.AddWithValue("@image", imageName);
+                        cmd.Parameters.AddWithValue("@password", password.ToUpper());
+                        cmd.Connection = con;
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -202,7 +244,21 @@ namespace PCClient.Model
             }
         }
 
-
+        public async static Task<bool> SaveDashboardBGAsync(User user, byte[] imageBuffer)
+        {
+            try
+            {
+                if (CheckConnectivity())
+                {
+                    return await Server_SaveDashboardImage(user, imageBuffer);
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
 
         // ===================================================================================================== //
@@ -271,14 +327,18 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static bool Server_RegisterUser(string email, string name, string image, string password)
+        public static async Task<bool> Server_RegisterUserAsync(string email, string name, byte[] imageBuffer, string password)
         {
             if (!string.IsNullOrEmpty(email) &&
                 !string.IsNullOrEmpty(name) &&
-                !string.IsNullOrEmpty(image) &&
                 !string.IsNullOrEmpty(password))
             {
                 string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
+
+                var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
+                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(email + ".png", CreationCollisionOption.ReplaceExisting);
+
+                await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
 
                 using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
                 {
@@ -290,7 +350,7 @@ namespace PCClient.Model
                         cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@name", name);
-                        cmd.Parameters.AddWithValue("@image", image);
+                        cmd.Parameters.AddWithValue("@image", email + ".png");
                         cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
@@ -394,6 +454,20 @@ namespace PCClient.Model
 
             return null;
         }
+
+        public async static Task<bool> Server_SaveDashboardImage(User user, byte[] imageBuffer)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.ToString());
+                return false;
+            }
+        }
+
         #endregion
         // ===================================================================================================== //
     }

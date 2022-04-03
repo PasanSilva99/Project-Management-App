@@ -135,12 +135,12 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static async Task<bool> RegisterUserAsync(string email, string name, byte[] image, string imageName, string password)
+        public static async Task<bool> RegisterUserAsync(string email, string name, byte[] image, string password)
         {
             try
             {
                 // Will be replaced after stabilize the server
-                return await Server_RegisterUserAsync(email, name, image, imageName, password);
+                return await Server_RegisterUserAsync(email, name, image, password);
             }
             catch (Exception e)
             {
@@ -244,7 +244,21 @@ namespace PCClient.Model
             }
         }
 
-
+        public async static Task<bool> SaveDashboardBGAsync(User user, byte[] imageBuffer)
+        {
+            try
+            {
+                if (CheckConnectivity())
+                {
+                    return await Server_SaveDashboardImage(user, imageBuffer);
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
 
         // ===================================================================================================== //
@@ -313,17 +327,16 @@ namespace PCClient.Model
         /// <param name="image">Image path for the reference image</param>
         /// <param name="password">Password Hash</param>
         /// <returns></returns>
-        public static async Task<bool> Server_RegisterUserAsync(string email, string name, byte[] imageBuffer, string image, string password)
+        public static async Task<bool> Server_RegisterUserAsync(string email, string name, byte[] imageBuffer, string password)
         {
             if (!string.IsNullOrEmpty(email) &&
                 !string.IsNullOrEmpty(name) &&
-                image!=null &&
                 !string.IsNullOrEmpty(password))
             {
                 string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
 
                 var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
-                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(image + ".png", CreationCollisionOption.ReplaceExisting);
+                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(email + ".png", CreationCollisionOption.ReplaceExisting);
 
                 await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
 
@@ -337,7 +350,7 @@ namespace PCClient.Model
                         cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@name", name);
-                        cmd.Parameters.AddWithValue("@image", image);
+                        cmd.Parameters.AddWithValue("@image", email + ".png");
                         cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
@@ -441,6 +454,20 @@ namespace PCClient.Model
 
             return null;
         }
+
+        public async static Task<bool> Server_SaveDashboardImage(User user, byte[] imageBuffer)
+        {
+            try
+            {
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.ToString());
+                return false;
+            }
+        }
+
         #endregion
         // ===================================================================================================== //
     }

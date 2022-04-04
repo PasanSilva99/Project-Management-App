@@ -1,0 +1,3 @@
+﻿PCClient.Server is a temporary Directory. Remember, this will be detached from the application. 
+Make sure the functions you use for this directory is capable of adopting this change.
+This will be replaced by a WCF Service. 

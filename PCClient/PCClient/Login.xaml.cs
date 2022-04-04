@@ -36,6 +36,7 @@ namespace PCClient
         {
             this.InitializeComponent();
             IntializeLocalDatabase(); // comes from dataStore Class
+            Server.PMServer1.IntializeDatabaseService1();
             CheckConnectionAsync();
         }
 

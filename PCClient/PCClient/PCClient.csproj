@@ -152,6 +152,7 @@
     <Compile Include="ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Server\PMServer1.cs" />
     <Compile Include="SighUpPage.xaml.cs">
       <DependentUpon>SighUpPage.xaml</DependentUpon>
     </Compile>
@@ -232,6 +233,7 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Server\ThisIsATemporaryDirectory.txt" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

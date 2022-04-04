@@ -265,9 +265,6 @@ namespace PCClient
 
         }
 
-
-
-
         /// <summary>
         /// This function will unlock(Enable) the Register button if the following criterias met
         /// Email, Username, Password and Repeat Password is not null

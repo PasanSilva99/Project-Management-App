@@ -15,6 +15,7 @@ namespace PCClient.Model
 {
     public class DataStore
     {
+        public static String DBName { get; set; } = "PMClientDB.db"; // Server
         public enum Status
         {
             Offline,
@@ -51,7 +52,7 @@ namespace PCClient.Model
 
         public static bool SetUserStatus(User user, Status status)
         {
-            Server_SetUserStatus(user, status);
+            Server.PMServer1.SetUserStatus(user, (Server.PMServer1.Status)status);
             return true;
         }
 
@@ -78,8 +79,8 @@ namespace PCClient.Model
         {
             try
             {
-                await ApplicationData.Current.LocalFolder.CreateFileAsync("PMUser.db", CreationCollisionOption.OpenIfExists);
-                string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, "PMUser.db");
+                await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName , CreationCollisionOption.OpenIfExists);
+                string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
 
                 using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
                 {
@@ -115,8 +116,6 @@ namespace PCClient.Model
                 Debug.WriteLine(ex.ToString(), "ERROR");
             }
 
-            // This should be in the server constructor
-            StartUserTimers();
         }
 
         /// <summary>
@@ -140,7 +139,7 @@ namespace PCClient.Model
             try
             {
                 // Will be replaced after stabilize the server
-                return await Server_RegisterUserAsync(email, name, image, password);
+                return await Server.PMServer1.RegisterUserAsync(email, name, image, password);
             }
             catch (Exception e)
             {
@@ -156,7 +155,7 @@ namespace PCClient.Model
                 !string.IsNullOrEmpty(imageName) &&
                 !string.IsNullOrEmpty(password))
             {
-                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
 
                 using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
                 {
@@ -194,7 +193,7 @@ namespace PCClient.Model
             if (CheckConnectivity())
             {
                 // Replace with this the server function
-                return Server_ValidateUser(email, password);
+                return Server.PMServer1.ValidateUser(email, password);
             }
             else
             {
@@ -215,7 +214,7 @@ namespace PCClient.Model
             {
                 if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
                 {
-                    return Server_GetUser(email, password);
+                    return Server.PMServer1.GetUser(email, password);
                 }
                 else
                 {
@@ -235,7 +234,7 @@ namespace PCClient.Model
             if (CheckConnectivity())
             {
                 //Debug.WriteLine("Checking User");
-                return Server_IsUserRegistered(email);
+                return Server.PMServer1.IsUserRegistered(email);
             }
             else
             {
@@ -250,7 +249,7 @@ namespace PCClient.Model
             {
                 if (CheckConnectivity())
                 {
-                    return await Server_SaveDashboardImage(user, imageBuffer);
+                    return await Server.PMServer1.SaveDashboardImage(user, imageBuffer);
                 }
                 return false;
             }
@@ -260,215 +259,5 @@ namespace PCClient.Model
             }
         }
 
-
-        // ===================================================================================================== //
-        // ================================== Will work as PMServer1 temoprary ================================= //
-        // ===================================================================================================== //
-        #region PMServer1Functions
-
-        public static String UserDBName { get; set; } = "PMUser.db"; // Server
-        private static List<User> lodedUsers = new List<User>();
-        private static List<UserStatus> undedUsers = new List<UserStatus>();
-
-        struct UserStatus
-        {
-            public User User { get; set; }
-            public Status Status { get; set; }
-        }
-
-        public static void StartUserTimers()
-        {
-            DispatcherTimer UserTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(30.0) };
-            UserTimer.Tick += UserTimer_Tick;
-            UserTimer.Start();
-        }
-
-        private static void UserTimer_Tick(object sender, object e)
-        {
-            FetchUsers();
-            foreach (User user in lodedUsers)
-            {
-                undedUsers.Add(new UserStatus() { User = user, Status = Status.Offline });
-            }
-        }
-
-        public static bool Server_SetUserStatus(User user, Status status)
-        {
-            FetchUsers();
-            foreach (UserStatus ustatus in undedUsers)
-            {
-                if (ustatus.User == user)
-                {
-                    undedUsers.Remove(ustatus);
-                    undedUsers.Add(new UserStatus() { User = user, Status = status });
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static Status? Server_GetUserStatus(string email)
-        {
-            foreach(UserStatus ustatus in undedUsers)
-            {
-                if (ustatus.User.Email == email)
-                {
-                    return ustatus.Status;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Add the user to the database
-        /// </summary>
-        /// <param name="email">Email Address</param>
-        /// <param name="name">Name of the user</param>
-        /// <param name="image">Image path for the reference image</param>
-        /// <param name="password">Password Hash</param>
-        /// <returns></returns>
-        public static async Task<bool> Server_RegisterUserAsync(string email, string name, byte[] imageBuffer, string password)
-        {
-            if (!string.IsNullOrEmpty(email) &&
-                !string.IsNullOrEmpty(name) &&
-                !string.IsNullOrEmpty(password))
-            {
-                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
-
-                var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
-                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(email + ".png", CreationCollisionOption.ReplaceExisting);
-
-                await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
-
-                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
-                {
-                    try
-                    {
-                        con.Open();
-
-                        SqliteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
-                        cmd.Parameters.AddWithValue("@email", email);
-                        cmd.Parameters.AddWithValue("@name", name);
-                        cmd.Parameters.AddWithValue("@image", email + ".png");
-                        cmd.Parameters.AddWithValue("@password", password.ToUpper());
-                        cmd.Connection = con;
-                        cmd.ExecuteNonQuery();
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-
-                    }
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Fetch all users
-        /// </summary>
-        /// <returns></returns>
-        public static List<User> FetchUsers()
-        {
-            // sync users 
-            List<User> users = new List<User>();
-
-            string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, UserDBName);
-
-            using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
-            {
-                if (con.State == System.Data.ConnectionState.Closed)
-                    con.Open();
-
-                string dbScript = "SELECT Email, Name, ImagePath, Password FROM user";
-                SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
-                SqliteDataReader reader = sqliteCommand.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    users.Add(new User() { Email = reader.GetString(0), Name = reader.GetString(1), Image = reader.GetString(2), Password = reader.GetString(3) });
-                }
-
-                lodedUsers = users;
-
-                con.Close();
-            }
-
-            return users;
-        }
-
-        /// <summary>
-        /// Validate the user wether exists on the database with the entered username and password
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static bool Server_ValidateUser(string email, string password)
-        {
-            FetchUsers();
-            foreach (User user in lodedUsers)
-            {
-                if (user.Email == email && user.Password.ToUpper() == password.ToUpper())
-                {
-                    Debug.WriteLine(user.Password + " :: " + password);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Check wether the entered emaill address is already in the database
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        public static bool Server_IsUserRegistered(string email)
-        {
-            FetchUsers();
-            foreach (User user in lodedUsers)
-            {
-                if (user.Email == email)
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Get the user
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
-        public static User Server_GetUser(string email, string password)
-        {
-            FetchUsers();
-            foreach (User user in lodedUsers)
-            {
-                if (user.Email == email && user.Password == password.ToUpper())
-                    return user;
-            }
-
-            return null;
-        }
-
-        public async static Task<bool> Server_SaveDashboardImage(User user, byte[] imageBuffer)
-        {
-            try
-            {
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.Write(ex.ToString());
-                return false;
-            }
-        }
-
-        #endregion
-        // ===================================================================================================== //
     }
 }

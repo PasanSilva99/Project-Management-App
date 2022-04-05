@@ -686,7 +686,7 @@
                     HorizontalAlignment="Right"
                     Margin="0,20,0,0"
                     Background="{ThemeResource SystemColorControlAccentBrush}"
-                    Foreground="white" IsEnabled="False"/>
+                    Foreground="white" IsEnabled="False" Loaded="btn_login_Loaded"/>
         </Grid>
 
         <!-- About the application Content-->

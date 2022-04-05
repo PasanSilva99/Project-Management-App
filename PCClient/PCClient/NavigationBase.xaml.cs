@@ -20,6 +20,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media.Animation;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -51,9 +52,48 @@ namespace PCClient
             timer.Start();
         }
 
-        private void Timer_Tick(object sender, object e)
+        private async void Timer_Tick(object sender, object e)
         {
             DataStore.SetUserStatus(mainPage.LoggedUser, userStatus);
+
+            if (CheckConnectivity())
+            {
+                GlobalServiceType = ServiceType.Online;
+            }
+            else
+            {
+                GlobalServiceType = ServiceType.Offline;
+            }
+
+            // Get the path to the app's Assets folder.
+            string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+            string path = root + @"\Assets\Icons";
+            var imagesFolder = await Windows.Storage.StorageFolder.GetFolderFromPathAsync(path);
+
+            if (GlobalServiceType == ServiceType.Online)
+            {
+                var cloudOnline = await imagesFolder.GetFileAsync("Cloud_onlineIcon.png");
+
+                using (IRandomAccessStream fileStream = await cloudOnline.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();  // Creates anew Bitmap Image
+                    await bitmapImage.SetSourceAsync(fileStream);  // Loads the file in to the created bitmap
+                    img_cloudStatus.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
+                }
+                lbl_serverStatus.Text = "Synced With the Server";
+            }
+            else
+            {
+                var cloudOffline = await imagesFolder.GetFileAsync("Cloud_offlineIcon.png");
+
+                using (IRandomAccessStream fileStream = await cloudOffline.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();  // Creates anew Bitmap Image
+                    await bitmapImage.SetSourceAsync(fileStream);  // Loads the file in to the created bitmap
+                    img_cloudStatus.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
+                }
+                lbl_serverStatus.Text = "Disconnected From The Server";
+            }
         }
 
         internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
@@ -79,9 +119,36 @@ namespace PCClient
                 frame_page.Navigate(type, this);
         }
 
+        internal bool ValidateUser(string email, string password)
+        {
+            if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+            {
+                if (DataStore.GlobalServiceType == ServiceType.Online)
+                {
+                    try
+                    {
+                        var isValid = DataStore.ValidateUser(email, password);
+                        return isValid;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error: " + ex.Message);
+                        return false;
+                    }
+                }
+                else
+                {
+                    var isValid = ValidateUserLocal(email, password);
+                    return isValid;
+                }
+            }
+            
+            return false;
+        }
+
         private async void ValidateLoggedUser()
         {
-            if (mainPage.LoggedUser == null && !ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+            if (mainPage.LoggedUser == null && !this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
             {
                 ContentDialog dialog = new ContentDialog();
                 dialog.Title = "Verification Faild";
@@ -337,7 +404,20 @@ namespace PCClient
                     userStatus = Status.Busy;
                     SetUserStatus(mainPage.LoggedUser, Status.Busy);
                 }
+                if (tag == "logout")
+                {
+                    LogoutUser();
+                }
             }
+        }
+
+        private void LogoutUser()
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["RememberedUser"] = null;
+            localSettings.Values["RememberedPassword"] = null;
+            mainPage.LoggedUser = null;
+            mainPage.NavigateToLoginPage();
         }
     }
 }

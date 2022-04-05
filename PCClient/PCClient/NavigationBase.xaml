@@ -866,7 +866,7 @@
                                                         Click="MenuFlyoutItem_Click" />
                                     </MenuFlyoutSubItem>
                                     <MenuFlyoutItem Text="Logout"
-                                                    Tag="logout" />
+                                                    Tag="logout" Click="MenuFlyoutItem_Click"/>
                                 </MenuFlyout>
 
                             </Button.Flyout>

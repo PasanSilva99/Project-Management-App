@@ -117,7 +117,11 @@ namespace PCClient
             UnlockRegister();
         }
 
-
+        /// <summary>
+        /// Add an image as the user profile photo
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void AddImage_Click(object sender, RoutedEventArgs e)
         {
 
@@ -164,6 +168,12 @@ namespace PCClient
 
         }
 
+
+        /// <summary>
+        /// This will remove the image form the user. and assign the default image.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveImage_Click(object sender, RoutedEventArgs e)
         {
             SetDefaultPic();  // Resets the image to the default image
@@ -195,6 +205,12 @@ namespace PCClient
             fly.Hide();  // Hide the flyout from the view
         }
 
+
+        /// <summary>
+        /// Tap to re crop the image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void img_profielPhoto_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
@@ -210,31 +226,70 @@ namespace PCClient
 
         }
 
+
+        /// <summary>
+        /// This function will register the user to the local and the Server database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void btn_register_Click(object sender, RoutedEventArgs e)
         {
+            // Get the entered details
             var email = tb_email.Text.Trim();
             var username = tb_username.Text;
             var password = DataStore.GetHashString(tb_password.Password);
             var re_password = DataStore.GetHashString(tb_rePassword.Password);
-            var imageBuffer = await SaveToBytesAsync(profileImage);
+            var imageBuffer = await SaveToBytesAsync(profileImage);  // Byte Array for the image file
 
 
-            if (DataStore.GlobalServiceType == ServiceType.Online)
+            if (DataStore.GlobalServiceType == ServiceType.Online)  // if the application is set to online mode
             {
-                if (DataStore.CheckConnectivity())
+                if (DataStore.CheckConnectivity())  // Check wether the computer is connected to any network
                 {
+                    // Save the selected image to a file
                     SaveImage();
-                    await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
+                    // Try to register the user in the server. If it retured tru, it is successfull
+                    var isSuccess = await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
+                    try
+                    {
+                        await RegisterUserLocallyAsync(email, username, email + ".png", password);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
+                    }
+                    if (!isSuccess)  // If not success registration
+                    {
+                        // Show the feedback to the user and ask wether if the user want to retry or just create offline
+                        ContentDialog dialog = new ContentDialog();
+                        dialog.Title = "Registration Failed";
+                        dialog.PrimaryButtonText = "Retry";
+                        dialog.SecondaryButtonText = "Try to Create Locally";
+                        dialog.CloseButtonText = "Close";
+                        dialog.DefaultButton = ContentDialogButton.Primary;
+                        dialog.Content = "You can retry to create the account on the server or try to create in offline database only.";
 
+                        var result = await dialog.ShowAsync();  // show the messgae and get the result
 
+                        if (result == ContentDialogResult.Primary) // if the user click retry,
+                            btn_register_Click(sender, e); // Re run this function
+                        else if (result == ContentDialogResult.Secondary)  // if the user click Create Locally, 
+                        {
+                            var isSuccessLocal = await RegisterUserLocallyAsync(email, username, email + ".png", password);
 
-                    registerBase.Visibility = Visibility.Collapsed;
-                    RigistrationDone.Visibility = Visibility.Visible;
+                            if (!isSuccessLocal)
+                            {
+                                return;
+                            }
+                        }
+
+                    }
                 }
                 else
                 {
+                    // If the computer is not connected to any network, show this error message and ask for users feedback
                     ContentDialog dialog = new ContentDialog();
-                    dialog.Title = "Connectivity Lost";
+                    dialog.Title = "Not Connected to the network";
                     dialog.PrimaryButtonText = "Retry";
                     dialog.CloseButtonText = "Ok";
                     dialog.DefaultButton = ContentDialogButton.Primary;
@@ -246,23 +301,53 @@ namespace PCClient
                         btn_register_Click(sender, e);
                     else
                     {
-                        SaveImage();
-                        await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
+                        var isSuccess = await RegisterUserLocallyAsync(email, username, email + ".png", password);
+
+                        if (!isSuccess)
+                        {
+                            return;
+                        }
                     }
-                    RigistrationDone.Visibility = Visibility.Visible;
-                    registerBase.Visibility = Visibility.Collapsed;
 
                 }
             }
             else
             {
-                SaveImage();
-                await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
-                RigistrationDone.Visibility = Visibility.Visible;
-                registerBase.Visibility = Visibility.Collapsed;
+                var isSuccess = await RegisterUserLocallyAsync(email, username, email + ".png", password);
+
+                if (!isSuccess)
+                {
+                    return;
+                }
 
             }
 
+            RigistrationDone.Visibility = Visibility.Visible;  // Show the Done Screen
+            registerBase.Visibility = Visibility.Collapsed;  // Hide the registration Screeen
+
+        }
+
+        private async Task<bool> RegisterUserLocallyAsync(string email, string username, string imageName, string password)
+        {
+            SaveImage(); // Save the image to Profile Pics Folder
+            var isSuccess = DataStore.RegisterUserLocal(email, username, email + ".png", password);  // Create the user in the local database
+
+            if (isSuccess)
+            {
+                return true;
+                
+            }
+            else
+            {
+                // Show the user it is not successfull an there is an error in the applicatiobn
+                ContentDialog dialog2 = new ContentDialog();
+                dialog2.Title = "Registration Failed";
+                dialog2.CloseButtonText = "Close";
+                dialog2.DefaultButton = ContentDialogButton.Primary;
+                dialog2.Content = "Please Restart the application and try again. If it is not resolved, Please contact your Administrator.";
+                await dialog2.ShowAsync();
+                return false;  // if it is not success, suspend the sunction here.
+            }
         }
 
         /// <summary>
@@ -273,6 +358,7 @@ namespace PCClient
         /// </summary>
         private void UnlockRegister()
         {
+            // Checks wether the following conditions are met and unlocks the Register button
             if (
                 !string.IsNullOrWhiteSpace(tb_email.Text) &&
                 !string.IsNullOrWhiteSpace(tb_username.Text) &&
@@ -313,13 +399,18 @@ namespace PCClient
         /// </summary>
         private async void SaveImage()
         {
-
+            // Create new folder to store the ProfileImages. If it is already there, Open it. 
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
 
+            // Save the User image by using user email for the name. If it is there, replace it.
             await profileImage.CopyAsync(storageFolder, tb_email.Text + ".png", NameCollisionOption.ReplaceExisting);
            
 
         }
+
+        /// <summary>
+        /// If the user image is not set, this will set the default image for the user.
+        /// </summary>
         private async void SetDefaultPic()
         {
             // Get the path to the app's Assets folder.
@@ -332,6 +423,13 @@ namespace PCClient
 
             profileImage = file;
         }
+
+        /// <summary>
+        /// This function will generate the Byte array for the given storage file
+        /// Purpose of this function is to get the byte array to pass the image file to the Server.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         public async Task<byte[]> SaveToBytesAsync(StorageFile file)
         {
             IRandomAccessStream filestream = await file.OpenAsync(FileAccessMode.Read);
@@ -345,6 +443,14 @@ namespace PCClient
             return pixels;
         }
 
+
+        /// <summary>
+        /// This will conver the received byte array back to a Storage file
+        /// Purpose of having this function is to convert the imageBuffer received from the server back to a storage file.
+        /// </summary>
+        /// <param name="imageBuffer">byte[] received from the server</param>
+        /// <param name="fileName">EmailOfTheUser.png</param>
+        /// <returns></returns>
         public async Task<StorageFile> BytesToStorageFile(byte[] imageBuffer, string fileName)
         {
             StorageFolder storageFolder = ApplicationData.Current.LocalFolder;

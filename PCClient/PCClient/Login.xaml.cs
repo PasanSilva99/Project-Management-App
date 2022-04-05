@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,6 +33,12 @@ namespace PCClient
 
         internal MainPage mainPage;
 
+        private static string key = "hVmYq3t6v9y$B&E)H@McQfTjWnZr4u7x";
+
+        internal bool isAutoLogin = false;
+
+        public bool RememberUser { get; private set; }
+
         public Login()
         {
             this.InitializeComponent();
@@ -50,18 +57,18 @@ namespace PCClient
         private async void CheckConnectionAsync()
         {
             // Connectivity check is coming from DataStore Class
-            if (!CheckConnectivity()) 
+            if (!CheckConnectivity())
             {
-                ContentDialog dialog = new ContentDialog();
-                dialog.Title = "Connectivity Lost";
-                dialog.PrimaryButtonText = "Retry";
-                dialog.CloseButtonText = "Continue with limited functions";
-                dialog.DefaultButton = ContentDialogButton.Primary;
-                dialog.Content = "Connection to ther server is not available. Please connect to the same network which is with the servers. If you continue without the connection, this app will swith to the offline mode.";
+                ContentDialog DialogConLost = new ContentDialog();
+                DialogConLost.Title = "Connectivity Lost";
+                DialogConLost.PrimaryButtonText = "Retry";
+                DialogConLost.CloseButtonText = "Continue with limited functions";
+                DialogConLost.DefaultButton = ContentDialogButton.Primary;
+                DialogConLost.Content = "Connection to ther server is not available. Please connect to the same network which is with the servers. If you continue without the connection, this app will swith to the offline mode.";
 
-                var result = await dialog.ShowAsync();
+                var DialogConLost_Result = await DialogConLost.ShowAsync();
 
-                if (result == ContentDialogResult.Primary)
+                if (DialogConLost_Result == ContentDialogResult.Primary)
                 {
                     CheckConnectionAsync();
                 }
@@ -76,56 +83,200 @@ namespace PCClient
             else
             {
                 Debug.WriteLine("Application Set to Online Mode");
-                serviceType= ServiceType.Online;
-                GlobalServiceType= ServiceType.Online;
+                serviceType = ServiceType.Online;
+                GlobalServiceType = ServiceType.Online;
 
             }
         }
 
         private void chb_rememberme_Click(object sender, RoutedEventArgs e)
         {
-
+            if (chb_rememberme.IsChecked == true) RememberUser = true;
+            else RememberUser = false;
         }
 
         private async void btn_login_Click(object sender, RoutedEventArgs e)
         {
-            CheckConnectionAsync();
+            Debug.WriteLine("Login");
             var email = tb_email.Text;
             var password = GetHashString(tb_password.Password);
 
             if (email != null && password != null)
             {
-                if(ValidateUser(email, password))
+                if (GlobalServiceType == ServiceType.Online)
                 {
-                    mainPage.LoggedUser = FindUser(email, password);
-                    mainPage.NavigateToNavigationBase();
-                }
-                else
-                {
-                    if (IsUserRegistered(email))
+                    if (CheckConnectivity())
                     {
-                        ContentDialog dialog = new ContentDialog();
-                        dialog.Title = "Passwords Do Not Match";
-                        dialog.CloseButtonText = "Retry";
-                        dialog.DefaultButton = ContentDialogButton.Close;
-                        dialog.Content = "The passowrd you entered is wrong. Please try again. ";
+                        try
+                        {
+                            var isValidUser = ValidateUser(email, password);
 
-                        var result = await dialog.ShowAsync();
+                            if (isValidUser)
+                            {
+                                ContinueToNavigator(email, password);
+                            }
+                            else
+                            {
+                                if (IsUserRegistered(email))
+                                {
+                                    ShowPasswordErrorDialog();
+                                }
+                                else
+                                {
+                                    ShowRegisterDialog(email, tb_password.Password);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ContentDialog RegistrationErrorDialog = new ContentDialog();
+                            RegistrationErrorDialog.Title = "UnSpecified Error";
+                            RegistrationErrorDialog.CloseButtonText = "Retry";
+                            RegistrationErrorDialog.DefaultButton = ContentDialogButton.Close;
+                            RegistrationErrorDialog.Content = "Please Contact Administrator 0x008E";
+
+                            await RegistrationErrorDialog.ShowAsync();
+
+                            Debug.WriteLine(ex.Message);
+                        }
 
                     }
                     else
                     {
-                        ContentDialog dialog = new ContentDialog();
-                        dialog.Title = "Register";
-                        dialog.CloseButtonText = "Done";
-                        dialog.DefaultButton = ContentDialogButton.Close;
+                        if (!isAutoLogin)
+                        {
+                            ContentDialog NotConnectedDialog = new ContentDialog();
+                            NotConnectedDialog.Title = "Not Connected to the network";
+                            NotConnectedDialog.PrimaryButtonText = "Retry";
+                            NotConnectedDialog.SecondaryButtonText = "Offline Login";
+                            NotConnectedDialog.CloseButtonText = "Ok";
+                            NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
+                            NotConnectedDialog.Content = "Press Retry after you connect to the network. If you want to continue with the cased data on your computer, press Offline Login";
 
-                        dialog.Content = new RegistrationPage(email, tb_password.Password);
 
-                        var result = await dialog.ShowAsync();
+                            var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
+
+                            if (NotConnectedDialogResult == ContentDialogResult.Primary)
+                            {
+                                btn_login_Click(sender, e);
+
+                            }
+                            else if (NotConnectedDialogResult == ContentDialogResult.Secondary)
+                            {
+                                GlobalServiceType = ServiceType.Offline;
+                                var IsUserValid = ValidateUserLocal(email, password);
+
+                                if (IsUserValid)
+                                {
+                                    ContinueToNavigator(email, password);
+                                }
+                                else
+                                {
+                                    if (IsUserRegistered(email))
+                                    {
+                                        ShowPasswordErrorDialog();
+
+                                    }
+                                    else
+                                    {
+                                        ShowRegisterDialog(email, tb_password.Password);
+                                    }
+                                }
+                            }
+                        }
+                        else  // Approching heare means its offline
+                        {
+                            GlobalServiceType = ServiceType.Offline;
+                            var IsUserValid = ValidateUserLocal(email, password);
+
+                            if (IsUserValid)
+                            {
+                                ContinueToNavigator(email, password);
+                            }
+                            else
+                            {
+                                if (IsUserRegistered(email))
+                                {
+                                    ShowPasswordErrorDialog();
+
+                                }
+                                else
+                                {
+                                    ShowRegisterDialog(email, tb_password.Password);
+                                }
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        var result = ValidateUserLocal(email, password);
+
+                        if (result)
+                        {
+                            mainPage.LoggedUser = FindUserLocal(email, password);
+                            mainPage.NavigateToNavigationBase();
+                        }
+                        else
+                        {
+                            if (IsUserRegistered(email))
+                            {
+                                ShowPasswordErrorDialog();
+
+                            }
+                            else
+                            {
+                                ShowRegisterDialog(email, tb_password.Password);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
                     }
                 }
             }
+        }
+
+        private void ContinueToNavigator(String email, String password)
+        {
+            var user = FindUserLocal(email, password);
+            mainPage.LoggedUser = user;
+            mainPage.NavigateToNavigationBase();
+
+            if (RememberUser)
+            {
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+                localSettings.Values["RememberedUser"] = email;
+                localSettings.Values["RememberedPassword"] = EncOperator.EncryptString(key, tb_password.Password);
+                
+            }
+        }
+
+        private async void ShowPasswordErrorDialog()
+        {
+            ContentDialog PasswordErrorDialog = new ContentDialog();
+            PasswordErrorDialog.Title = "Passwords Do Not Match";
+            PasswordErrorDialog.CloseButtonText = "Retry";
+            PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
+            PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. ";
+
+            await PasswordErrorDialog.ShowAsync();
+        }
+
+        private async void ShowRegisterDialog(String email, String password)
+        {
+            ContentDialog RegisterDialog = new ContentDialog();
+            RegisterDialog.Title = "Register";
+            RegisterDialog.CloseButtonText = "Done";
+            RegisterDialog.DefaultButton = ContentDialogButton.Close;
+
+            RegisterDialog.Content = new RegistrationPage(email, password);
+
+            await RegisterDialog.ShowAsync();
         }
 
         /// <summary>
@@ -187,7 +338,7 @@ namespace PCClient
                 tb_password.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)214, (byte)0, (byte)0));  // set the border of password to red
                 btn_login.IsEnabled = false;  // dissable the login button
 
-                
+
             }
             else
             {
@@ -207,12 +358,39 @@ namespace PCClient
             UnlockLogin();  // unlock the login button if the all requenments met
         }
         private void UnlockLogin()
-        { 
+        {
             // if the error messages are not visible
             // if the email and password is not empty
             // enable the button
             if (lbl_password_error.Visibility != Visibility.Visible && lbl_email_error.Visibility != Visibility.Visible && !string.IsNullOrWhiteSpace(tb_email.Text) && !string.IsNullOrWhiteSpace(tb_password.Password))
                 btn_login.IsEnabled = true;
+        }
+
+        private void btn_login_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+
+                var email = localSettings.Values["RememberedUser"] as string;
+                var password = localSettings.Values["RememberedPassword"] as string;
+
+                Debug.WriteLine(password);
+                Debug.WriteLine(EncOperator.DecryptString(key, password));
+
+                if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+                {
+                    isAutoLogin = true;
+                    Debug.WriteLine("AutoLogin");
+                    tb_email.Text = email;
+                    tb_password.Password = EncOperator.DecryptString(key, password);
+                    btn_login_Click(new object(), new RoutedEventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
     }
 }

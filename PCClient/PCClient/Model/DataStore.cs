@@ -16,6 +16,7 @@ namespace PCClient.Model
     public class DataStore
     {
         public static String DBName { get; set; } = "PMClientDB.db"; // Server
+        private static List<User> lodedUsers = new List<User>();
         public enum Status
         {
             Offline,
@@ -148,7 +149,7 @@ namespace PCClient.Model
             return false;
         }
 
-        public static bool RegisterUserLocalAsync(string email, string name, string imageName, string password)
+        public static bool RegisterUserLocal(string email, string name, string imageName, string password)
         {
             if (!string.IsNullOrEmpty(email) &&
                 !string.IsNullOrEmpty(name) &&
@@ -203,6 +204,60 @@ namespace PCClient.Model
         }
 
         /// <summary>
+        /// This will fetch all the users from the local database and save it to the lodedUsers List
+        /// </summary>
+        /// <returns></returns>
+        public static List<User> FetchUsers()
+        {
+            // sync users 
+            List<User> users = new List<User>();
+
+            string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+
+            using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+            {
+                if (con.State == System.Data.ConnectionState.Closed)
+                    con.Open();
+
+                string dbScript = "SELECT Email, Name, ImagePath, Password FROM user";
+                SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
+                SqliteDataReader reader = sqliteCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    users.Add(new User() { Email = reader.GetString(0), Name = reader.GetString(1), Image = reader.GetString(2), Password = reader.GetString(3) });
+                }
+
+                lodedUsers = users;
+
+                con.Close();
+            }
+
+            return users;
+        }
+
+        /// <summary>
+        /// This will validate the user from the local database. If the user is valid, The return will be true.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static bool ValidateUserLocal(string email, string password)
+        {
+            FetchUsers();
+            foreach (User user in lodedUsers)
+            {
+                if (user.Email == email && user.Password.ToUpper() == password.ToUpper())
+                {
+                    Debug.WriteLine(user.Password + " :: " + password);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Find and get the user account
         /// </summary>
         /// <param name="email"></param>
@@ -225,6 +280,24 @@ namespace PCClient.Model
         }
 
         /// <summary>
+        /// This find user from the local database
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public static User FindUserLocal(string email, string password)
+        {
+            FetchUsers();
+            foreach (User user in lodedUsers)
+            {
+                if (user.Email == email && user.Password == password.ToUpper())
+                    return user;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Check wether the entered emaill address is already in the database - checks from the server
         /// </summary>
         /// <param name="email"></param>
@@ -239,6 +312,13 @@ namespace PCClient.Model
             else
             {
                 Debug.WriteLine("Connectivity Error", "ERROR");
+                FetchUsers();
+                foreach (User user in lodedUsers)
+                {
+                    if (user.Email == email)
+                        return true;
+                }
+                Debug.WriteLine("UsedLocalDB");
                 return false;
             }
         }

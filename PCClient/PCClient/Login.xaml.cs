@@ -24,6 +24,13 @@ using static PCClient.Model.DataStore;
 
 namespace PCClient
 {
+
+    public class RegisterData
+    {
+        public User user { get; set; }
+        public Login login { get; set; }
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -33,7 +40,7 @@ namespace PCClient
 
         internal MainPage mainPage;
 
-        private static string key = "hVmYq3t6v9y$B&E)H@McQfTjWnZr4u7x";
+        internal static string key = "hVmYq3t6v9y$B&E)H@McQfTjWnZr4u7x";
 
         internal bool isAutoLogin = false;
 
@@ -252,7 +259,7 @@ namespace PCClient
                 ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
                 localSettings.Values["RememberedUser"] = email;
                 localSettings.Values["RememberedPassword"] = EncOperator.EncryptString(key, tb_password.Password);
-                
+
             }
         }
 
@@ -267,16 +274,47 @@ namespace PCClient
             await PasswordErrorDialog.ShowAsync();
         }
 
-        private async void ShowRegisterDialog(String email, String password)
+        internal void SetUser(User user)
         {
-            ContentDialog RegisterDialog = new ContentDialog();
-            RegisterDialog.Title = "Register";
-            RegisterDialog.CloseButtonText = "Done";
-            RegisterDialog.DefaultButton = ContentDialogButton.Close;
+            btn_login.IsEnabled = true;
+            RightPanelMinimize.Begin();
 
-            RegisterDialog.Content = new RegistrationPage(email, password);
+            tb_email.Text = user.Email;
+            tb_password.Password = EncOperator.DecryptString(key, user.Password);
+        }
 
-            await RegisterDialog.ShowAsync();
+        private void ShowRegisterDialog(String email, String password)
+        {
+
+            if (frame_register.SourcePageType != null)
+            {
+                if (targ.X != 500)
+                {
+                    btn_login.IsEnabled = true;
+                    RightPanelMinimize.Begin();
+                    tb_email.Text = (frame_register.Tag as User).Email;
+                    tb_password.Password = (frame_register.Tag as User).Password;
+                }
+                else
+                {
+                    btn_login.IsEnabled = false;
+                    tb_email.Text = "";
+                    tb_password.Password = "";
+                    RightPanelExpand.Begin();
+                    
+                }
+
+            }
+
+            else
+            {
+                frame_register.Navigate(typeof(RegistrationPage), 
+                    new RegisterData() { user = new User() { Email = email, Password = EncOperator.EncryptString(key, password) }, login = this });
+
+                frame_register.Tag = new User() { Email = email, Password = password };
+                if (targ.X == 500)
+                    RightPanelExpand.Begin();
+            }
         }
 
         /// <summary>

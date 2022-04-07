@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using System.Security.Cryptography;
 using Windows.UI.Xaml;
+using Windows.Storage.Streams;
 
 namespace PCClient.Model
 {
@@ -46,7 +47,7 @@ namespace PCClient.Model
             return sb.ToString();
         }
 
-        public static ServiceType GlobalServiceType { get; set; }
+        public static ServiceType GlobalServiceType { get; set; } = ServiceType.Online;
 
         public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
         public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
@@ -339,5 +340,84 @@ namespace PCClient.Model
             }
         }
 
+        public static async Task<bool> UpdateUserLocally(User loggedUser, User tempUser)
+        {
+            if (lodedUsers != null && tempUser != null)
+            {
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+                {
+                    try
+                    {
+                        con.Open();
+
+                        SqliteCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "UPDATE user SET Email=@email, Name=@name, ImagePath=@image, Password=@password WHERE Email=@cemail AND Password=@cpassword";
+                        cmd.Parameters.AddWithValue("@email", tempUser.Email);
+                        cmd.Parameters.AddWithValue("@name", tempUser.Name);
+                        cmd.Parameters.AddWithValue("@image", tempUser.Image);
+                        cmd.Parameters.AddWithValue("@password", tempUser.Password.ToUpper());
+                        cmd.Parameters.AddWithValue("@cemail", loggedUser.Email);
+                        cmd.Parameters.AddWithValue("@cpassword", loggedUser.Password);
+                        cmd.Connection = con;
+                        var affectedRows = cmd.ExecuteNonQuery();
+
+                        if (loggedUser.Image != tempUser.Image)
+                        {
+                            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                            StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Image);
+                            await userImageFile.CopyAsync(storageFolder, tempUser.Image, NameCollisionOption.ReplaceExisting);
+                            await userImageFile.DeleteAsync();
+                        }
+
+
+                        if (affectedRows != 0) return true;
+                        else return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        internal static async Task<bool> UpdateUser(User loggedUser, User tempUser)
+        {
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+            StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Image);
+
+            var image = await SaveToBytesAsync(userImageFile);
+
+            try
+            { 
+                await UpdateUserLocally(loggedUser, tempUser);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return await Server.PMServer1.UpdateUser(loggedUser, tempUser, image);
+
+        }
+
+        // Pasan - C:\Users\pasan\AppData\Local\Packages\b112076d-ff1b-4f40-bf4a-497cdcf4cc3c_r36wv3zd9209g\LocalState\
+
+        public static async Task<byte[]> SaveToBytesAsync(StorageFile file)
+        {
+            IRandomAccessStream filestream = await file.OpenAsync(FileAccessMode.Read);
+            var reader = new DataReader(filestream.GetInputStreamAt(0));
+            await reader.LoadAsync((uint)filestream.Size);
+
+            byte[] pixels = new byte[filestream.Size];
+
+            reader.ReadBytes(pixels);
+
+            return pixels;
+        }
     }
 }

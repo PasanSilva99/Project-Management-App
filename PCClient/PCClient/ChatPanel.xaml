@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
-      d:Width="450">
+      d:Width="450" Background="WHITE">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,8 +24,8 @@
                    FontSize="18"
                    FontWeight="Bold"
                    Margin="0,0,0,10" />
+        
         <!--\/ Users Stack \/-->
-
         <ScrollViewer Grid.Column="0"
                       Grid.Row="1"
                       HorizontalAlignment="Stretch"
@@ -205,6 +205,11 @@
         </ScrollViewer>
         <!--/\ Users Stack /\-->
 
+        <!--\/ Messages List \/-->
+        <ListView>
+            
+        </ListView>
+        <!--/\ Messages List /\-->
 
     </Grid>
 </Page>

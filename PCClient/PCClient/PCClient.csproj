@@ -122,6 +122,9 @@
     <Compile Include="BookmarkPanel.xaml.cs">
       <DependentUpon>BookmarkPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChangePassword.xaml.cs">
+      <DependentUpon>ChangePassword.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChatPanel.xaml.cs">
       <DependentUpon>ChatPanel.xaml</DependentUpon>
     </Compile>
@@ -159,6 +162,9 @@
     </Compile>
     <Compile Include="StickyNotePanel.xaml.cs">
       <DependentUpon>StickyNotePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserSettingsPage.xaml.cs">
+      <DependentUpon>UserSettingsPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +256,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ChangePassword.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChatPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -291,6 +301,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StickyNotePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

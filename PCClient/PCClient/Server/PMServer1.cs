@@ -279,6 +279,60 @@ namespace PCClient.Server
             }
         }
 
+        internal static async Task<bool> UpdateUser(User loggedUser, User tempUser, byte[] image)
+        {
+            if (lodedUsers != null && tempUser != null)
+            {
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+                {
+                    try
+                    {
+                        con.Open();
+
+                        SqliteCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "UPDATE user SET Email=@email, Name=@name, ImagePath=@image, Password=@password WHERE Email=@cemail AND Password=@cpassword";
+                        cmd.Parameters.AddWithValue("@email", tempUser.Email);
+                        cmd.Parameters.AddWithValue("@name", tempUser.Name);
+                        cmd.Parameters.AddWithValue("@image", tempUser.Image);
+                        cmd.Parameters.AddWithValue("@password", tempUser.Password.ToUpper());
+                        cmd.Parameters.AddWithValue("@cemail", loggedUser.Email);
+                        cmd.Parameters.AddWithValue("@cpassword", loggedUser.Password);
+                        cmd.Connection = con;
+                        var affectedRows = cmd.ExecuteNonQuery();
+
+                        if (loggedUser.Image != tempUser.Image)
+                        {
+                            try
+                            {
+                                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                                StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Image);
+                                await userImageFile.DeleteAsync();
+                            }
+                            catch (Exception _ex)
+                            {
+
+                            }
+
+                            var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
+                            var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(tempUser.Image, CreationCollisionOption.ReplaceExisting);
+                            await FileIO.WriteBytesAsync(ProfilePicFile, image);
+                        }
+
+                        if (affectedRows != 0) return true;
+                        else return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+
+            return false;
+        }
+
         #endregion
         // ===================================================================================================== //
     }

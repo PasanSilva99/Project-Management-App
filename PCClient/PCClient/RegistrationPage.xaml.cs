@@ -36,13 +36,23 @@ namespace PCClient
         StorageFile originalImage = null;
         byte[] ProfileImageStream = null;
         StorageFile croppedImage = null;  // Store the cropped images globally
+        Login login = null;
 
-        public RegistrationPage(string email, string password)
+        public RegistrationPage()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            var data  = e.Parameter as RegisterData;
+            login = data.login;
+
             btn_register.IsEnabled = false;
-            tb_email.Text = email;
-            tb_password.Password = password;
+            tb_email.Text = data.user.Email;
+            tb_password.Password = EncOperator.DecryptString(Login.key, data.user.Password);
 
             SetDefaultPic();  //  sets the default prifile pic in the temporary profile selection
         }
@@ -322,8 +332,7 @@ namespace PCClient
 
             }
 
-            RigistrationDone.Visibility = Visibility.Visible;  // Show the Done Screen
-            registerBase.Visibility = Visibility.Collapsed;  // Hide the registration Screeen
+            login.SetUser(new User() { Email = email, Password = EncOperator.EncryptString(Login.key, tb_password.Password) });
 
         }
 

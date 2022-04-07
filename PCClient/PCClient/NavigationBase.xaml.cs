@@ -21,6 +21,9 @@ using Windows.UI.Xaml.Media.Animation;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using System.Text.RegularExpressions;
+using Windows.UI;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -42,12 +45,18 @@ namespace PCClient
 
         Status userStatus = Status.Online;
 
+        StorageFile ProfilePhoto = null;
+        StorageFile croppedImage = null;
+        StorageFile originalImage = null;
+        internal ImageSource profileImageSource = null;
+        internal User tempUser;
+
 
         public NavigationBase()
         {
             this.InitializeComponent();
             TopNavStack.Children.Clear();
-            DispatcherTimer timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0)};
+            DispatcherTimer timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0) };
             timer.Tick += Timer_Tick;
             timer.Start();
         }
@@ -142,7 +151,7 @@ namespace PCClient
                     return isValid;
                 }
             }
-            
+
             return false;
         }
 
@@ -166,6 +175,8 @@ namespace PCClient
                 StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
                 StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
                 Debug.WriteLine("File Path " + storageFolder.Path);
+                ProfilePhoto = profilePicture;
+                
 
                 using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
                 {
@@ -173,7 +184,7 @@ namespace PCClient
                     await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
 
                     img_profilePicture.Source = bitmapImage;
-
+                    profileImageSource = bitmapImage; 
                 }
             }
         }
@@ -189,7 +200,7 @@ namespace PCClient
 
         private void NavigateTo(object sender, RoutedEventArgs e)
         {
-            switch((sender as Button).Tag)
+            switch ((sender as Button).Tag)
             {
                 case "Dashboard":
                     NavigateToDashboard();
@@ -233,7 +244,7 @@ namespace PCClient
         /// <param name="isOpen">Boolean value for Open/Close</param>
         internal void OpenUserMenu(bool isOpen)
         {
-            
+
 
         }
 
@@ -243,7 +254,7 @@ namespace PCClient
         /// <param name="isOpen"></param>
         internal void OpenCloudInformation(bool isOpen)
         {
-            
+
 
         }
 
@@ -301,13 +312,13 @@ namespace PCClient
         /// This page opens the right pannel with the target page
         /// </summary>
         /// <param name="target">The page that you want to show in the panel</param>
-        private void OpenRightPanel(Type target)
+        internal void OpenRightPanel(Type target)
         {
             if (frame_tools.SourcePageType != null)
             {
                 if (frame_tools.SourcePageType != target)
                 {
-                    frame_tools.Navigate(target);
+                    frame_tools.Navigate(target, this);
                     if (targ.X == 500)
                         RightPanelExpand.Begin();
                 }
@@ -325,7 +336,7 @@ namespace PCClient
             }
             else
             {
-                frame_tools.Navigate(target);
+                frame_tools.Navigate(target, this);
                 if (targ.X == 500)
                     RightPanelExpand.Begin();
             }
@@ -377,7 +388,7 @@ namespace PCClient
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var tag = (sender as MenuFlyoutItem).Tag as string;
-            
+
             if (tag != null)
             {
                 if (tag == "Online")
@@ -408,7 +419,17 @@ namespace PCClient
                 {
                     LogoutUser();
                 }
+                if (tag == "account")
+                {
+                    Debug.WriteLine("UserSettings");
+                    ShowUserSettings();
+                }
             }
+        }
+
+        private void ShowUserSettings()
+        {
+            OpenRightPanel(typeof(UserSettingsPage));
         }
 
         private void LogoutUser()
@@ -419,5 +440,7 @@ namespace PCClient
             mainPage.LoggedUser = null;
             mainPage.NavigateToLoginPage();
         }
+
+        
     }
 }

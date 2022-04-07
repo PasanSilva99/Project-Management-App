@@ -699,7 +699,8 @@
               Grid.Row="2"
               Background="{ThemeResource SystemColorWindowColor}"
               CornerRadius="10 10 10 10"
-              Margin="10,0,0,0">
+              Margin="10,0,0,0"
+              x:Name="baseGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="85" />
@@ -707,7 +708,7 @@
 
             <Frame x:Name="frame_page"
                    Margin="10 10 10 10"
-                   Grid.Column="0" />
+                   Grid.Column="0"/>
 
             <!--\/ Right Panel \/-->
             <controls:DropShadowPanel x:Name="RightPanel"
@@ -850,7 +851,10 @@
                                         </Style>
                                     </MenuFlyout.MenuFlyoutPresenterStyle>
                                     <MenuFlyoutItem Text="My Account"
-                                                    Tag="account" />
+                                                    Tag="account"
+                                                    Click="MenuFlyoutItem_Click">
+
+                                    </MenuFlyoutItem>
                                     <MenuFlyoutSubItem Text="Set Status">
                                         <MenuFlyoutItem Text="🟢 Online"
                                                         Tag="Online"
@@ -866,7 +870,8 @@
                                                         Click="MenuFlyoutItem_Click" />
                                     </MenuFlyoutSubItem>
                                     <MenuFlyoutItem Text="Logout"
-                                                    Tag="logout" Click="MenuFlyoutItem_Click"/>
+                                                    Tag="logout"
+                                                    Click="MenuFlyoutItem_Click" />
                                 </MenuFlyout>
 
                             </Button.Flyout>

@@ -42,10 +42,19 @@
 
     <ScrollViewer>
         <Grid>
-            <Grid MinWidth="500"
+            <Grid MinWidth="400"
                   x:Name="registerBase">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="New user registration"
+                           Grid.Row="0"
+                           FontSize="18" />
+
                 <StackPanel Margin="10,10,10,10"
-                            Spacing="10">
+                            Spacing="10" Grid.Row="1">
 
                     <Grid HorizontalAlignment="Center"
                           VerticalAlignment="Center"

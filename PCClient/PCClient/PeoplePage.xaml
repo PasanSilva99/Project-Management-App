@@ -6,6 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+      Background="{ThemeResource SystemColorWindowBrush}"
       RequestedTheme="Light">
     <Page.Resources>
         <Style x:Key="NaviButton" TargetType="Button">
@@ -83,20 +84,17 @@
             </Setter>
         </Style>
     </Page.Resources>
-    <Page.Background>
+    <!--<Page.Background>
         <ImageBrush ImageSource="/Assets/Images/Greeny.jpg"/>
-    </Page.Background>
+        </Page.Background>-->
 
-    <Grid Padding="10 10 10 10">
+    <Grid Padding="10 10 10 10" Margin="-1,0,1,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid.Background>
-            <media:BackdropBlurBrush  Amount="10" FallbackColor="White" />
-        </Grid.Background>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -113,7 +111,7 @@
                 </Button.Content>
             </Button>
             <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" Spacing="15">
-                <TextBlock Text="DS Project Management Aplication" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+                <TextBlock Text="DS Project Management Application" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
                 <Button Style="{StaticResource NaviButton}" >
                     <Button.Content>
                         <StackPanel Orientation="Horizontal" Spacing="10">
@@ -134,6 +132,61 @@
             </Button>
 
         </Grid>
+
+        <TextBlock Grid.Row="1" Text="Manage People"
+                   FontSize="18"
+                   FontWeight="SemiBold" Margin="30 10 0 20"/>
+
+        <Grid Grid.Row="2" Margin="10 0 10 10" Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Name" Grid.Column="0" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Email" Grid.Column="1" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Assigned Date" Grid.Column="2" Foreground="#FFA0A0A0" />
+            <TextBlock Text="Role" Grid.Column="3" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Activity" Grid.Column="4" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Status" Grid.Column="5" Foreground="#FFA0A0A0"/>
+        </Grid>
+
+
+        <ListView Grid.Row="3">
+            <ListViewItem HorizontalContentAlignment="Stretch">
+                <ListViewItem.Content>
+
+                    <Grid  Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                            <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
+                            <TextBlock Text="Name" Grid.Column="0" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Email" Grid.Column="1"  VerticalAlignment="Center"/>
+                        <TextBlock Text="Assigned Date" Grid.Column="2"  VerticalAlignment="Center" />
+                        <TextBlock Text="Role" Grid.Column="3"  VerticalAlignment="Center"/>
+                        <TextBlock Text="Activity" Grid.Column="4" VerticalAlignment="Center"/>
+                        <TextBlock Text="Status" Grid.Column="5"  VerticalAlignment="Center"/>
+                    </Grid>
+
+                </ListViewItem.Content>
+            </ListViewItem>
+        </ListView>
+
+
 
     </Grid>
 </Page>

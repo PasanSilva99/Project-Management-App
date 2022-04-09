@@ -90,6 +90,7 @@ namespace PCClient
                     img_cloudStatus.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
                 }
                 lbl_serverStatus.Text = "Synced With the Server";
+                
             }
             else
             {
@@ -103,6 +104,8 @@ namespace PCClient
                 }
                 lbl_serverStatus.Text = "Disconnected From The Server";
             }
+
+            ValidateLoggedUser();
         }
 
         internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
@@ -155,7 +158,7 @@ namespace PCClient
             return false;
         }
 
-        private async void ValidateLoggedUser()
+        internal async void ValidateLoggedUser()
         {
             if (mainPage.LoggedUser == null && !this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
             {

@@ -316,11 +316,13 @@ namespace PCClient
                 }
             }
             SaveImage();
+            navigationBase.ValidateLoggedUser();
         }
 
         private void Dialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            throw new NotImplementedException();
+            btn_UpdateUser_Click(new object(), new RoutedEventArgs());
+            sender.Hide();
         }
 
         private void UnlockUpdate()

@@ -160,36 +160,52 @@ namespace PCClient
 
         internal async void ValidateLoggedUser()
         {
-            if (mainPage.LoggedUser == null && !this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+            try
             {
-                ContentDialog dialog = new ContentDialog();
-                dialog.Title = "Verification Faild";
-                dialog.CloseButtonText = "Login Again";
-                dialog.DefaultButton = ContentDialogButton.Close;
-                dialog.Content = "Failed to verify User";
-
-                var result = await dialog.ShowAsync();
-
-                mainPage.NavigateToLoginPage();
-            }
-            else
-            {
-                // Get the user image
-                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
-                Debug.WriteLine("File Path " + storageFolder.Path);
-                ProfilePhoto = profilePicture;
-                
-
-                using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
+                if (mainPage.LoggedUser == null)
                 {
-                    BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
-                    await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Verification Faild";
+                    dialog.CloseButtonText = "Login Again";
+                    dialog.DefaultButton = ContentDialogButton.Close;
+                    dialog.Content = "Failed to verify User";
 
-                    img_profilePicture.Source = bitmapImage;
-                    profileImageSource = bitmapImage; 
+                    var result = await dialog.ShowAsync();
+
+                    mainPage.NavigateToLoginPage();
+                }
+                else if (!this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+                {
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Verification Faild";
+                    dialog.CloseButtonText = "Login Again";
+                    dialog.DefaultButton = ContentDialogButton.Close;
+                    dialog.Content = "Failed to verify User";
+
+                    var result = await dialog.ShowAsync();
+
+                    mainPage.NavigateToLoginPage();
+                }
+                else
+                {
+                    // Get the user image
+                    StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                    StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
+                    Debug.WriteLine("File Path " + storageFolder.Path);
+                    ProfilePhoto = profilePicture;
+
+
+                    using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                        await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+
+                        img_profilePicture.Source = bitmapImage;
+                        profileImageSource = bitmapImage;
+                    }
                 }
             }
+            catch (Exception) { }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

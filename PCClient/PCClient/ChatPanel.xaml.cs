@@ -28,99 +28,53 @@ namespace PCClient
     /// </summary>
     public sealed partial class ChatPanel : Page
     {
+        NavigationBase navigationBase;
+
         public ChatPanel()
         {
             this.InitializeComponent();
 
-            list_messages.Items.Clear();            
+            list_messages.Items.Clear();
+
+            btn_emogi.IsEnabled = true;
+            btn_emogi.Visibility = Visibility.Visible;
+
+            btn_send.IsEnabled = false;
+            btn_send.Visibility = Visibility.Collapsed;
         }
 
-        private async void SendMessage()
-        {
-            // Create new folder to store the ProfileImages. If it is already there, Open it. 
-            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Messages", CreationCollisionOption.OpenIfExists);
-
-
-            StorageFile file = await storageFolder.CreateFileAsync("TempMessage", CreationCollisionOption.ReplaceExisting);
-            if (file != null)
-            {
-                Debug.WriteLine(file.Path);
-                // Prevent updates to the remote version of the file until we
-                // finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
-                // write to file
-                Windows.Storage.Streams.IRandomAccessStream randAccStream =
-                    await file.OpenAsync(FileAccessMode.ReadWrite);
-
-                reb_message.Document.SaveToStream(TextGetOptions.FormatRtf, randAccStream);
-
-                // Let Windows know that we're finished changing the file so the
-                // other app can update the remote version of the file.
-                Windows.Storage.Provider.FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                if (status != Windows.Storage.Provider.FileUpdateStatus.Complete)
-                {
-                    Windows.UI.Popups.MessageDialog errorBox =
-                        new Windows.UI.Popups.MessageDialog("File " + file.Name + " couldn't be saved.");
-                    await errorBox.ShowAsync();
-                }
-            }
-
-            ReceiveMessageControl receiveMessageControl = new ReceiveMessageControl();
-            
-
-        }
-
-        private void HighlightMentionedUsers()
+        private void SendMessage()
         {
 
-            var users = new List<User>();
-            users = DataStore.FetchUsers();
-
-            foreach (var user in users)
+            if (!string.IsNullOrWhiteSpace(tb_message.Text))
             {
-                ITextRange searchRange = reb_message.Document.GetRange(0, 0);
-                while (searchRange.FindText("@"+user.Name, TextConstants.MaxUnitCount, FindOptions.Word) > 0)
-                {
-                    searchRange.CharacterFormat.BackgroundColor = Windows.UI.Color.FromArgb((byte)255, (byte)226, (byte)245, (byte)201); ;
-                    searchRange.CharacterFormat.ForegroundColor = Windows.UI.Color.FromArgb((byte)255, (byte)0, (byte)0, (byte)0);
-                }
+                SendMessageControl sendMessageControl = new SendMessageControl();
+                sendMessageControl.MessageContent = tb_message.Text;
+
+                sendMessageControl.isSticker = false;
+                sendMessageControl.sender = navigationBase.mainPage.LoggedUser.Name;
+                sendMessageControl.ProfileImage = navigationBase.profileImageSource;
+                sendMessageControl.Time = DateTime.Now;
+
+                ListViewItem chatBubble = new ListViewItem();
+                chatBubble.Style = Resources["ChatMessageStyle"] as Style;
+                chatBubble.Content = sendMessageControl;
+
+                list_messages.Items.Add(chatBubble);
+                tb_message.Text = "";
             }
         }
 
-        private void RemoveHightlight()
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            ITextRange documentRange = reb_message.Document.GetRange(0, TextConstants.MaxUnitCount);
-            SolidColorBrush defaultBackground = reb_message.Background as SolidColorBrush;
-            SolidColorBrush defaultForeground = reb_message.Foreground as SolidColorBrush;
+            base.OnNavigatedTo(e);
 
-            documentRange.CharacterFormat.BackgroundColor = defaultBackground.Color;
-            documentRange.CharacterFormat.ForegroundColor = defaultForeground.Color;
-
+            navigationBase = e.Parameter as NavigationBase;
         }
 
         private void NewDirectUser_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void reb_message_TextChanging(RichEditBox sender, RichEditBoxTextChangingEventArgs args)
-        {
-            RemoveHightlight();
-            HighlightMentionedUsers();
-
-            string cText;
-            reb_message.Document.GetText(TextGetOptions.UseCrlf,out cText);
-
-            if (cText.Length > 0)
-            {
-                Debug.WriteLine("Has Text");
-                ShowSendButton(true);
-            }
-            else
-            {
-                Debug.WriteLine("No text");
-                ShowSendButton(false);
-            }
         }
 
         private void ShowSendButton(bool state)
@@ -130,7 +84,7 @@ namespace PCClient
                 btn_emogi.IsEnabled = false;
                 btn_emogi.Visibility = Visibility.Collapsed;
 
-                btn_send.IsEnabled = true; 
+                btn_send.IsEnabled = true;
                 btn_send.Visibility = Visibility.Visible;
             }
             else
@@ -143,23 +97,71 @@ namespace PCClient
             }
         }
 
-        private void reb_message_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void btn_send_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Shift)
+            if (!string.IsNullOrWhiteSpace(tb_message.Text))
             {
-                reb_message.AcceptsReturn = true;
-            }
-            else
-            {
-                reb_message.AcceptsReturn = false;
+                SendMessage();
             }
         }
 
-        private void btn_send_Click(object sender, RoutedEventArgs e)
+        private void tb_message_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
         {
-            if(reb_message.Document != null)
+            if (tb_message.Text.Length > 0)
             {
-                SendMessage();
+                Debug.WriteLine("Has Text");
+                ShowSendButton(true);
+            }
+            else
+            {
+                Debug.WriteLine("No text");
+                ShowSendButton(false);
+                tb_message.AcceptsReturn = false;
+            }
+        }
+
+        private void tb_message_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Shift)
+            {
+                tb_message.AcceptsReturn = true;
+            }
+            else
+            {
+                if (e.Key == Windows.System.VirtualKey.Enter)
+                {
+                    SendMessage();
+                }
+            }
+        }
+
+        private async void tb_message_Paste(object sender, TextControlPasteEventArgs e)
+        {
+            TextBox messageBox = sender as TextBox;
+            if (messageBox != null)
+            {
+                // Mark the event as messageBoxhandled first. Otherwise, the
+                // default paste action will happen, then the custom paste
+                // action, and the user will see the text box content change.
+                e.Handled = true;
+
+                // Get content from the clipboard.
+                var dataPackageView = Windows.ApplicationModel.DataTransfer.Clipboard.GetContent();
+                if (dataPackageView.Contains(Windows.ApplicationModel.DataTransfer.StandardDataFormats.Text))
+                {
+                    try
+                    {
+                        var text = await dataPackageView.GetTextAsync();
+                        if (text.Contains('\n'))
+                            messageBox.AcceptsReturn = true;
+                        messageBox.Text = text;
+                        
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore or handle exception as needed.
+                    }
+                }
             }
         }
     }

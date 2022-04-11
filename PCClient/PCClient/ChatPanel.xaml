@@ -395,7 +395,7 @@
               Grid.Row="1"
               Padding="5 5 5 5"
               Margin="5,5,5,5"
-              Background="#FFF8F7F7"
+              Background="#5FF8F7F7"
               CornerRadius="10 10 10 10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -404,6 +404,13 @@
 
             <ListView Grid.Row="0" x:Name="list_messages">
 
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel VerticalAlignment="Bottom"
+                                         ItemsUpdatingScrollMode="KeepLastItemInView" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                
                 <ListViewItem Style="{StaticResource ChatMessageStyle}">
                     <ListViewItem.Content>
                         <local:SendMessageControl />
@@ -451,13 +458,14 @@
                         </SymbolIcon.RenderTransform>
                     </SymbolIcon>
                 </Button>
-                    <RichEditBox Grid.Column="1"
+                    <TextBox Grid.Column="1" MaxHeight="400"
                                  BorderBrush="Transparent"
                                  CornerRadius="10 10 10 10"
                                  PlaceholderText="Type Your Message"
                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                 AcceptsReturn="True" x:Name="reb_message" TextChanging="reb_message_TextChanging" KeyDown="reb_message_KeyDown">
-                    </RichEditBox>
+                                 x:Name="tb_message" KeyDown="tb_message_KeyDown"
+                             TextChanging="tb_message_TextChanging" Paste="tb_message_Paste">
+                    </TextBox>
 
                 <Button CornerRadius="25 25 25 25"
                         Width="25"

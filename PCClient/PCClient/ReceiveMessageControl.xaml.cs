@@ -26,7 +26,7 @@ namespace PCClient
         private string _MessageContent = "";
         private bool _isSticker = false;
         private string _sender = "";
-        private BitmapImage _ProfileImage = null;
+        private ImageSource _ProfileImage = null;
         private DateTime _Time = DateTime.Now;
         private List<String> _MentionedUsers = null;
 
@@ -66,7 +66,7 @@ namespace PCClient
                 UpdateView();
             }
         }
-        public BitmapImage ProfileImage
+        public ImageSource ProfileImage
         {
             get
             {
@@ -99,14 +99,19 @@ namespace PCClient
             }
             set
             {
-                _MentionedUsers.Clear();
                 _MentionedUsers=value;
             }
         }
 
         private void UpdateView()
         {
-
+            if (!isSticker)
+            {
+                message_body.Text = _MessageContent;
+                img_prifilePic.Source = _ProfileImage;
+                lbl_username.Text = _sender;
+                lbl_time.Text = _Time.ToString("t");
+            }
         }
 
         public ReceiveMessageControl()

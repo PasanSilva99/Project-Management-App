@@ -12,60 +12,77 @@
 
     <Grid ColumnSpacing="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-
         <controls:DropShadowPanel HorizontalContentAlignment="Stretch"
-                                  Grid.Column="2"
+                                  Grid.Column="0"
                                   BlurRadius="20"
                                   ShadowOpacity="0.1"
-                                  Margin="0 18 10 10"
-                                  HorizontalAlignment="Left">
+                                  Margin="10 18 0 10"
+                                  HorizontalAlignment="Right">
             <Grid Background="White"
-                  CornerRadius="0 10 10 10"
-                  Padding="10 10 10 10"
+                  CornerRadius="10 0 10 10"
+                  Padding="10 10 10 20"
                   MinWidth="100">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" /> 
+                    
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
+                           x:Name="lbl_username"
                            Text="LiliKi"
                            FontWeight="SemiBold"
-                           Foreground="#FF038A2A" />
-                <TextBlock Grid.Row="1"
-                           Text="ok"
-                           TextWrapping="Wrap" />
-                <TextBlock Grid.Row="2"
-                           Text="10:49 AM"
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="Right"
-                           Margin="0,0,-4,-7"
-                           FontSize="11"
-                           Foreground="Gray" />
+                           Foreground="#FF038A2A"
+                           Tapped="lbl_username_Tapped" />
+                <TextBox Grid.Row="1"
+                         x:Name="message_body"
+                         Text="Empty Message"
+                         BorderThickness="0"
+                         IsReadOnly="True"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap">
+
+                </TextBox>
+
+
             </Grid>
+
         </controls:DropShadowPanel>
-
-        
-
+        <TextBlock Text="10:49 AM"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Right"
+                   Margin="0,0,6,13"
+                   FontSize="11"
+                   Foreground="Gray"
+                   x:Name="lbl_time"
+                   PointerEntered="lbl_time_PointerEntered"
+                   PointerExited="lbl_time_PointerExited">
+            <TextBlock.ContextFlyout>
+                <Flyout Placement="Bottom"
+                        x:Name="fly_time">
+                    <TextBlock Text="4/9/2022 10:49:39 AM" />
+                </Flyout>
+            </TextBlock.ContextFlyout>
+        </TextBlock>
         <Border Grid.Column="1"
                 Width="5"
                 Height="10"
-                Margin="0,18,-20,0"
+                Margin="-20,18,0,0"
                 VerticalAlignment="Top"
                 Background="White"
-                CornerRadius="5 0 0 20" />
+                CornerRadius="0 5 20 0" />
 
-        <Border Grid.Column="0"
+        <Border Grid.Column="2"
                 Width="40"
                 Height="40"
                 VerticalAlignment="Top"
                 CornerRadius="37 37 37 37"
                 Background="#FF9E9E9E">
-            <Image Source="/Assets/Images/image.png"
+            <Image x:Name="img_prifilePic"
+                   Source="/Assets/Images/image.png"
                    Stretch="Uniform" />
         </Border>
 

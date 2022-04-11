@@ -50,15 +50,13 @@ namespace PCClient
         StorageFile originalImage = null;
         internal ImageSource profileImageSource = null;
         internal User tempUser;
-
+        DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0) };
 
         public NavigationBase()
         {
             this.InitializeComponent();
             TopNavStack.Children.Clear();
-            DispatcherTimer timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0) };
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            UserVerificationTimer.Tick += Timer_Tick;
         }
 
         private async void Timer_Tick(object sender, object e)
@@ -213,7 +211,7 @@ namespace PCClient
             base.OnNavigatedTo(e);
 
             mainPage = e.Parameter as MainPage;
-
+            UserVerificationTimer.Start();
             ValidateLoggedUser();
         }
 
@@ -285,30 +283,6 @@ namespace PCClient
         internal void OpenChat(object sender)
         {
             OpenRightPanel(typeof(ChatPanel));
-        }
-
-        /// <summary>
-        /// This will open the chat panel with user
-        /// </summary>
-        internal void OpenChat(string email)
-        {
-            if (targ.X == 500)
-            {
-                frame_tools.Navigate(typeof(ChatPanel), email);
-                RightPanelExpand.Begin();
-            }
-        }
-
-        /// <summary>
-        /// This will open the chat panel without user
-        /// </summary>
-        internal void OpenChat()
-        {
-            if (targ.X == 500)
-            {
-                frame_tools.Navigate(typeof(ChatPanel));
-                RightPanelExpand.Begin();
-            }
         }
 
         /// <summary>
@@ -458,6 +432,7 @@ namespace PCClient
             localSettings.Values["RememberedPassword"] = null;
             mainPage.LoggedUser = null;
             mainPage.NavigateToLoginPage();
+            UserVerificationTimer.Stop();
         }
 
         

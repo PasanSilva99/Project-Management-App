@@ -155,41 +155,174 @@ namespace PCClient
 
         }
 
-        private void btn_UpdateUser_Click(object sender, RoutedEventArgs e)
+        private async void btn_UpdateUser_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("buh");
-        }
+            Debug.WriteLine("Atempting to chanage Account Settings");
+            // Create a temporarary user
+            User tempUser = new User();
+            tempUser.Name = tb_username.Text;
+            tempUser.Email = tb_email.Text;
+            tempUser.Image = tb_email.Text + ".png";
+            tempUser.Password = navigationBase.mainPage.LoggedUser.Password;
 
-        private async void UserSettingFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
-        {
-            Debug.WriteLine("User Setting flyout Exit");
-            if (tb_email.Text != navigationBase.mainPage.LoggedUser.Email || tb_username.Text != navigationBase.mainPage.LoggedUser.Name || navigationBase.profileImageSource != user_Settings_pic.Source)
+            // Check the global Service type
+
+            if (DataStore.GlobalServiceType == DataStore.ServiceType.Online)
             {
-                args.Cancel = true;
-                Debug.WriteLine("Attempted to close without saving");
-                ContentDialog dialog = new ContentDialog();
-                dialog.Title = "Unsaved Changes";
-                dialog.PrimaryButtonText = "Save";
-                dialog.SecondaryButtonText = "Dismiss";
-                dialog.DefaultButton = ContentDialogButton.Close;
-                dialog.Content = "You have unsaved changes. Do you want to save it? ";
 
-                var result = await dialog.ShowAsync();
-
-                if (result == ContentDialogResult.Primary)
+                // Check wether the computer is connected to any network
+                if (DataStore.CheckConnectivity())
                 {
-                    btn_UpdateUser_Click(new object(), new RoutedEventArgs());
+                    try
+                    {
+                        var isValid = DataStore.ValidateUser(tempUser.Email, tempUser.Password);
+
+                        if (isValid)
+                        {
+                            // Using the Remote Service
+                            var isSuccess = await DataStore.UpdateUser(navigationBase.mainPage.LoggedUser, tempUser);
+
+                            if (isSuccess)
+                            {
+                                // Cose the changing ui and show success ui
+                                navigationBase.OpenRightPanel(typeof(UserSettingsPage));
+                            }
+                            else
+                            {
+                                // Cause 1 - Undefined Error
+                                // Show the feedback to the user and ask wether if the user want to retry or just create offline
+                                ContentDialog dialog = new ContentDialog();
+                                dialog.Title = "Update Failed";
+                                dialog.PrimaryButtonText = "Retry";
+                                dialog.SecondaryButtonText = "Work Offline";
+                                dialog.CloseButtonText = "Cancel";
+                                dialog.DefaultButton = ContentDialogButton.Primary;
+                                dialog.Content = "You can retry to uptade the account on the server or try to create in offline mode only.";
+                                dialog.CloseButtonClick += Dialog_CloseButtonClick; ;
+
+                                var result = await dialog.ShowAsync();  // show the messgae and get the result
+
+                                if (result == ContentDialogResult.Primary) // if the user click retry,
+                                    btn_UpdateUser_Click(sender, e); // Re run this function
+
+                                else if (result == ContentDialogResult.Secondary)  // if the user click Create Locally, 
+                                {
+                                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+
+                                    if (!isSuccessLocal)
+                                    {
+                                        return;
+                                    }
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            ContentDialog PasswordErrorDialog = new ContentDialog();
+                            PasswordErrorDialog.Title = "Passwords Do Not Match";
+                            PasswordErrorDialog.CloseButtonText = "Retry";
+                            PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
+                            PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
+
+                            await PasswordErrorDialog.ShowAsync();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+
+                        ContentDialog RegistrationErrorDialog = new ContentDialog();
+                        RegistrationErrorDialog.Title = "UnSpecified Error";
+                        RegistrationErrorDialog.CloseButtonText = "Retry";
+                        RegistrationErrorDialog.DefaultButton = ContentDialogButton.Close;
+                        RegistrationErrorDialog.Content = "Please Contact Administrator 0x0074";
+
+                        await RegistrationErrorDialog.ShowAsync();
+
+
+                    }
                 }
-                else if (result == ContentDialogResult.Secondary)
+                else
                 {
-                    tb_email.Text = navigationBase.mainPage.LoggedUser.Email;
-                    tb_username.Text = navigationBase.mainPage.LoggedUser.Name;
-                    user_Settings_pic.Source = navigationBase.profileImageSource;
-                    Debug.WriteLine("Changes Dismissed");
-                    sender.Hide();
+                    ContentDialog NotConnectedDialog = new ContentDialog();
+                    NotConnectedDialog.Title = "Not Connected to the network";
+                    NotConnectedDialog.PrimaryButtonText = "Retry";
+                    NotConnectedDialog.SecondaryButtonText = "Offline Login";
+                    NotConnectedDialog.CloseButtonText = "Cancel";
+                    NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
+                    NotConnectedDialog.Content = "Press Retry after you connect to the network. If you want to continue with the cached data on your computer, press Work Offline";
+
+
+                    var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
+
+                    if (NotConnectedDialogResult == ContentDialogResult.Primary)
+                    {
+                        btn_UpdateUser_Click(sender, e);
+
+                    }
+                    else if (NotConnectedDialogResult == ContentDialogResult.Secondary)
+                    {
+                        DataStore.GlobalServiceType = DataStore.ServiceType.Offline;
+                        var IsUserValid = DataStore.ValidateUserLocal(tempUser.Email, tempUser.Password);
+
+                        if (IsUserValid)
+                        {
+                            var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+
+                            if (!isSuccessLocal)
+                            {
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            ContentDialog PasswordErrorDialog = new ContentDialog();
+                            PasswordErrorDialog.Title = "Passwords Do Not Match";
+                            PasswordErrorDialog.CloseButtonText = "Retry";
+                            PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
+                            PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
+
+                            await PasswordErrorDialog.ShowAsync();
+                        }
+                    }
                 }
             }
+            else
+            {
+                DataStore.GlobalServiceType = DataStore.ServiceType.Offline;
+                var IsUserValid = DataStore.ValidateUserLocal(tempUser.Email, tempUser.Password);
 
+                if (IsUserValid)
+                {
+                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+
+                    if (!isSuccessLocal)
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    ContentDialog PasswordErrorDialog = new ContentDialog();
+                    PasswordErrorDialog.Title = "Passwords Do Not Match";
+                    PasswordErrorDialog.CloseButtonText = "Retry";
+                    PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
+                    PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
+
+                    await PasswordErrorDialog.ShowAsync();
+                }
+            }
+            SaveImage();
+            navigationBase.ValidateLoggedUser();
+        }
+
+        private void Dialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            btn_UpdateUser_Click(new object(), new RoutedEventArgs());
+            sender.Hide();
         }
 
         private void UnlockUpdate()

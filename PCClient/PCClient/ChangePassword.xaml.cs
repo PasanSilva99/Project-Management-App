@@ -48,8 +48,6 @@ namespace PCClient
             tempUser.Image = navigationBase.tempUser.Image;
             tempUser.Password = DataStore.GetHashString(tb_newPassword.Password);
 
-
-
             // Check the global Service type
 
             if (DataStore.GlobalServiceType == DataStore.ServiceType.Online)

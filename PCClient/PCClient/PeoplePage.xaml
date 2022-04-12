@@ -171,7 +171,9 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                            <Border CornerRadius="50 50 50 50">
                             <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
+                            </Border>
                             <TextBlock Text="Name" Grid.Column="0" VerticalAlignment="Center"/>
                         </StackPanel>
 

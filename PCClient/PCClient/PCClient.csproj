@@ -181,16 +181,21 @@
   <ItemGroup>
     <Content Include="Assets\Icons\add.png" />
     <Content Include="Assets\Icons\AnalysisIcon.png" />
+    <Content Include="Assets\Icons\back.png" />
     <Content Include="Assets\Icons\BookmarkIcon.png" />
     <Content Include="Assets\Icons\ChatIcon.png" />
     <Content Include="Assets\Icons\Cloud_offlineIcon.png" />
     <Content Include="Assets\Icons\Cloud_onlineIcon.png" />
     <Content Include="Assets\Icons\DashboardIcon.png" />
+    <Content Include="Assets\Icons\github.png" />
     <Content Include="Assets\Icons\emogi_icon.png" />
     <Content Include="Assets\Icons\PeopleIcon.png" />
+    <Content Include="Assets\Icons\plus.png" />
     <Content Include="Assets\Icons\ProjectsIcon.png" />
     <Content Include="Assets\Icons\sned.png" />
     <Content Include="Assets\Icons\StickyNoteIcon.png" />
+    <Content Include="Assets\Images\green.jpg" />
+    <Content Include="Assets\Images\Greeny.jpg" />
     <Content Include="Assets\Images\image.png" />
     <Content Include="Assets\Images\login-bg.jpg" />
     <Content Include="Assets\Images\logo.png" />

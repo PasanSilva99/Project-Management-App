@@ -262,7 +262,7 @@ namespace PCClient
                     var isSuccess = await DataStore.RegisterUserAsync(email, username, imageBuffer, password);
                     try
                     {
-                        await RegisterUserLocallyAsync(email, username, email + ".png", password);
+                        await RegisterUserLocallyAsync(email, username, username + ".png", password);
                     }
                     catch (Exception ex)
                     {
@@ -285,7 +285,7 @@ namespace PCClient
                             btn_register_Click(sender, e); // Re run this function
                         else if (result == ContentDialogResult.Secondary)  // if the user click Create Locally, 
                         {
-                            var isSuccessLocal = await RegisterUserLocallyAsync(email, username, email + ".png", password);
+                            var isSuccessLocal = await RegisterUserLocallyAsync(email, username, username + ".png", password);
 
                             if (!isSuccessLocal)
                             {
@@ -311,7 +311,7 @@ namespace PCClient
                         btn_register_Click(sender, e);
                     else
                     {
-                        var isSuccess = await RegisterUserLocallyAsync(email, username, email + ".png", password);
+                        var isSuccess = await RegisterUserLocallyAsync(email, username, username + ".png", password);
 
                         if (!isSuccess)
                         {
@@ -323,7 +323,7 @@ namespace PCClient
             }
             else
             {
-                var isSuccess = await RegisterUserLocallyAsync(email, username, email + ".png", password);
+                var isSuccess = await RegisterUserLocallyAsync(email, username, username + ".png", password);
 
                 if (!isSuccess)
                 {
@@ -339,7 +339,7 @@ namespace PCClient
         private async Task<bool> RegisterUserLocallyAsync(string email, string username, string imageName, string password)
         {
             SaveImage(); // Save the image to Profile Pics Folder
-            var isSuccess = DataStore.RegisterUserLocal(email, username, email + ".png", password);  // Create the user in the local database
+            var isSuccess = DataStore.RegisterUserLocal(email, username, username + ".png", password);  // Create the user in the local database
 
             if (isSuccess)
             {
@@ -412,7 +412,7 @@ namespace PCClient
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
 
             // Save the User image by using user email for the name. If it is there, replace it.
-            await profileImage.CopyAsync(storageFolder, tb_email.Text + ".png", NameCollisionOption.ReplaceExisting);
+            await profileImage.CopyAsync(storageFolder, tb_username.Text + ".png", NameCollisionOption.ReplaceExisting);
            
 
         }

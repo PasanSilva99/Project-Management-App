@@ -145,25 +145,38 @@ namespace PCClient
 
         private async void SaveImage()
         {
-            // Create new folder to store the ProfileImages. If it is already there, Open it. 
-            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+            try
+            {
 
-            // Save the User image by using user email for the name. If it is there, replace it.
-            await ProfilePhoto.CopyAsync(storageFolder, tb_email.Text + ".png", NameCollisionOption.ReplaceExisting);
+                if (ProfilePhoto != null)
+                {
+                    // Create new folder to store the ProfileImages. If it is already there, Open it. 
+                    StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
 
-            Debug.WriteLine("Image Updated Locally");
+                    // Save the User image by using user email for the name. If it is there, replace it.
+                    await ProfilePhoto.CopyAsync(storageFolder, tb_username.Text + ".png", NameCollisionOption.ReplaceExisting);
+
+                    Debug.WriteLine("Image Updated Locally");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
         }
 
         private async void btn_UpdateUser_Click(object sender, RoutedEventArgs e)
         {
+
             Debug.WriteLine("buh");
             Debug.WriteLine("Atempting to chanage Account Settings");
             // Create a temporarary user
             User tempUser = new User();
             tempUser.Name = tb_username.Text;
             tempUser.Email = tb_email.Text;
-            tempUser.Image = tb_email.Text + ".png";
+            tempUser.Image = tb_username.Text + ".png";
             tempUser.Password = navigationBase.mainPage.LoggedUser.Password;
 
             // Check the global Service type
@@ -317,6 +330,8 @@ namespace PCClient
             }
             SaveImage();
             navigationBase.ValidateLoggedUser();
+
+
         }
 
         private void Dialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -382,7 +397,7 @@ namespace PCClient
         private void btn_ChangePassword_Click(object sender, RoutedEventArgs e)
         {
             navigationBase.OpenRightPanel(typeof(ChangePassword));
-            navigationBase.tempUser = new User() { Name = tb_username.Text , Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password, Image=tb_email.Text+".png"};
+            navigationBase.tempUser = new User() { Name = tb_username.Text, Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password, Image = tb_username.Text + ".png" };
         }
     }
 }

@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="Model\DataStore.cs" />
     <Compile Include="Model\EncOperator.cs" />
+    <Compile Include="Model\Message.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="NavigationBase.xaml.cs">
       <DependentUpon>NavigationBase.xaml</DependentUpon>
@@ -163,6 +164,7 @@
       <DependentUpon>SendMessageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Server\PMServer1.cs" />
+    <Compile Include="Server\PMServer2.cs" />
     <Compile Include="SighUpPage.xaml.cs">
       <DependentUpon>SighUpPage.xaml</DependentUpon>
     </Compile>

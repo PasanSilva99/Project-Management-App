@@ -147,7 +147,7 @@ namespace PCClient.Server
                 string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
 
                 var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
-                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(email + ".png", CreationCollisionOption.ReplaceExisting);
+                var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(name + ".png", CreationCollisionOption.ReplaceExisting);
 
                 await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
 
@@ -161,7 +161,7 @@ namespace PCClient.Server
                         cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@name", name);
-                        cmd.Parameters.AddWithValue("@image", email + ".png");
+                        cmd.Parameters.AddWithValue("@image", name + ".png");
                         cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();

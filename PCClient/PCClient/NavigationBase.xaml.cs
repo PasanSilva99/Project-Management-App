@@ -50,15 +50,13 @@ namespace PCClient
         StorageFile originalImage = null;
         internal ImageSource profileImageSource = null;
         internal User tempUser;
-
+        DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0) };
 
         public NavigationBase()
         {
             this.InitializeComponent();
             TopNavStack.Children.Clear();
-            DispatcherTimer timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0) };
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            UserVerificationTimer.Tick += Timer_Tick;
         }
 
         private async void Timer_Tick(object sender, object e)
@@ -90,6 +88,7 @@ namespace PCClient
                     img_cloudStatus.Source = bitmapImage;  // Sets the created bitmap as ImageSource             
                 }
                 lbl_serverStatus.Text = "Synced With the Server";
+                
             }
             else
             {
@@ -103,6 +102,8 @@ namespace PCClient
                 }
                 lbl_serverStatus.Text = "Disconnected From The Server";
             }
+
+            ValidateLoggedUser();
         }
 
         internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
@@ -155,38 +156,54 @@ namespace PCClient
             return false;
         }
 
-        private async void ValidateLoggedUser()
+        internal async void ValidateLoggedUser()
         {
-            if (mainPage.LoggedUser == null && !this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+            try
             {
-                ContentDialog dialog = new ContentDialog();
-                dialog.Title = "Verification Faild";
-                dialog.CloseButtonText = "Login Again";
-                dialog.DefaultButton = ContentDialogButton.Close;
-                dialog.Content = "Failed to verify User";
-
-                var result = await dialog.ShowAsync();
-
-                mainPage.NavigateToLoginPage();
-            }
-            else
-            {
-                // Get the user image
-                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
-                Debug.WriteLine("File Path " + storageFolder.Path);
-                ProfilePhoto = profilePicture;
-                
-
-                using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
+                if (mainPage.LoggedUser == null)
                 {
-                    BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
-                    await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Verification Faild";
+                    dialog.CloseButtonText = "Login Again";
+                    dialog.DefaultButton = ContentDialogButton.Close;
+                    dialog.Content = "Failed to verify User";
 
-                    img_profilePicture.Source = bitmapImage;
-                    profileImageSource = bitmapImage; 
+                    var result = await dialog.ShowAsync();
+
+                    mainPage.NavigateToLoginPage();
+                }
+                else if (!this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+                {
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Verification Faild";
+                    dialog.CloseButtonText = "Login Again";
+                    dialog.DefaultButton = ContentDialogButton.Close;
+                    dialog.Content = "Failed to verify User";
+
+                    var result = await dialog.ShowAsync();
+
+                    mainPage.NavigateToLoginPage();
+                }
+                else
+                {
+                    // Get the user image
+                    StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                    StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
+                    Debug.WriteLine("File Path " + storageFolder.Path);
+                    ProfilePhoto = profilePicture;
+
+
+                    using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                        await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+
+                        img_profilePicture.Source = bitmapImage;
+                        profileImageSource = bitmapImage;
+                    }
                 }
             }
+            catch (Exception) { }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -194,7 +211,7 @@ namespace PCClient
             base.OnNavigatedTo(e);
 
             mainPage = e.Parameter as MainPage;
-
+            UserVerificationTimer.Start();
             ValidateLoggedUser();
         }
 
@@ -266,30 +283,6 @@ namespace PCClient
         internal void OpenChat(object sender)
         {
             OpenRightPanel(typeof(ChatPanel));
-        }
-
-        /// <summary>
-        /// This will open the chat panel with user
-        /// </summary>
-        internal void OpenChat(string email)
-        {
-            if (targ.X == 500)
-            {
-                frame_tools.Navigate(typeof(ChatPanel), email);
-                RightPanelExpand.Begin();
-            }
-        }
-
-        /// <summary>
-        /// This will open the chat panel without user
-        /// </summary>
-        internal void OpenChat()
-        {
-            if (targ.X == 500)
-            {
-                frame_tools.Navigate(typeof(ChatPanel));
-                RightPanelExpand.Begin();
-            }
         }
 
         /// <summary>
@@ -439,6 +432,7 @@ namespace PCClient
             localSettings.Values["RememberedPassword"] = null;
             mainPage.LoggedUser = null;
             mainPage.NavigateToLoginPage();
+            UserVerificationTimer.Stop();
         }
 
         

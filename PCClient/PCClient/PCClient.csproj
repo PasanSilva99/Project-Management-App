@@ -150,11 +150,17 @@
       <DependentUpon>ProjectsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceiveMessageControl.xaml.cs">
+      <DependentUpon>ReceiveMessageControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SendMessageControl.xaml.cs">
+      <DependentUpon>SendMessageControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Server\PMServer1.cs" />
     <Compile Include="SighUpPage.xaml.cs">
@@ -182,9 +188,11 @@
     <Content Include="Assets\Icons\Cloud_onlineIcon.png" />
     <Content Include="Assets\Icons\DashboardIcon.png" />
     <Content Include="Assets\Icons\github.png" />
+    <Content Include="Assets\Icons\emogi_icon.png" />
     <Content Include="Assets\Icons\PeopleIcon.png" />
     <Content Include="Assets\Icons\plus.png" />
     <Content Include="Assets\Icons\ProjectsIcon.png" />
+    <Content Include="Assets\Icons\sned.png" />
     <Content Include="Assets\Icons\StickyNoteIcon.png" />
     <Content Include="Assets\Images\green.jpg" />
     <Content Include="Assets\Images\Greeny.jpg" />
@@ -288,11 +296,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ReceiveMessageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RegistrationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ReportsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SendMessageControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -321,6 +337,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
       <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

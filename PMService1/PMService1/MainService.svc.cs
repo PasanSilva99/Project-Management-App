@@ -18,6 +18,22 @@ namespace PMService1
             DataStore.InitializeDatabase();
             usersCache = DataStore.GetUsers();
         }
+
+        public DataStore.Status? GetUserStatus(string email)
+        {
+            return DataStore.Status.Online;
+        }
+
+        public bool RegisterUser(string email, string name, string password, byte[] image)
+        {
+            return true;
+        }
+
+        public bool SetUserStatus(User user, DataStore.Status status)
+        {
+            return true;
+        }
+
         public bool ValidateLogin(string email, string password)
         {
             // Create Mock Database

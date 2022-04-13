@@ -26,11 +26,13 @@ namespace PCClient.Server
                 {
                     con.Open();
                     string dbScript = "CREATE TABLE IF NOT EXISTS " +
-                    "message (" +
-                        "Email TEXT, " +
-                        "Name TEXT, " +
-                        "ImagePath TEXT, " +
-                        "Password TEXT ); ";
+                    "message ( " +
+                        "MessageContent TEXT, " +
+                        "isSticker int, " +
+                        "sender TEXT, " +
+                        "receiver TEXT, " +
+                        "Time TEXT, " +
+                        "MentionedUsers TEXT ); ";
 
                     SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                     sqliteCommand.ExecuteNonQuery();
@@ -84,7 +86,52 @@ namespace PCClient.Server
 
         public static bool NewMessage(Message message)
         {
+            string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+            var CommandString = "INSERT INTO message VALUES(@messageContent, @isSticker, @sender, @receiver, @time, @mentionedUsers);";
 
+            
+
+            using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+            {
+                try
+                {
+                    con.Open();
+
+                    SqliteCommand command = con.CreateCommand();
+                    command.CommandText = CommandString;
+                    command.Parameters.AddWithValue("@messageContent", message.MessageContent);
+                    command.Parameters.AddWithValue("@isSticker", message.isSticker? 1 : 0);
+                    command.Parameters.AddWithValue("@sender", message.sender);
+                    command.Parameters.AddWithValue("@receiver", message.receiver);
+                    command.Parameters.AddWithValue("@time", message.Time.ToString("G"));
+                    if (message.MentionedUsers != null)
+                    {
+                        if (message.MentionedUsers.Count > 1)
+                        {
+                            StringBuilder mentionUserString = new StringBuilder();
+                            foreach(var user in message.MentionedUsers)
+                            {
+                                mentionUserString.Append(user + ",");
+                            }
+                            command.Parameters.AddWithValue("@mentionedUsers", mentionUserString.ToString().Substring(0, mentionUserString[mentionUserString.Length - 1]));
+                            Debug.WriteLine(mentionUserString.ToString().Substring(0, mentionUserString[mentionUserString.Length - 1]));
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@mentionedUsers", message.MentionedUsers.ToArray()[0]);
+                        }
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@mentionedUsers", "");
+                    }
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+            }
             return false;
         }
 

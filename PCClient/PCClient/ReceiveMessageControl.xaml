@@ -80,7 +80,7 @@
                 CornerRadius="37 37 37 37"
                 Background="#FF9E9E9E">
             <Image x:Name="img_prifilePic"
-                   Source="/Assets/Images/image.png"
+                   Source="/Assets/Icons/user.png"
                    Stretch="Uniform" />
         </Border>
 

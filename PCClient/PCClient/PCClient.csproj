@@ -193,6 +193,9 @@
     <Content Include="Assets\Icons\ProjectsIcon.png" />
     <Content Include="Assets\Icons\sned.png" />
     <Content Include="Assets\Icons\StickyNoteIcon.png" />
+    <Content Include="Assets\Icons\user.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Images\image.png" />
     <Content Include="Assets\Images\login-bg.jpg" />
     <Content Include="Assets\Images\logo.png" />

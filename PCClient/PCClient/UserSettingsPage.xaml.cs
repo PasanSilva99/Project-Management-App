@@ -263,10 +263,9 @@ namespace PCClient
                     ContentDialog NotConnectedDialog = new ContentDialog();
                     NotConnectedDialog.Title = "Not Connected to the network";
                     NotConnectedDialog.PrimaryButtonText = "Retry";
-                    NotConnectedDialog.SecondaryButtonText = "Offline Login";
                     NotConnectedDialog.CloseButtonText = "Cancel";
                     NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
-                    NotConnectedDialog.Content = "Press Retry after you connect to the network. If you want to continue with the cached data on your computer, press Work Offline";
+                    NotConnectedDialog.Content = "Press Retry after you connect to the network. You must be connected to the server to make changes";
 
 
                     var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
@@ -276,56 +275,24 @@ namespace PCClient
                         btn_UpdateUser_Click(sender, e);
 
                     }
-                    else if (NotConnectedDialogResult == ContentDialogResult.Secondary)
-                    {
-                        DataStore.GlobalServiceType = DataStore.ServiceType.Offline;
-                        var IsUserValid = DataStore.ValidateUserLocal(tempUser.Email, tempUser.Password);
-
-                        if (IsUserValid)
-                        {
-                            var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
-
-                            if (!isSuccessLocal)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            ContentDialog PasswordErrorDialog = new ContentDialog();
-                            PasswordErrorDialog.Title = "Passwords Do Not Match";
-                            PasswordErrorDialog.CloseButtonText = "Retry";
-                            PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
-                            PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
-
-                            await PasswordErrorDialog.ShowAsync();
-                        }
-                    }
                 }
             }
             else
             {
-                DataStore.GlobalServiceType = DataStore.ServiceType.Offline;
-                var IsUserValid = DataStore.ValidateUserLocal(tempUser.Email, tempUser.Password);
+                ContentDialog NotConnectedDialog = new ContentDialog();
+                NotConnectedDialog.Title = "Not Connected to the network";
+                NotConnectedDialog.PrimaryButtonText = "Retry";
+                NotConnectedDialog.CloseButtonText = "Cancel";
+                NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
+                NotConnectedDialog.Content = "Press Retry after you connect to the network. You must be connected to the server to make changes";
 
-                if (IsUserValid)
+
+                var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
+
+                if (NotConnectedDialogResult == ContentDialogResult.Primary)
                 {
-                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+                    btn_UpdateUser_Click(sender, e);
 
-                    if (!isSuccessLocal)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    ContentDialog PasswordErrorDialog = new ContentDialog();
-                    PasswordErrorDialog.Title = "Passwords Do Not Match";
-                    PasswordErrorDialog.CloseButtonText = "Retry";
-                    PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
-                    PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
-
-                    await PasswordErrorDialog.ShowAsync();
                 }
             }
             SaveImage();

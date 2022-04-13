@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 
 namespace PCClient.Server
@@ -331,6 +332,53 @@ namespace PCClient.Server
             }
 
             return false;
+        }
+
+        public async Task<bool> IsFilePresent(string fileName)
+        {
+            var item = await ApplicationData.Current.LocalFolder.TryGetItemAsync(fileName);
+            return item != null;
+        }
+
+        public static async Task<byte[]> RequestUserImage(string username)
+        {
+            var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePicsServer", CreationCollisionOption.OpenIfExists);
+            StorageFile ProfilePicFile = null;
+
+            var item = await ProfilePicFolder.TryGetItemAsync(username + ".png");
+
+            if (item != null)
+            {
+                ProfilePicFile = await ProfilePicFolder.GetFileAsync(username + ".png");
+                return await SaveToBytesAsync(ProfilePicFile);
+            }
+            else
+            {
+                // Get the path to the app's Assets folder.
+                string root = Windows.ApplicationModel.Package.Current.InstalledLocation.Path;
+                string path = root + @"\Assets\Icons";
+
+                // Get the folder object that corresponds to this absolute path in the file system.
+                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
+                StorageFile file = await folder.GetFileAsync("user.png");
+
+                return await SaveToBytesAsync(file);
+            }
+            return null;
+
+        }
+
+        public static async Task<byte[]> SaveToBytesAsync(StorageFile file)
+        {
+            IRandomAccessStream filestream = await file.OpenAsync(FileAccessMode.Read);
+            var reader = new DataReader(filestream.GetInputStreamAt(0));
+            await reader.LoadAsync((uint)filestream.Size);
+
+            byte[] pixels = new byte[filestream.Size];
+
+            reader.ReadBytes(pixels);
+
+            return pixels;
         }
 
         #endregion

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -17,6 +18,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -130,7 +132,14 @@ namespace PCClient
 
         }
 
-        private void UpdateMessagesList(List<Message> messages)
+        public async Task<bool> IsFilePresent(string fileName)
+        {
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+            var item = await storageFolder.TryGetItemAsync(fileName);
+            return item != null;
+        }
+
+        private async void UpdateMessagesList(List<Message> messages)
         {
             foreach (var message in messages)
             {
@@ -155,11 +164,44 @@ namespace PCClient
                         ReceiveMessageControl receiveMessageControl = new ReceiveMessageControl();
                         receiveMessageControl.sender = message.sender;
                         receiveMessageControl.MessageContent = message.MessageContent;
-                        receiveMessageControl.ProfileImage = navigationBase.profileImageSource;
+
+                        StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                        if (await IsFilePresent(message.sender + ".png"))
+                        {
+                            Debug.WriteLine("Has Sender Image");
+                            StorageFile imageFile = await storageFolder.GetFileAsync(message.sender + ".png");
+                            using (var fileStream = await imageFile.OpenAsync(FileAccessMode.Read))
+                            {
+                                BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                                await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                                receiveMessageControl.ProfileImage = bitmapImage;  // sets the created bitmap as an image source
+                            }
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Requesting Sender Image");
+                            var image = await Server.PMServer1.RequestUserImage(message.sender);
+                            Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
+
+                            var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                            var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
+
+                            await FileIO.WriteBytesAsync(ProfilePicFile, image);
+
+                            using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                            {
+                                BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                                await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                                receiveMessageControl.ProfileImage = bitmapImage;  // sets the created bitmap as an image source
+                            }
+
+                        }
+
                         receiveMessageControl.Time = message.Time;
 
                         ListViewItem chatBubble = new ListViewItem();
                         chatBubble.Content = receiveMessageControl;
+                        chatBubble.Style = Resources["ChatMessageStyle"] as Style;
                         list_messages.Items.Add(chatBubble);
                     }
                 }
@@ -364,6 +406,13 @@ namespace PCClient
                     }
                 }
             }
+        }
+        public async Task<StorageFile> BytesToStorageFile(byte[] imageBuffer, string fileName)
+        {
+            StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
+            StorageFile sampleFile = await storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteBytesAsync(sampleFile, imageBuffer);
+            return sampleFile;
         }
     }
 }

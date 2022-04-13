@@ -76,8 +76,8 @@ namespace Projent.PMServer1 {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="DataStore.Status", Namespace="http://schemas.datacontract.org/2004/07/PMService1.Model")]
-    public enum DataStoreStatus : int {
+    [System.Runtime.Serialization.DataContractAttribute(Name="Status", Namespace="http://schemas.datacontract.org/2004/07/PMService1")]
+    public enum Status : int {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
         Offline = 0,
@@ -99,17 +99,38 @@ namespace Projent.PMServer1 {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PMServer1.IMainService")]
     public interface IMainService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/ValidateLogin", ReplyAction="http://tempuri.org/IMainService/ValidateLoginResponse")]
-        System.Threading.Tasks.Task<bool> ValidateLoginAsync(string email, string password);
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/IntializeDatabaseService", ReplyAction="http://tempuri.org/IMainService/IntializeDatabaseServiceResponse")]
+        System.Threading.Tasks.Task IntializeDatabaseServiceAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/GetSqliteVersion", ReplyAction="http://tempuri.org/IMainService/GetSqliteVersionResponse")]
+        System.Threading.Tasks.Task GetSqliteVersionAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/SetUserStatus", ReplyAction="http://tempuri.org/IMainService/SetUserStatusResponse")]
-        System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.DataStoreStatus status);
+        System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.Status status);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/GetUserStatus", ReplyAction="http://tempuri.org/IMainService/GetUserStatusResponse")]
-        System.Threading.Tasks.Task<System.Nullable<Projent.PMServer1.DataStoreStatus>> GetUserStatusAsync(string email);
+        System.Threading.Tasks.Task<System.Nullable<Projent.PMServer1.Status>> GetUserStatusAsync(string email);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/RegisterUser", ReplyAction="http://tempuri.org/IMainService/RegisterUserResponse")]
-        System.Threading.Tasks.Task<bool> RegisterUserAsync(string email, string name, string password, byte[] image);
+        System.Threading.Tasks.Task<bool> RegisterUserAsync(string email, string name, byte[] imageBuffer, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/FetchUsers", ReplyAction="http://tempuri.org/IMainService/FetchUsersResponse")]
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer1.User>> FetchUsersAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/ValidateUser", ReplyAction="http://tempuri.org/IMainService/ValidateUserResponse")]
+        System.Threading.Tasks.Task<bool> ValidateUserAsync(string email, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/IsUserRegistered", ReplyAction="http://tempuri.org/IMainService/IsUserRegisteredResponse")]
+        System.Threading.Tasks.Task<bool> IsUserRegisteredAsync(string email);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/GetUser", ReplyAction="http://tempuri.org/IMainService/GetUserResponse")]
+        System.Threading.Tasks.Task<Projent.PMServer1.User> GetUserAsync(string email, string password);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/UpdateUser", ReplyAction="http://tempuri.org/IMainService/UpdateUserResponse")]
+        System.Threading.Tasks.Task<bool> UpdateUserAsync(Projent.PMServer1.User loggedUser, Projent.PMServer1.User tempUser, byte[] image);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/RequestUserImage", ReplyAction="http://tempuri.org/IMainService/RequestUserImageResponse")]
+        System.Threading.Tasks.Task<byte[]> RequestUserImageAsync(string username);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -149,20 +170,48 @@ namespace Projent.PMServer1 {
                 base(binding, remoteAddress) {
         }
         
-        public System.Threading.Tasks.Task<bool> ValidateLoginAsync(string email, string password) {
-            return base.Channel.ValidateLoginAsync(email, password);
+        public System.Threading.Tasks.Task IntializeDatabaseServiceAsync() {
+            return base.Channel.IntializeDatabaseServiceAsync();
         }
         
-        public System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.DataStoreStatus status) {
+        public System.Threading.Tasks.Task GetSqliteVersionAsync() {
+            return base.Channel.GetSqliteVersionAsync();
+        }
+        
+        public System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.Status status) {
             return base.Channel.SetUserStatusAsync(user, status);
         }
         
-        public System.Threading.Tasks.Task<System.Nullable<Projent.PMServer1.DataStoreStatus>> GetUserStatusAsync(string email) {
+        public System.Threading.Tasks.Task<System.Nullable<Projent.PMServer1.Status>> GetUserStatusAsync(string email) {
             return base.Channel.GetUserStatusAsync(email);
         }
         
-        public System.Threading.Tasks.Task<bool> RegisterUserAsync(string email, string name, string password, byte[] image) {
-            return base.Channel.RegisterUserAsync(email, name, password, image);
+        public System.Threading.Tasks.Task<bool> RegisterUserAsync(string email, string name, byte[] imageBuffer, string password) {
+            return base.Channel.RegisterUserAsync(email, name, imageBuffer, password);
+        }
+        
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer1.User>> FetchUsersAsync() {
+            return base.Channel.FetchUsersAsync();
+        }
+        
+        public System.Threading.Tasks.Task<bool> ValidateUserAsync(string email, string password) {
+            return base.Channel.ValidateUserAsync(email, password);
+        }
+        
+        public System.Threading.Tasks.Task<bool> IsUserRegisteredAsync(string email) {
+            return base.Channel.IsUserRegisteredAsync(email);
+        }
+        
+        public System.Threading.Tasks.Task<Projent.PMServer1.User> GetUserAsync(string email, string password) {
+            return base.Channel.GetUserAsync(email, password);
+        }
+        
+        public System.Threading.Tasks.Task<bool> UpdateUserAsync(Projent.PMServer1.User loggedUser, Projent.PMServer1.User tempUser, byte[] image) {
+            return base.Channel.UpdateUserAsync(loggedUser, tempUser, image);
+        }
+        
+        public System.Threading.Tasks.Task<byte[]> RequestUserImageAsync(string username) {
+            return base.Channel.RequestUserImageAsync(username);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {
@@ -194,10 +243,10 @@ namespace Projent.PMServer1 {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IMainService)) {
-                return new System.ServiceModel.EndpointAddress("http://localhost:8086/MainServiceReference");
+                return new System.ServiceModel.EndpointAddress("http://pasan-desktop:8086/MainServiceReference");
             }
             if ((endpointConfiguration == EndpointConfiguration.NetTcpBinding_IMainService)) {
-                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://localhost:8090/MainServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-LAPTOP\\pasan"));
+                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://pasan-desktop:8090/MainServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-DESKTOP\\Pasan"));
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

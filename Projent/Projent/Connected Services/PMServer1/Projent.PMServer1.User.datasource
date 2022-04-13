@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="DataStoreStatus" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>Projent.PMServer1.DataStoreStatus</TypeInfo>
+<GenericObjectDataSource DisplayName="User" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>Projent.PMServer1.User</TypeInfo>
 </GenericObjectDataSource>

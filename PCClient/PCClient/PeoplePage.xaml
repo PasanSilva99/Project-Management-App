@@ -5,10 +5,190 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
-      RequestedTheme="Light"
-      Background="#FFD65D5D">
+      xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+      Background="{ThemeResource SystemColorWindowBrush}"
+      RequestedTheme="Light">
+    <Page.Resources>
+        <Style x:Key="NaviButton" TargetType="Button">
+            <Setter Property="Background" Value="#ffF3F3F3"/>
+            <Setter Property="BackgroundSizing" Value="OuterBorderEdge"/>
+            <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="7 2 10 2"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
+            <Setter Property="FocusVisualMargin" Value="-3"/>
+            <Setter Property="CornerRadius" Value="10 10 10 10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" Background="{TemplateBinding Background}" BackgroundSizing="{TemplateBinding BackgroundSizing}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" CornerRadius="{TemplateBinding CornerRadius}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <!--<Page.Background>
+        <ImageBrush ImageSource="/Assets/Images/Greeny.jpg"/>
+        </Page.Background>-->
 
-    <Grid>
+    <Grid Padding="10 10 10 10" Margin="-1,0,1,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Style="{StaticResource NaviButton}"  Grid.Column="0">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="25" Height="25" Source="/Assets/Icons/back.png"/>
+                        <TextBlock Text="All Projects" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" Spacing="15">
+                <TextBlock Text="DS Project Management Application" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
+                <Button Style="{StaticResource NaviButton}" >
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Image Width="20" Height="20" Source="/Assets/Icons/github.png"/>
+                            <TextBlock Text="GitHub" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+
+            <Button Style="{StaticResource NaviButton}"  Grid.Column="2" Padding="15,2,15,3">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Image Width="25" Height="25" Source="/Assets/Icons/plus.png"/>
+                        <TextBlock Text="Add Team Members" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+        </Grid>
+
+        <TextBlock Grid.Row="1" Text="Manage People"
+                   FontSize="18"
+                   FontWeight="SemiBold" Margin="30 10 0 20"/>
+
+        <Grid Grid.Row="2" Margin="10 0 10 10" Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Name" Grid.Column="0" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Email" Grid.Column="1" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Assigned Date" Grid.Column="2" Foreground="#FFA0A0A0" />
+            <TextBlock Text="Role" Grid.Column="3" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Activity" Grid.Column="4" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Status" Grid.Column="5" Foreground="#FFA0A0A0"/>
+        </Grid>
+
+
+        <ListView Grid.Row="3">
+            <ListViewItem HorizontalContentAlignment="Stretch">
+                <ListViewItem.Content>
+
+                    <Grid  Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                            <Border CornerRadius="50 50 50 50">
+                            <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
+                            </Border>
+                            <TextBlock Text="Name" Grid.Column="0" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBlock Text="Email" Grid.Column="1"  VerticalAlignment="Center"/>
+                        <TextBlock Text="Assigned Date" Grid.Column="2"  VerticalAlignment="Center" />
+                        <TextBlock Text="Role" Grid.Column="3"  VerticalAlignment="Center"/>
+                        <TextBlock Text="Activity" Grid.Column="4" VerticalAlignment="Center"/>
+                        <TextBlock Text="Status" Grid.Column="5"  VerticalAlignment="Center"/>
+                    </Grid>
+
+                </ListViewItem.Content>
+            </ListViewItem>
+        </ListView>
+
+
 
     </Grid>
 </Page>

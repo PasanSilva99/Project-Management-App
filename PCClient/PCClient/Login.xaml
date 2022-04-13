@@ -740,11 +740,11 @@
                     </StackPanel.Background>
                     <Image Source="/Assets/Images/logo.png" />
 
-                    <TextBlock Text="Collaborative Project Mnagement Platform"
+                    <TextBlock Text="Collaborative Project Management Platform"
                                HorizontalAlignment="Center"
                                Margin="0,20,0,0" />
 
-                    <TextBlock Text="All in one project management powerful tool built with the concepts of destributed systems with the features of, &#x0a; • Live chatting with the team &#x0a; • Cusomizable project steps/ Tasks and issues &#x0a; • Inbuild Sticky Notes function &#x0a; • Add book marks for specific tasks and issues &#x0a; • Advance Visualizations and much more &#x0a;&#x0a; This tool works on your Local Network. "
+                    <TextBlock Text="All in one project management powerful tool built with the concepts of distributed systems with the features of, &#x0a; • Live chatting with the team &#x0a; • Customizable project steps/ Tasks and issues &#x0a; • Inbuild Sticky Notes function &#x0a; • Add book marks for specific tasks and issues &#x0a; • Advance Visualizations and much more &#x0a;&#x0a; This tool works on your Local Network. "
                                HorizontalAlignment="Center"
                                TextWrapping="Wrap"
                                Margin="0,20,0,0" />

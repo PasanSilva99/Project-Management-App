@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{603EBAB8-3164-426A-8F58-93AB844C01ED}</ProjectGuid>
+    <ProjectGuid>{789C85FE-D42B-42C3-8F06-95D6DF7AD213}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PCClient</RootNamespace>
-    <AssemblyName>PCClient</AssemblyName>
+    <RootNamespace>Projent</RootNamespace>
+    <AssemblyName>Projent</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
@@ -119,61 +119,20 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BookmarkPanel.xaml.cs">
-      <DependentUpon>BookmarkPanel.xaml</DependentUpon>
+    <Compile Include="Connected Services\PMServer1\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="ChangePassword.xaml.cs">
-      <DependentUpon>ChangePassword.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ChatPanel.xaml.cs">
-      <DependentUpon>ChatPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DashboardPage.xaml.cs">
-      <DependentUpon>DashboardPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Login.xaml.cs">
-      <DependentUpon>Login.xaml</DependentUpon>
+    <Compile Include="Connected Services\PMServer2\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\DataStore.cs" />
-    <Compile Include="Model\EncOperator.cs" />
-    <Compile Include="Model\Message.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="NavigationBase.xaml.cs">
-      <DependentUpon>NavigationBase.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PeoplePage.xaml.cs">
-      <DependentUpon>PeoplePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ProjectsPage.xaml.cs">
-      <DependentUpon>ProjectsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReceiveMessageControl.xaml.cs">
-      <DependentUpon>ReceiveMessageControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RegistrationPage.xaml.cs">
-      <DependentUpon>RegistrationPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ReportsPage.xaml.cs">
-      <DependentUpon>ReportsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SendMessageControl.xaml.cs">
-      <DependentUpon>SendMessageControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Server\PMServer1.cs" />
-    <Compile Include="Server\PMServer2.cs" />
-    <Compile Include="SighUpPage.xaml.cs">
-      <DependentUpon>SighUpPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StickyNotePanel.xaml.cs">
-      <DependentUpon>StickyNotePanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UserSettingsPage.xaml.cs">
-      <DependentUpon>UserSettingsPage.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -181,30 +140,23 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Icons\add.png" />
-    <Content Include="Assets\Icons\AnalysisIcon.png" />
-    <Content Include="Assets\Icons\back.png" />
-    <Content Include="Assets\Icons\BookmarkIcon.png" />
-    <Content Include="Assets\Icons\ChatIcon.png" />
-    <Content Include="Assets\Icons\Cloud_offlineIcon.png" />
-    <Content Include="Assets\Icons\Cloud_onlineIcon.png" />
-    <Content Include="Assets\Icons\DashboardIcon.png" />
-    <Content Include="Assets\Icons\github.png" />
-    <Content Include="Assets\Icons\emogi_icon.png" />
-    <Content Include="Assets\Icons\PeopleIcon.png" />
-    <Content Include="Assets\Icons\plus.png" />
-    <Content Include="Assets\Icons\ProjectsIcon.png" />
-    <Content Include="Assets\Icons\sned.png" />
-    <Content Include="Assets\Icons\StickyNoteIcon.png" />
-    <Content Include="Assets\Icons\user.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    <Content Include="Assets\Images\green.jpg" />
-    <Content Include="Assets\Images\Greeny.jpg" />
-    <Content Include="Assets\Images\image.png" />
-    <Content Include="Assets\Images\login-bg.jpg" />
-    <Content Include="Assets\Images\logo.png" />
-    <Content Include="Assets\Images\logo_white.png" />
-    <Content Include="Assets\Images\top_logo.png" />
+    <None Include="Connected Services\PMServer1\item.disco" />
+    <None Include="Connected Services\PMServer1\configuration91.svcinfo" />
+    <None Include="Connected Services\PMServer1\configuration.svcinfo" />
+    <None Include="Connected Services\PMServer1\Projent.PMServer1.DataStoreStatus.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PMServer1\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Connected Services\PMServer2\item.disco" />
+    <None Include="Connected Services\PMServer2\configuration91.svcinfo" />
+    <None Include="Connected Services\PMServer2\configuration.svcinfo" />
+    <None Include="Connected Services\PMServer2\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />
     <Content Include="Assets\LargeTile.scale-150.png" />
@@ -257,96 +209,46 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <Content Include="Server\ThisIsATemporaryDirectory.txt" />
+    <None Include="Connected Services\PMServer2\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer2\ProjectService.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BookmarkPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ChangePassword.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ChatPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DashboardPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Login.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NavigationBase.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PeoplePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ProjectsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ReceiveMessageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="RegistrationPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ReportsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SendMessageControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="SighUpPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StickyNotePanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserSettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite">
-      <Version>6.0.3</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>7.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Media">
-      <Version>7.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
-    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\PMServer1\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer1\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer1\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer1\MainService.wsdl" />
+    <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\PMServer1\" />
+    <WCFMetadataStorage Include="Connected Services\PMServer2\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

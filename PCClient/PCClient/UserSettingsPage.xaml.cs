@@ -145,25 +145,38 @@ namespace PCClient
 
         private async void SaveImage()
         {
-            // Create new folder to store the ProfileImages. If it is already there, Open it. 
-            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+            try
+            {
 
-            // Save the User image by using user email for the name. If it is there, replace it.
-            await ProfilePhoto.CopyAsync(storageFolder, tb_email.Text + ".png", NameCollisionOption.ReplaceExisting);
+                if (ProfilePhoto != null)
+                {
+                    // Create new folder to store the ProfileImages. If it is already there, Open it. 
+                    StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
 
-            Debug.WriteLine("Image Updated Locally");
+                    // Save the User image by using user email for the name. If it is there, replace it.
+                    await ProfilePhoto.CopyAsync(storageFolder, tb_username.Text + ".png", NameCollisionOption.ReplaceExisting);
+
+                    Debug.WriteLine("Image Updated Locally");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
         }
 
         private async void btn_UpdateUser_Click(object sender, RoutedEventArgs e)
         {
+
             Debug.WriteLine("buh");
             Debug.WriteLine("Atempting to chanage Account Settings");
             // Create a temporarary user
             User tempUser = new User();
             tempUser.Name = tb_username.Text;
             tempUser.Email = tb_email.Text;
-            tempUser.Image = tb_email.Text + ".png";
+            tempUser.Image = tb_username.Text + ".png";
             tempUser.Password = navigationBase.mainPage.LoggedUser.Password;
 
             // Check the global Service type
@@ -250,10 +263,9 @@ namespace PCClient
                     ContentDialog NotConnectedDialog = new ContentDialog();
                     NotConnectedDialog.Title = "Not Connected to the network";
                     NotConnectedDialog.PrimaryButtonText = "Retry";
-                    NotConnectedDialog.SecondaryButtonText = "Offline Login";
                     NotConnectedDialog.CloseButtonText = "Cancel";
                     NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
-                    NotConnectedDialog.Content = "Press Retry after you connect to the network. If you want to continue with the cached data on your computer, press Work Offline";
+                    NotConnectedDialog.Content = "Press Retry after you connect to the network. You must be connected to the server to make changes";
 
 
                     var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
@@ -263,60 +275,30 @@ namespace PCClient
                         btn_UpdateUser_Click(sender, e);
 
                     }
-                    else if (NotConnectedDialogResult == ContentDialogResult.Secondary)
-                    {
-                        DataStore.GlobalServiceType = DataStore.ServiceType.Offline;
-                        var IsUserValid = DataStore.ValidateUserLocal(tempUser.Email, tempUser.Password);
-
-                        if (IsUserValid)
-                        {
-                            var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
-
-                            if (!isSuccessLocal)
-                            {
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            ContentDialog PasswordErrorDialog = new ContentDialog();
-                            PasswordErrorDialog.Title = "Passwords Do Not Match";
-                            PasswordErrorDialog.CloseButtonText = "Retry";
-                            PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
-                            PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
-
-                            await PasswordErrorDialog.ShowAsync();
-                        }
-                    }
                 }
             }
             else
             {
-                DataStore.GlobalServiceType = DataStore.ServiceType.Offline;
-                var IsUserValid = DataStore.ValidateUserLocal(tempUser.Email, tempUser.Password);
+                ContentDialog NotConnectedDialog = new ContentDialog();
+                NotConnectedDialog.Title = "Not Connected to the network";
+                NotConnectedDialog.PrimaryButtonText = "Retry";
+                NotConnectedDialog.CloseButtonText = "Cancel";
+                NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
+                NotConnectedDialog.Content = "Press Retry after you connect to the network. You must be connected to the server to make changes";
 
-                if (IsUserValid)
+
+                var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
+
+                if (NotConnectedDialogResult == ContentDialogResult.Primary)
                 {
-                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+                    btn_UpdateUser_Click(sender, e);
 
-                    if (!isSuccessLocal)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    ContentDialog PasswordErrorDialog = new ContentDialog();
-                    PasswordErrorDialog.Title = "Passwords Do Not Match";
-                    PasswordErrorDialog.CloseButtonText = "Retry";
-                    PasswordErrorDialog.DefaultButton = ContentDialogButton.Close;
-                    PasswordErrorDialog.Content = "The passowrd you entered is wrong. Please try again. If you think this is a mistake, please contact the adminsitrator.";
-
-                    await PasswordErrorDialog.ShowAsync();
                 }
             }
             SaveImage();
             navigationBase.ValidateLoggedUser();
+
+
         }
 
         private void Dialog_CloseButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -382,7 +364,7 @@ namespace PCClient
         private void btn_ChangePassword_Click(object sender, RoutedEventArgs e)
         {
             navigationBase.OpenRightPanel(typeof(ChangePassword));
-            navigationBase.tempUser = new User() { Name = tb_username.Text , Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password, Image=tb_email.Text+".png"};
+            navigationBase.tempUser = new User() { Name = tb_username.Text, Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password, Image = tb_username.Text + ".png" };
         }
     }
 }

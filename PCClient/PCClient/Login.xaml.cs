@@ -36,8 +36,6 @@ namespace PCClient
     /// </summary>
     public sealed partial class Login : Page
     {
-        private ServiceType serviceType = ServiceType.Online;
-
         internal MainPage mainPage;
 
         internal static string key = "hVmYq3t6v9y$B&E)H@McQfTjWnZr4u7x";
@@ -51,6 +49,7 @@ namespace PCClient
             this.InitializeComponent();
             IntializeLocalDatabase(); // comes from dataStore Class
             Server.PMServer1.IntializeDatabaseService1();
+            Server.PMServer2.IntializeDatabaseService1();
             CheckConnectionAsync();
         }
 
@@ -82,7 +81,6 @@ namespace PCClient
                 else
                 {
                     Debug.WriteLine("Application Set to Offline Mode");
-                    serviceType = ServiceType.Offline;
                     GlobalServiceType = ServiceType.Offline;
                 }
 
@@ -90,7 +88,6 @@ namespace PCClient
             else
             {
                 Debug.WriteLine("Application Set to Online Mode");
-                serviceType = ServiceType.Online;
                 GlobalServiceType = ServiceType.Online;
 
             }
@@ -186,7 +183,12 @@ namespace PCClient
                                     }
                                     else
                                     {
-                                        ShowRegisterDialog(email, tb_password.Password);
+                                        ContentDialog NotRegisterDialog = new ContentDialog();
+                                        NotRegisterDialog.Title = "Not Connected to the network";
+                                        NotRegisterDialog.CloseButtonText = "Ok";
+                                        NotRegisterDialog.DefaultButton = ContentDialogButton.Primary;
+                                        NotRegisterDialog.Content = "Seems like you're not registered to the system. Please Retry to register after you connect to the network.";
+                                        await NotRegisterDialog.ShowAsync();
                                     }
                                 }
                             }
@@ -209,7 +211,12 @@ namespace PCClient
                                 }
                                 else
                                 {
-                                    ShowRegisterDialog(email, tb_password.Password);
+                                    ContentDialog NotRegisterDialog = new ContentDialog();
+                                    NotRegisterDialog.Title = "Not Connected to the network";
+                                    NotRegisterDialog.CloseButtonText = "Ok";
+                                    NotRegisterDialog.DefaultButton = ContentDialogButton.Primary;
+                                    NotRegisterDialog.Content = "Seems like you're not registered to the system. Please Retry to register after you connect to the network.";
+                                    await NotRegisterDialog.ShowAsync();
                                 }
                             }
                         }
@@ -236,7 +243,12 @@ namespace PCClient
                             }
                             else
                             {
-                                ShowRegisterDialog(email, tb_password.Password);
+                                ContentDialog NotRegisterDialog = new ContentDialog();
+                                NotRegisterDialog.Title = "Not Connected to the network";
+                                NotRegisterDialog.CloseButtonText = "Ok";
+                                NotRegisterDialog.DefaultButton = ContentDialogButton.Primary;
+                                NotRegisterDialog.Content = "Seems like you're not registered to the system. Please Retry to register after you connect to the network.";
+                                await NotRegisterDialog.ShowAsync();
                             }
                         }
                     }

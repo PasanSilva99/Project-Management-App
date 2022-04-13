@@ -46,8 +46,11 @@ namespace Projent
         {
             this.InitializeComponent();
             IntializeLocalDatabase(); // comes from dataStore Class
-            Server.PMServer1.IntializeDatabaseService1();
-            Server.PMServer2.IntializeDatabaseService1();
+            //# Server.PMServer1.IntializeDatabaseService1();
+            Server.MainServer.InitializeServer();
+            //# Server.PMServer2.IntializeDatabaseService1();
+            Server.ProjectServer.InitializeServer();
+
             CheckConnectionAsync();
         }
 

@@ -54,7 +54,7 @@ namespace Projent.Model
 
         public static bool SetUserStatus(User user, Status status)
         {
-            Server.PMServer1.SetUserStatus(user, (Server.PMServer1.Status)status);
+            //Server.PMServer1.SetUserStatus(user, (Server.PMServer1.Status)status);
             return true;
         }
 
@@ -141,7 +141,8 @@ namespace Projent.Model
             try
             {
                 // Will be replaced after stabilize the server
-                return await Server.PMServer1.RegisterUserAsync(email, name, image, password);
+                //return await Server.PMServer1.RegisterUserAsync(email, name, image, password);
+                return true;
             }
             catch (Exception e)
             {
@@ -195,7 +196,8 @@ namespace Projent.Model
             if (CheckConnectivity())
             {
                 // Replace with this the server function
-                return Server.PMServer1.ValidateUser(email, password);
+                //return Server.PMServer1.ValidateUser(email, password);
+                return false;
             }
             else
             {
@@ -270,7 +272,8 @@ namespace Projent.Model
             {
                 if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
                 {
-                    return Server.PMServer1.GetUser(email, password);
+                    //return Server.PMServer1.GetUser(email, password);
+                    return null;
                 }
                 else
                 {
@@ -308,7 +311,8 @@ namespace Projent.Model
             if (CheckConnectivity())
             {
                 //Debug.WriteLine("Checking User");
-                return Server.PMServer1.IsUserRegistered(email);
+                //return Server.PMServer1.IsUserRegistered(email);
+                return true;
             }
             else
             {
@@ -330,7 +334,8 @@ namespace Projent.Model
             {
                 if (CheckConnectivity())
                 {
-                    return await Server.PMServer1.SaveDashboardImage(user, imageBuffer);
+                    //return await Server.PMServer1.SaveDashboardImage(user, imageBuffer);
+                    return true;
                 }
                 return false;
             }
@@ -401,7 +406,8 @@ namespace Projent.Model
                 Debug.WriteLine(ex.Message);
             }
 
-            return await Server.PMServer1.UpdateUser(loggedUser, tempUser, image);
+            //return await Server.PMServer1.UpdateUser(loggedUser, tempUser, image);
+            return true;
 
         }
 
@@ -421,3 +427,5 @@ namespace Projent.Model
         }
 
     }
+}
+

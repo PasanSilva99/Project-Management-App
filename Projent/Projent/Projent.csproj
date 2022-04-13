@@ -173,6 +173,8 @@
     <Compile Include="SendMessageControl.xaml.cs">
       <DependentUpon>SendMessageControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Server\MainServer.cs" />
+    <Compile Include="Server\ProjectServer.cs" />
     <Compile Include="StickyNotePanel.xaml.cs">
       <DependentUpon>StickyNotePanel.xaml</DependentUpon>
     </Compile>

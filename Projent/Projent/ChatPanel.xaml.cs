@@ -57,11 +57,11 @@ namespace Projent
                         List<Message> messages = null;
                         if (list_messages.Items.Count > 0)
                         {
-                            messages = Server.PMServer2.FindDirectMessagesFor(navigationBase.mainPage.LoggedUser, list_messages.Items[list_messages.Items.Count - 1] as Message);
+                            //messages = Server.PMServer2.FindDirectMessagesFor(navigationBase.mainPage.LoggedUser, list_messages.Items[list_messages.Items.Count - 1] as Message);
                         }
                         else
                         {
-                            messages = Server.PMServer2.FindDirectMessagesFor(navigationBase.mainPage.LoggedUser, null);
+                            //messages = Server.PMServer2.FindDirectMessagesFor(navigationBase.mainPage.LoggedUser, null);
 
                         }
                         if (messages != null)
@@ -180,13 +180,13 @@ namespace Projent
                         else
                         {
                             Debug.WriteLine("Requesting Sender Image");
-                            var image = await Server.PMServer1.RequestUserImage(message.sender);
-                            Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
+                            //var image = await Server.PMServer1.RequestUserImage(message.sender);
+                            //Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
 
                             var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
                             var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
 
-                            await FileIO.WriteBytesAsync(ProfilePicFile, image);
+                            //await FileIO.WriteBytesAsync(ProfilePicFile, image);
 
                             using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
                             {
@@ -230,11 +230,11 @@ namespace Projent
                             bool isSussess = false;
                             if (list_messages.Items.Count > 0)
                             {
-                                isSussess = Server.PMServer2.NewMessage(message);
+                                //isSussess = Server.PMServer2.NewMessage(message);
                             }
                             else
                             {
-                                isSussess = Server.PMServer2.NewMessage(message);
+                                //isSussess = Server.PMServer2.NewMessage(message);
 
                             }
                             if (isSussess)

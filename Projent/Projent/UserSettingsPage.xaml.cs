@@ -176,20 +176,19 @@ namespace Projent
             User tempUser = new User();
             tempUser.Name = tb_username.Text;
             tempUser.Email = tb_email.Text;
-            tempUser.Image = tb_username.Text + ".png";
             tempUser.Password = navigationBase.mainPage.LoggedUser.Password;
 
             // Check the global Service type
 
             if (DataStore.GlobalServiceType == DataStore.ServiceType.Online)
             {
-
+                SaveImage();
                 // Check wether the computer is connected to any network
                 if (DataStore.CheckConnectivity())
                 {
                     try
                     {
-                        var isValid = DataStore.ValidateUser(tempUser.Email, tempUser.Password);
+                        var isValid = await DataStore.ValidateUser(tempUser.Email, tempUser.Password);
 
                         if (isValid)
                         {
@@ -364,7 +363,7 @@ namespace Projent
         private void btn_ChangePassword_Click(object sender, RoutedEventArgs e)
         {
             navigationBase.OpenRightPanel(typeof(ChangePassword));
-            navigationBase.tempUser = new User() { Name = tb_username.Text, Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password, Image = tb_username.Text + ".png" };
+            navigationBase.tempUser = new User() { Name = tb_username.Text, Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password};
         }
     }
 }

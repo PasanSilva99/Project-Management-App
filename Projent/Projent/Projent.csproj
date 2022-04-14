@@ -142,6 +142,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Converter.cs" />
     <Compile Include="Model\DataStore.cs" />
     <Compile Include="Model\EncOperator.cs" />
     <Compile Include="Model\Message.cs" />
@@ -246,12 +247,8 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <None Include="Connected Services\PMServer1\item.disco" />
     <None Include="Connected Services\PMServer1\configuration91.svcinfo" />
     <None Include="Connected Services\PMServer1\configuration.svcinfo" />
-    <None Include="Connected Services\PMServer1\item3.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Connected Services\PMServer1\Projent.PMServer1.Status.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -351,20 +348,23 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
+    <None Include="Connected Services\PMServer1\PMService1.Model.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer1\PMService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer1\service.wsdl" />
+    <None Include="Connected Services\PMServer1\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer1\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\PMServer1\item.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\PMServer1\item1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\PMServer1\item2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\PMServer1\MainService.wsdl" />
-    <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\PMServer1\" />

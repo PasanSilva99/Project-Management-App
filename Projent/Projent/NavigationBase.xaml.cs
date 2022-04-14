@@ -48,7 +48,7 @@ namespace Projent
         StorageFile originalImage = null;
         internal ImageSource profileImageSource = null;
         internal User tempUser;
-        DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(5.0) };
+        DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(15.0) };
 
         public NavigationBase()
         {
@@ -59,7 +59,7 @@ namespace Projent
 
         private async void Timer_Tick(object sender, object e)
         {
-            DataStore.SetUserStatus(mainPage.LoggedUser, userStatus);
+            await DataStore.SetUserStatus(mainPage.LoggedUser, userStatus);
 
             if (CheckConnectivity())
             {
@@ -127,7 +127,7 @@ namespace Projent
                 frame_page.Navigate(type, this);
         }
 
-        internal bool ValidateUser(string email, string password)
+        internal async Task<bool> ValidateUser(string email, string password)
         {
             if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
             {
@@ -135,7 +135,7 @@ namespace Projent
                 {
                     try
                     {
-                        var isValid = DataStore.ValidateUser(email, password);
+                        var isValid = await DataStore.ValidateUser(email, password);
                         return isValid;
                     }
                     catch (Exception ex)
@@ -170,7 +170,7 @@ namespace Projent
 
                     mainPage.NavigateToLoginPage();
                 }
-                else if (!this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+                else if (! await this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
                 {
                     ContentDialog dialog = new ContentDialog();
                     dialog.Title = "Verification Faild";
@@ -186,7 +186,7 @@ namespace Projent
                 {
                     // Get the user image
                     StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                    StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Image);
+                    StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Name + ".png");
                     Debug.WriteLine("File Path " + storageFolder.Path);
                     ProfilePhoto = profilePicture;
 
@@ -376,7 +376,7 @@ namespace Projent
 
         #endregion
 
-        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var tag = (sender as MenuFlyoutItem).Tag as string;
 
@@ -386,25 +386,25 @@ namespace Projent
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)28, (byte)255, (byte)21));
                     userStatus = Status.Online;
-                    SetUserStatus(mainPage.LoggedUser, Status.Online);
+                    await SetUserStatus(mainPage.LoggedUser, Status.Online);
                 }
                 if (tag == "Idle")
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)242, (byte)255, (byte)15));
                     userStatus = Status.Idle;
-                    SetUserStatus(mainPage.LoggedUser, Status.Idle);
+                    await SetUserStatus(mainPage.LoggedUser, Status.Idle);
                 }
                 if (tag == "Busy")
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)255, (byte)16, (byte)16));
                     userStatus = Status.Busy;
-                    SetUserStatus(mainPage.LoggedUser, Status.Busy);
+                    await SetUserStatus(mainPage.LoggedUser, Status.Busy);
                 }
                 if (tag == "Invisible")
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)36, (byte)35, (byte)35));
                     userStatus = Status.Busy;
-                    SetUserStatus(mainPage.LoggedUser, Status.Busy);
+                    await SetUserStatus(mainPage.LoggedUser, Status.Busy);
                 }
                 if (tag == "logout")
                 {

@@ -11,6 +11,7 @@ using Windows.Storage;
 using System.Security.Cryptography;
 using Windows.UI.Xaml;
 using Windows.Storage.Streams;
+using Projent.PMServer1;
 
 namespace Projent.Model
 {
@@ -43,7 +44,7 @@ namespace Projent.Model
             StringBuilder sb = new StringBuilder();
             foreach (byte b in GetHash(inputString))
                 sb.Append(b.ToString("X2"));
-
+            
             return sb.ToString();
         }
 
@@ -52,10 +53,20 @@ namespace Projent.Model
         public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
         public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
 
-        public static bool SetUserStatus(User user, Status status)
+        public static async Task<bool> SetUserStatus(User user, Status status)
         {
-            //Server.PMServer1.SetUserStatus(user, (Server.PMServer1.Status)status);
-            return true;
+            try
+            {
+                PMServer1.User serverUser = new PMServer1.User() { Email = user.Email, Name = user.Name, Password = user.Password };
+
+                await Server.MainServer.mainServiceClient.SetUserStatusAsync(Converter.ToServerUser(user), Converter.ToServerStatus(status));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
         }
 
         /// <summary>
@@ -66,6 +77,7 @@ namespace Projent.Model
         {
             if (NetworkInterface.GetIsNetworkAvailable())
             {
+
                 return true;
             }
             else
@@ -91,7 +103,6 @@ namespace Projent.Model
                     "user (" +
                         "Email TEXT, " +
                         "Name TEXT, " +
-                        "ImagePath TEXT, " +
                         "Password TEXT ); " +
                     "CREATE TABLE IF NOT EXISTS " +
                         "chat (" +
@@ -140,9 +151,9 @@ namespace Projent.Model
         {
             try
             {
-                // Will be replaced after stabilize the server
-                //return await Server.PMServer1.RegisterUserAsync(email, name, image, password);
-                return true;
+                
+                return await Server.MainServer.mainServiceClient.RegisterUserAsync(email, name, image, password);
+
             }
             catch (Exception e)
             {
@@ -191,13 +202,12 @@ namespace Projent.Model
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static bool ValidateUser(string email, string password)
+        public async static Task<bool> ValidateUser(string email, string password)
         {
             if (CheckConnectivity())
             {
                 // Replace with this the server function
-                //return Server.PMServer1.ValidateUser(email, password);
-                return false;
+                return await Server.MainServer.mainServiceClient.ValidateUserAsync(email, password);
             }
             else
             {
@@ -222,13 +232,13 @@ namespace Projent.Model
                 if (con.State == System.Data.ConnectionState.Closed)
                     con.Open();
 
-                string dbScript = "SELECT Email, Name, ImagePath, Password FROM user";
+                string dbScript = "SELECT Email, Name, Password FROM user";
                 SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                 SqliteDataReader reader = sqliteCommand.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    users.Add(new User() { Email = reader.GetString(0), Name = reader.GetString(1), Image = reader.GetString(2), Password = reader.GetString(3) });
+                    users.Add(new User() { Email = reader.GetString(0), Name = reader.GetString(1), Password = reader.GetString(2) });
                 }
 
                 lodedUsers = users;
@@ -266,14 +276,13 @@ namespace Projent.Model
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static User FindUser(string email, string password)
+        public async static Task<User> FindUser(string email, string password)
         {
             if (CheckConnectivity())
             {
                 if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
                 {
-                    //return Server.PMServer1.GetUser(email, password);
-                    return null;
+                    return Converter.ToLocalUser(await Server.MainServer.mainServiceClient.GetUserAsync(email, password));
                 }
                 else
                 {
@@ -306,13 +315,12 @@ namespace Projent.Model
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public static bool IsUserRegistered(string email)
+        public async static Task<bool> IsUserRegistered(string email)
         {
             if (CheckConnectivity())
             {
-                //Debug.WriteLine("Checking User");
-                //return Server.PMServer1.IsUserRegistered(email);
-                return true;
+                Debug.WriteLine("Checking User");
+                return await Server.MainServer.mainServiceClient.IsUserRegisteredAsync(email);
             }
             else
             {
@@ -334,8 +342,8 @@ namespace Projent.Model
             {
                 if (CheckConnectivity())
                 {
-                    //return await Server.PMServer1.SaveDashboardImage(user, imageBuffer);
-                    return true;
+                    //return await Server.MainServer.mainServiceClient.SaveDashboardImageAsync(user, imageBuffer);
+                    return false;
                 }
                 return false;
             }
@@ -358,21 +366,20 @@ namespace Projent.Model
                         con.Open();
 
                         SqliteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "UPDATE user SET Email=@email, Name=@name, ImagePath=@image, Password=@password WHERE Email=@cemail AND Password=@cpassword";
+                        cmd.CommandText = "UPDATE user SET Email=@email, Name=@name, Password=@password WHERE Email=@cemail AND Password=@cpassword";
                         cmd.Parameters.AddWithValue("@email", tempUser.Email);
                         cmd.Parameters.AddWithValue("@name", tempUser.Name);
-                        cmd.Parameters.AddWithValue("@image", tempUser.Image);
                         cmd.Parameters.AddWithValue("@password", tempUser.Password.ToUpper());
                         cmd.Parameters.AddWithValue("@cemail", loggedUser.Email);
                         cmd.Parameters.AddWithValue("@cpassword", loggedUser.Password);
                         cmd.Connection = con;
                         var affectedRows = cmd.ExecuteNonQuery();
 
-                        if (loggedUser.Image != tempUser.Image)
+                        if (loggedUser.Name != tempUser.Name)
                         {
                             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                            StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Image);
-                            await userImageFile.CopyAsync(storageFolder, tempUser.Image, NameCollisionOption.ReplaceExisting);
+                            StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Name + ".png");
+                            await userImageFile.CopyAsync(storageFolder, tempUser.Name + ".png", NameCollisionOption.ReplaceExisting);
                             await userImageFile.DeleteAsync();
                         }
 
@@ -393,7 +400,7 @@ namespace Projent.Model
         internal static async Task<bool> UpdateUser(User loggedUser, User tempUser)
         {
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-            StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Image);
+            StorageFile userImageFile = await storageFolder.GetFileAsync(loggedUser.Name + ".png");
 
             var image = await SaveToBytesAsync(userImageFile);
 
@@ -406,8 +413,7 @@ namespace Projent.Model
                 Debug.WriteLine(ex.Message);
             }
 
-            //return await Server.PMServer1.UpdateUser(loggedUser, tempUser, image);
-            return true;
+            return await Server.MainServer.mainServiceClient.UpdateUserAsync(Converter.ToServerUser(loggedUser), Converter.ToServerUser(tempUser), image);
 
         }
 

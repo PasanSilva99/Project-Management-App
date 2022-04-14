@@ -51,6 +51,8 @@ namespace Projent
             //# Server.PMServer2.IntializeDatabaseService1();
             Server.ProjectServer.InitializeServer();
 
+            Server.ProjectServer.projectServiceClient.IntializeDatabaseServiceAsync();
+
             CheckConnectionAsync();
         }
 
@@ -114,7 +116,7 @@ namespace Projent
                     {
                         try
                         {
-                            var isValidUser = ValidateUser(email, password);
+                            var isValidUser = await ValidateUser(email, password);
 
                             if (isValidUser)
                             {
@@ -122,7 +124,7 @@ namespace Projent
                             }
                             else
                             {
-                                if (IsUserRegistered(email))
+                                if (await IsUserRegistered(email))
                                 {
                                     ShowPasswordErrorDialog();
                                 }
@@ -177,7 +179,7 @@ namespace Projent
                                 }
                                 else
                                 {
-                                    if (IsUserRegistered(email))
+                                    if (await IsUserRegistered(email))
                                     {
                                         ShowPasswordErrorDialog();
 
@@ -205,7 +207,7 @@ namespace Projent
                             }
                             else
                             {
-                                if (IsUserRegistered(email))
+                                if (await IsUserRegistered(email))
                                 {
                                     ShowPasswordErrorDialog();
 
@@ -237,7 +239,7 @@ namespace Projent
                         }
                         else
                         {
-                            if (IsUserRegistered(email))
+                            if (await IsUserRegistered(email))
                             {
                                 ShowPasswordErrorDialog();
 

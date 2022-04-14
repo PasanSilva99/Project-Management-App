@@ -45,7 +45,6 @@ namespace Projent
             User tempUser = new User();
             tempUser.Name = navigationBase.tempUser.Name;
             tempUser.Email = navigationBase.tempUser.Email;
-            tempUser.Image = navigationBase.tempUser.Image;
             tempUser.Password = DataStore.GetHashString(tb_newPassword.Password);
 
             // Check the global Service type
@@ -58,7 +57,7 @@ namespace Projent
                 {
                     try
                     {
-                        var isValid = DataStore.ValidateUser(tempUser.Email, DataStore.GetHashString(tb_currentPassword.Password));
+                        var isValid = await DataStore.ValidateUser(tempUser.Email, DataStore.GetHashString(tb_currentPassword.Password));
 
                         if (isValid)
                         {

@@ -57,11 +57,16 @@ namespace Projent
                         List<Message> messages = null;
                         if (list_messages.Items.Count > 0)
                         {
-                            //messages = Server.PMServer2.FindDirectMessagesFor(navigationBase.mainPage.LoggedUser, list_messages.Items[list_messages.Items.Count - 1] as Message);
+                            var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
+                                navigationBase.mainPage.LoggedUser.Name, 
+                                Converter.ToServerMessage(list_messages.Items[list_messages.Items.Count - 1] as Message));
+
+                            messages = Converter.GetLocalMessageList(messagesOList.ToList());
                         }
                         else
                         {
-                            //messages = Server.PMServer2.FindDirectMessagesFor(navigationBase.mainPage.LoggedUser, null);
+                            var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, null);
+                            messages = Converter.GetLocalMessageList( messagesOList.ToList());
 
                         }
                         if (messages != null)
@@ -72,12 +77,13 @@ namespace Projent
                     }
                     catch (Exception ex)
                     {
+                        Debug.WriteLine(ex);
                         ContentDialog dialog = new ContentDialog();
                         dialog.Title = "UnExpected Error";
                         dialog.PrimaryButtonText = "Retry";
                         dialog.SecondaryButtonText = "Close";
                         dialog.DefaultButton = ContentDialogButton.Primary;
-                        dialog.Content = "Unexpected Error Occured 0x4368617450616E656C3633";
+                        dialog.Content = $"Unexpected Error Occured \n{ex.Message}";
 
                         var result = await dialog.ShowAsync();  // show the messgae and get the result
                         if (result == ContentDialogResult.Primary)

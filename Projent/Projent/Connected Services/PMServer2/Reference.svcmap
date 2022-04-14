@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="cd4d47bd-3362-4414-bd4d-27e522dd8fde" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="dc06cf95-6849-474e-9e69-42f8fff5b337" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -21,14 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://pasan-desktop:8086/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://pasan-desktop:8076/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="b688f164-4b20-4eee-88ef-b825ff23654c" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="63fae7a9-981f-4248-928b-8ce51939cee4" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="e2f3f1ee-4b40-4c1c-9f10-aaccd3034b1b" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="PMService1.Model.xsd" MetadataType="Schema" ID="79868cf8-22c3-49f3-9026-32e87c168946" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="PMService1.xsd" MetadataType="Schema" ID="f1314a52-2d64-4984-9a7a-a8c09df4f53f" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="2e5173fe-87fb-4f7a-aff8-4f0755be2cbe" SourceId="1" SourceUrl="http://pasan-desktop:8076/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="49b04845-58f2-41d4-ae24-60614d26e85b" SourceId="1" SourceUrl="http://pasan-desktop:8076/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="46bbe3a6-7bd5-4e1c-ba92-454c31b73cbf" SourceId="1" SourceUrl="http://pasan-desktop:8076/mex" />
+    <MetadataFile FileName="PMService2.Model.xsd" MetadataType="Schema" ID="ab930b6c-075a-4878-b6d5-7e095fbeb9ee" SourceId="1" SourceUrl="http://pasan-desktop:8076/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="f52ba196-0073-42fe-a651-faff8f8085a3" SourceId="1" SourceUrl="http://pasan-desktop:8076/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

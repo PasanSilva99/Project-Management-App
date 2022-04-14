@@ -13,8 +13,17 @@ namespace PMService1
     [ServiceContract]
     public interface IMainService
     {
+        /// <summary>
+        /// Initialize the server database
+        /// </summary>
         [OperationContract]
-        bool ValidateLogin(String email, String password);
+        void IntializeDatabaseService();
+
+        /// <summary>
+        /// Gets the SQLite version
+        /// </summary>
+        [OperationContract]
+        void GetSqliteVersion();
 
         [OperationContract]
         bool SetUserStatus(User user, Status status);
@@ -23,7 +32,24 @@ namespace PMService1
         Status? GetUserStatus(string email);
 
         [OperationContract]
-        bool RegisterUser(string email, string name, string password, byte[] image);
-        
+        bool RegisterUser(string email, string name, byte[] imageBuffer, string password);
+
+        [OperationContract]
+        List<User> FetchUsers();
+
+        [OperationContract]
+        bool ValidateUser(string email, string password);
+
+        [OperationContract]
+        bool IsUserRegistered(string email);
+
+        [OperationContract]
+        User GetUser(string email, string password);
+
+        [OperationContract]
+        bool UpdateUser(User loggedUser, User tempUser, byte[] image);
+
+        [OperationContract]
+        byte[] RequestUserImage(string username);
     }
 }

@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Projent.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -22,9 +26,30 @@ namespace Projent
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        internal User LoggedUser;
         public MainPage()
         {
             this.InitializeComponent();
+            // Expand the view into the titlebar
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            CoreApplicationViewTitleBar coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
+            // Navigate to login Page
+            mainFrame.Navigate(typeof(Login), this);
         }
+
+        internal void NavigateToNavigationBase()
+        {
+            mainFrame.Navigate(typeof(NavigationBase), this);
+        }
+
+        internal void NavigateToLoginPage()
+        {
+            mainFrame.Navigate(typeof(Login), this);
+        }
+
     }
 }

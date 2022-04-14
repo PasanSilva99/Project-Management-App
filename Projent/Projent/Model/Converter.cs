@@ -55,5 +55,39 @@ namespace Projent.Model
             return null;
         }
 
+        public static PMServer2.Message ToServerMessage(Message message)
+        {
+            return new PMServer2.Message() {
+                isSticker = message.isSticker,
+                MentionedUsers = new System.Collections.ObjectModel.ObservableCollection<string>(message.MentionedUsers),
+                MessageContent = message.MessageContent,
+                receiver = message.receiver,
+                sender = message.sender,
+                Time = message.Time};
+        }
+
+        public static Message ToLocalMessage(PMServer2.Message smessage)
+        {
+            return new Message()
+            {
+                isSticker = smessage.isSticker,
+                MessageContent = smessage.MessageContent,
+                MentionedUsers = smessage.MentionedUsers.ToList(),
+                receiver = smessage.receiver,
+                sender = smessage.sender,
+                Time = smessage.Time
+            };
+        }
+
+        public static List<Message> GetLocalMessageList(List<PMServer2.Message> messages)
+        {
+            List<Message> messagesList = new List<Message>();
+            foreach (PMServer2.Message message in messages)
+            {
+                messagesList.Add(ToLocalMessage(message));
+            }
+            return messagesList;
+        }
+
     }
 }

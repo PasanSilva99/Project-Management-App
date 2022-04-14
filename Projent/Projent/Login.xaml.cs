@@ -51,6 +51,8 @@ namespace Projent
             //# Server.PMServer2.IntializeDatabaseService1();
             Server.ProjectServer.InitializeServer();
 
+            Server.ProjectServer.projectServiceClient.IntializeDatabaseServiceAsync();
+
             CheckConnectionAsync();
         }
 

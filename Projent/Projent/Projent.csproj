@@ -133,6 +133,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Connected Services\PMServer2\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="DashboardPage.xaml.cs">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Compile>
@@ -259,6 +264,15 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Connected Services\PMServer2\configuration91.svcinfo" />
+    <None Include="Connected Services\PMServer2\configuration.svcinfo" />
+    <None Include="Connected Services\PMServer2\Projent.PMServer2.Message.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\PMServer2\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -361,6 +375,19 @@
     <None Include="Connected Services\PMServer1\service1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Connected Services\PMServer2\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer2\PMService2.Model.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer2\service.wsdl" />
+    <None Include="Connected Services\PMServer2\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\PMServer2\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\ServiceReferences.Designer.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
@@ -368,6 +395,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\PMServer1\" />
+    <WCFMetadataStorage Include="Connected Services\PMServer2\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

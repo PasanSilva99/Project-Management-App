@@ -13,11 +13,41 @@ namespace PMServer2
         {
             using (ServiceHost host = new ServiceHost(typeof(PMService2.ProjectService)))
             {
+                ShowStartScreen();
                 host.Open();
-                Console.WriteLine("Project Server Started");
+                Log("Project Server Started");
+                PMService2.ProjectService mainService = new PMService2.ProjectService();
+                mainService.IntializeDatabaseService();
 
                 Console.ReadLine();
             }
+        }
+
+        public static void Log(string v)
+        {
+            Console.WriteLine($"[{DateTime.Now.ToString("G")}] >> {v}");
+        }
+        static void ShowStartScreen()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("" +
+                "===================================================================\n" +
+                "||  ██████╗ ██████╗  ██████╗      ██╗███████╗███╗   ██╗████████╗ ||\n" +
+                "||  ██╔══██╗██╔══██╗██╔═══██╗     ██║██╔════╝████╗  ██║╚══██╔══╝ ||\n" +
+                "||  ██████╔╝██████╔╝██║   ██║     ██║█████╗  ██╔██╗ ██║   ██║    ||\n" +
+                "||  ██╔═══╝ ██╔══██╗██║   ██║██   ██║██╔══╝  ██║╚██╗██║   ██║    ||\n" +
+                "||  ██║     ██║  ██║╚██████╔╝╚█████╔╝███████╗██║ ╚████║   ██║    ||\n" +
+                "||  ╚═╝     ╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚══════╝╚═╝  ╚═══╝   ╚═╝    ||\n" +
+                "||                                                               ||\n" +
+                "||     █▀█ █▀█ █▀█ ░░█ █▀▀ █▀▀ ▀█▀   █▀ █▀▀ █▀█ █░█ █▀▀ █▀█      ||\n"+
+                "||     █▀▀ █▀▄ █▄█ █▄█ ██▄ █▄▄ ░█░   ▄█ ██▄ █▀▄ ▀▄▀ ██▄ █▀▄      ||\n"+
+                "===================================================================\n");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(":::Project Server:::");
+
+            Console.ResetColor();
+
         }
     }
 }

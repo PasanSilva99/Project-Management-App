@@ -22,9 +22,12 @@
     <MetadataSource Address="http://localhost:65524/ProjectService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ProjectService.wsdl" MetadataType="Wsdl" ID="33b2b144-8d94-44cb-901f-e98df12a2906" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?wsdl" />
-    <MetadataFile FileName="ProjectService.disco" MetadataType="Disco" ID="0ced8ac5-3d61-4719-9f57-be3d8a2844cc" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?disco" />
     <MetadataFile FileName="ProjectService.xsd" MetadataType="Schema" ID="4c14f484-9b8d-4c8d-8751-4d87da95d7fd" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ProjectService1.xsd" MetadataType="Schema" ID="9667ffc1-d3fe-48f3-83e0-68436af8f226" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ProjectService.disco" MetadataType="Disco" ID="0ced8ac5-3d61-4719-9f57-be3d8a2844cc" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?disco" />
+    <MetadataFile FileName="ProjectService.wsdl" MetadataType="Wsdl" ID="33b2b144-8d94-44cb-901f-e98df12a2906" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?wsdl" />
+    <MetadataFile FileName="ProjectService11.xsd" MetadataType="Schema" ID="f989ca70-a644-4534-9744-0bbdce5e4a95" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ProjectService12.xsd" MetadataType="Schema" ID="5982800b-eb7f-4c8a-a616-49101f0d0623" SourceId="1" SourceUrl="http://localhost:65524/ProjectService.svc?xsd=xsd3" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

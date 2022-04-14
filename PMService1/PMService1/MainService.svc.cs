@@ -53,6 +53,8 @@ namespace PMService1
         {
             try
             {
+
+                System.IO.Directory.CreateDirectory("ProfilePics");
                 var dbFile = File.Open(DBName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
                 string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(MainService)).CodeBase);
@@ -123,7 +125,7 @@ namespace PMService1
             FetchUsers();
             foreach (UserStatus ustatus in undedUsers)
             {
-                if (ustatus.User == user)
+                if (ustatus.User.Name == user.Name)
                 {
                     undedUsers.Remove(ustatus);
                     undedUsers.Add(new UserStatus() { User = user, Status = status });
@@ -132,14 +134,16 @@ namespace PMService1
                 }
             }
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Log($"⚠️ User {user.Name} is not in the database.");
+            Log($"/!\\ User {user.Name} is not in the database.");
             Console.ResetColor();
             return false;
         }
 
         public Status? GetUserStatus(string email)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Log("User Status Requested");
+            Console.ResetColor();
             foreach (UserStatus ustatus in undedUsers)
             {
                 if (ustatus.User.Email == email)
@@ -154,7 +158,10 @@ namespace PMService1
 
         public bool RegisterUser(string email, string name, byte[] imageBuffer, string password)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Log("User Registration Invoked");
+            Console.ResetColor();
+
             if (!string.IsNullOrEmpty(email) &&
                 !string.IsNullOrEmpty(name) &&
                 !string.IsNullOrEmpty(password))
@@ -165,20 +172,22 @@ namespace PMService1
                 newImage.Close();
                 Log($"Saved User Image for {name}");
 
-                using (SQLiteConnection con = new SQLiteConnection($"filename={pathTODB}"))
+                using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
                 {
                     try
                     {
                         con.Open();
 
                         SQLiteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
+                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @password);";
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@name", name);
                         cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Log($"Successfully Registered User {name}");
+                        Console.ResetColor();
                         return true;
                     }
                     catch (Exception ex)
@@ -189,7 +198,7 @@ namespace PMService1
                     }
                 }
 
-                
+
             }
             Console.ForegroundColor = ConsoleColor.Red;
             Log($"Failed to register user {name}");
@@ -237,7 +246,9 @@ namespace PMService1
         /// <returns></returns>
         public bool ValidateUser(string email, string password)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Log($"Validate Requested for {email}");
+            Console.ResetColor();
             FetchUsers();
             foreach (User user in lodedUsers)
             {
@@ -260,7 +271,9 @@ namespace PMService1
         /// <returns></returns>
         public bool IsUserRegistered(string email)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Log($"User {email} Register Status Requested");
+            Console.ResetColor();
             FetchUsers();
             foreach (User user in lodedUsers)
             {
@@ -283,7 +296,9 @@ namespace PMService1
         /// <returns></returns>
         public User GetUser(string email, string password)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Log("Get User Requested");
+            Console.ResetColor();
             FetchUsers();
             Log($"Searching for user {email}");
             foreach (User user in lodedUsers)
@@ -300,7 +315,9 @@ namespace PMService1
 
         public bool UpdateUser(User loggedUser, User tempUser, byte[] image)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Log("Update User Requested");
+            Console.ResetColor();
             if (lodedUsers != null && tempUser != null)
             {
                 using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
@@ -320,30 +337,32 @@ namespace PMService1
                         cmd.Connection = con;
                         var affectedRows = cmd.ExecuteNonQuery();
 
-                        if (loggedUser.Name != tempUser.Name)
+                        Log($"Updating Image For {loggedUser.Name}");
+                        try
                         {
-                            Log("Detected Username Change");
-                            try
-                            {
-                                Log("Deleted Old Image");
-                                File.Delete(Path.Combine("ProfilePics", loggedUser.Name + ".png"));
+                            Log("Deleted Old Image");
+                            File.Delete(Path.Combine("ProfilePics", loggedUser.Name + ".png"));
 
-                            }
-                            catch (Exception _ex)
-                            {
-
-                            }
-
-
-                            var newImage = File.Create(Path.Combine("ProfilePics", tempUser.Name + ".png"));
-                            newImage.Write(image, 0, image.Length);
-                            newImage.Close();
-                            Log($"Updated User Image for {loggedUser.Name}");
                         }
+                        catch (Exception _ex)
+                        {
+
+                        }
+
+
+                        var newImage = File.Create(Path.Combine("ProfilePics", tempUser.Name + ".png"));
+                        newImage.Write(image, 0, image.Length);
+                        newImage.Close();
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Log($"Updated User Image for {loggedUser.Name}");
+                        Console.ResetColor();
+
 
                         if (affectedRows != 0)
                         {
+                            Console.ForegroundColor = ConsoleColor.Green;
                             Log($"User {loggedUser.Name} updated successfully");
+                            Console.ResetColor();
                             return true;
                         }
                         else
@@ -394,12 +413,16 @@ namespace PMService1
 
         public byte[] RequestUserImage(string username)
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Log($"User Image Requested for {username}");
+            Console.ResetColor();
             FileStream ProfilePicFile;
 
             if (File.Exists(Path.Combine("ProfilePics", username + ".png")))
             {
+                Console.ForegroundColor = ConsoleColor.Green;
                 Log("User Image Found");
+                Console.ResetColor();
                 ProfilePicFile = File.OpenRead(Path.Combine("ProfilePics", username + ".png"));
                 return GetBytesFromFile(ProfilePicFile);
             }

@@ -32,12 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-   <PropertyGroup> 
+  <PropertyGroup>
     <ContentSQLiteInteropFiles>true</ContentSQLiteInteropFiles>
     <CopySQLiteInteropFiles>false</CopySQLiteInteropFiles>
     <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
     <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
- </PropertyGroup>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,6 +68,7 @@
     <None Include="Connected Services\MainServiceReference\MainService1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\DataSources\PMService1.Model.User.datasource" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -85,6 +86,12 @@
     <None Include="Connected Services\MainServiceReference\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Connected Services\MainServiceReference\MainService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\MainServiceReference\MainService21.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Connected Services\MainServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

@@ -4,24 +4,216 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:65428/MainService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:65428/MainService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:65428/MainService.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/PMService1.Model" />
+      <xsd:import schemaLocation="http://localhost:65428/MainService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/PMService1" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IMainService_ValidateLogin_InputMessage">
-    <wsdl:part name="parameters" element="tns:ValidateLogin" />
+  <wsdl:message name="IMainService_IntializeDatabaseService_InputMessage">
+    <wsdl:part name="parameters" element="tns:IntializeDatabaseService" />
   </wsdl:message>
-  <wsdl:message name="IMainService_ValidateLogin_OutputMessage">
-    <wsdl:part name="parameters" element="tns:ValidateLoginResponse" />
+  <wsdl:message name="IMainService_IntializeDatabaseService_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IntializeDatabaseServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_GetSqliteVersion_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSqliteVersion" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_GetSqliteVersion_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSqliteVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_SetUserStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetUserStatus" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_SetUserStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetUserStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_GetUserStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserStatus" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_GetUserStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_RegisterUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUser" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_RegisterUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegisterUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_FetchUsers_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchUsers" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_FetchUsers_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchUsersResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_ValidateUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateUser" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_ValidateUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ValidateUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_IsUserRegistered_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsUserRegistered" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_IsUserRegistered_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsUserRegisteredResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_GetUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUser" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_GetUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_UpdateUser_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateUser" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_UpdateUser_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_RequestUserImage_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestUserImage" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_RequestUserImage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestUserImageResponse" />
   </wsdl:message>
   <wsdl:portType name="IMainService">
-    <wsdl:operation name="ValidateLogin">
-      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/ValidateLogin" message="tns:IMainService_ValidateLogin_InputMessage" />
-      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/ValidateLoginResponse" message="tns:IMainService_ValidateLogin_OutputMessage" />
+    <wsdl:operation name="IntializeDatabaseService">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/IntializeDatabaseService" message="tns:IMainService_IntializeDatabaseService_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/IntializeDatabaseServiceResponse" message="tns:IMainService_IntializeDatabaseService_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSqliteVersion">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/GetSqliteVersion" message="tns:IMainService_GetSqliteVersion_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/GetSqliteVersionResponse" message="tns:IMainService_GetSqliteVersion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUserStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/SetUserStatus" message="tns:IMainService_SetUserStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/SetUserStatusResponse" message="tns:IMainService_SetUserStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/GetUserStatus" message="tns:IMainService_GetUserStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/GetUserStatusResponse" message="tns:IMainService_GetUserStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/RegisterUser" message="tns:IMainService_RegisterUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/RegisterUserResponse" message="tns:IMainService_RegisterUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchUsers">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/FetchUsers" message="tns:IMainService_FetchUsers_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/FetchUsersResponse" message="tns:IMainService_FetchUsers_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/ValidateUser" message="tns:IMainService_ValidateUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/ValidateUserResponse" message="tns:IMainService_ValidateUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsUserRegistered">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/IsUserRegistered" message="tns:IMainService_IsUserRegistered_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/IsUserRegisteredResponse" message="tns:IMainService_IsUserRegistered_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/GetUser" message="tns:IMainService_GetUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/GetUserResponse" message="tns:IMainService_GetUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUser">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/UpdateUser" message="tns:IMainService_UpdateUser_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/UpdateUserResponse" message="tns:IMainService_UpdateUser_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestUserImage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/RequestUserImage" message="tns:IMainService_RequestUserImage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/RequestUserImageResponse" message="tns:IMainService_RequestUserImage_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IMainService" type="tns:IMainService">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="ValidateLogin">
-      <soap:operation soapAction="http://tempuri.org/IMainService/ValidateLogin" style="document" />
+    <wsdl:operation name="IntializeDatabaseService">
+      <soap:operation soapAction="http://tempuri.org/IMainService/IntializeDatabaseService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSqliteVersion">
+      <soap:operation soapAction="http://tempuri.org/IMainService/GetSqliteVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserStatus">
+      <soap:operation soapAction="http://tempuri.org/IMainService/SetUserStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserStatus">
+      <soap:operation soapAction="http://tempuri.org/IMainService/GetUserStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterUser">
+      <soap:operation soapAction="http://tempuri.org/IMainService/RegisterUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchUsers">
+      <soap:operation soapAction="http://tempuri.org/IMainService/FetchUsers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ValidateUser">
+      <soap:operation soapAction="http://tempuri.org/IMainService/ValidateUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsUserRegistered">
+      <soap:operation soapAction="http://tempuri.org/IMainService/IsUserRegistered" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUser">
+      <soap:operation soapAction="http://tempuri.org/IMainService/GetUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateUser">
+      <soap:operation soapAction="http://tempuri.org/IMainService/UpdateUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestUserImage">
+      <soap:operation soapAction="http://tempuri.org/IMainService/RequestUserImage" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

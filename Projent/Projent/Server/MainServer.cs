@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Projent.Model;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,10 +11,11 @@ namespace Projent.Server
     public class MainServer
     {
         public static PMServer1.MainServiceClient mainServiceClient = null;
-        public static void InitializeServer()
+        public async static void InitializeServer()
         {
             mainServiceClient = new PMServer1.MainServiceClient(PMServer1.MainServiceClient.EndpointConfiguration.BasicHttpBinding_IMainService);
             Debug.WriteLine("PMServer1 Client Started");
+            await mainServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
         }
     }
 }

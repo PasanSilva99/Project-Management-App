@@ -105,6 +105,9 @@ namespace Projent.PMServer1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/GetSqliteVersion", ReplyAction="http://tempuri.org/IMainService/GetSqliteVersionResponse")]
         System.Threading.Tasks.Task GetSqliteVersionAsync();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/RequestState", ReplyAction="http://tempuri.org/IMainService/RequestStateResponse")]
+        System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMainService/SetUserStatus", ReplyAction="http://tempuri.org/IMainService/SetUserStatusResponse")]
         System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.Status status);
         
@@ -176,6 +179,10 @@ namespace Projent.PMServer1 {
         
         public System.Threading.Tasks.Task GetSqliteVersionAsync() {
             return base.Channel.GetSqliteVersionAsync();
+        }
+        
+        public System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID) {
+            return base.Channel.RequestStateAsync(DeviceID);
         }
         
         public System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.Status status) {

@@ -39,6 +39,12 @@ namespace Projent
     /// </summary>
     public sealed partial class NavigationBase : Page
     {
+        public struct UserStatus
+        {
+            public DirectUser directUser { get; set; }
+            public Status status { get; set; }
+        }
+
         internal MainPage mainPage;
 
         Status userStatus = Status.Online;
@@ -49,6 +55,8 @@ namespace Projent
         internal ImageSource profileImageSource = null;
         internal User tempUser;
         DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(15.0) };
+        public List<DirectUser> directUsers = new List<DirectUser>();
+        public ChatPanel loadedChatPanel = null;
 
         public NavigationBase()
         {
@@ -102,6 +110,26 @@ namespace Projent
             }
 
             ValidateLoggedUser();
+
+            if (directUsers != null)
+            {
+                if (directUsers.Count > 0)
+                {
+                    foreach (var user in directUsers)
+                    {
+                        try
+                        {
+                            var drStatus = await Server.MainServer.mainServiceClient.GetUserStatusAsync(user.Email);
+                            loadedChatPanel.SetUserStaus(user, (Status)drStatus);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex);
+                        }
+                    }
+                }
+            }
+
         }
 
         internal void SetTopNavigation(List<NavigatorTag> navigatorTags)
@@ -168,7 +196,8 @@ namespace Projent
 
                     var result = await dialog.ShowAsync();
 
-                    mainPage.NavigateToLoginPage();
+                    LogoutUser();
+
                 }
                 else if (! await this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
                 {
@@ -180,24 +209,31 @@ namespace Projent
 
                     var result = await dialog.ShowAsync();
 
-                    mainPage.NavigateToLoginPage();
+                    LogoutUser();
                 }
                 else
                 {
-                    // Get the user image
-                    StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                    StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Name + ".png");
-                    Debug.WriteLine("File Path " + storageFolder.Path);
-                    ProfilePhoto = profilePicture;
-
-
-                    using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
+                    try
                     {
-                        BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
-                        await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                        // Get the user image
+                        StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
+                        StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Name + ".png");
+                        Debug.WriteLine("File Path " + storageFolder.Path);
+                        ProfilePhoto = profilePicture;
 
-                        img_profilePicture.Source = bitmapImage;
-                        profileImageSource = bitmapImage;
+
+                        using (var fileStream = await profilePicture.OpenAsync(FileAccessMode.ReadWrite))
+                        {
+                            BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                            await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+
+                            img_profilePicture.Source = bitmapImage;
+                            profileImageSource = bitmapImage;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex);
                     }
                 }
             }

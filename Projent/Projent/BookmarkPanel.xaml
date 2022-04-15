@@ -5,10 +5,22 @@
     xmlns:local="using:Projent"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    mc:Ignorable="d">
 
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1"
+                                 StartPoint="0.5,0">
+                <LinearGradientBrush.RelativeTransform>
+                    <CompositeTransform CenterY="0.5"
+                                        CenterX="0.5"
+                                        Rotation="40.236" />
+                </LinearGradientBrush.RelativeTransform>
+                <GradientStop Color="#FFE3E6FF" />
+                <GradientStop Color="#FFF0D2FF"
+                              Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
 
     </Grid>
 </Page>

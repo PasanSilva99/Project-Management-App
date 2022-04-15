@@ -57,6 +57,7 @@ namespace Projent.Model
         {
             try
             {
+
                 PMServer1.User serverUser = new PMServer1.User() { Email = user.Email, Name = user.Name, Password = user.Password };
 
                 await Server.MainServer.mainServiceClient.SetUserStatusAsync(Converter.ToServerUser(user), Converter.ToServerStatus(status));
@@ -177,10 +178,9 @@ namespace Projent.Model
                         con.Open();
 
                         SqliteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @image, @password);";
+                        cmd.CommandText = "INSERT INTO user VALUES(@email, @name, @password);";
                         cmd.Parameters.AddWithValue("@email", email);
                         cmd.Parameters.AddWithValue("@name", name);
-                        cmd.Parameters.AddWithValue("@image", imageName);
                         cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
@@ -513,6 +513,27 @@ namespace Projent.Model
                 }
             }
             return false;
+        }
+
+        public static string GetDefaultMacAddress()
+        {
+            Dictionary<string, long> macAddresses = new Dictionary<string, long>();
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (nic.OperationalStatus == OperationalStatus.Up)
+                    macAddresses[nic.GetPhysicalAddress().ToString()] = nic.GetIPStatistics().BytesSent + nic.GetIPStatistics().BytesReceived;
+            }
+            long maxValue = 0;
+            string mac = "";
+            foreach (KeyValuePair<string, long> pair in macAddresses)
+            {
+                if (pair.Value > maxValue)
+                {
+                    mac = pair.Key;
+                    maxValue = pair.Value;
+                }
+            }
+            return mac;
         }
     }
 }

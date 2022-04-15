@@ -15,7 +15,6 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="sender" nillable="true" type="xs:string" />
-        <xs:element minOccurs="0" name="receiver" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="lastMessage" type="xs:dateTime" />
       </xs:sequence>
     </xs:complexType>
@@ -52,6 +51,21 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="RequestStateResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CheckNewMessagesFor">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="latestMessageTime" type="xs:dateTime" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CheckNewMessagesForResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="CheckNewMessagesForResult" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

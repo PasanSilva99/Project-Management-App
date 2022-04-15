@@ -33,6 +33,8 @@ namespace Projent
     {
         NavigationBase navigationBase;
         private string SelectedReceiver = "LilyKi";
+        public DispatcherTimer ChatTimer = new DispatcherTimer();
+        public DateTime latestMessageTime = DateTime.MinValue;
 
         public ChatPanel()
         {
@@ -69,12 +71,12 @@ namespace Projent
                             if (LastMessageControl.Content.GetType() == typeof(ReceiveMessageControl))
                             {
                                 messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, SelectedReceiver, (LastMessage as ReceiveMessageControl).Time);
+                                navigationBase.mainPage.LoggedUser.Name, (LastMessage as ReceiveMessageControl).Time);
                             }
                             else
                             {
                                 messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, SelectedReceiver, (LastMessage as SendMessageControl).Time);
+                                navigationBase.mainPage.LoggedUser.Name, (LastMessage as SendMessageControl).Time);
                             }
                             //Debug.WriteLine(LastMessage.ToString());
 
@@ -84,14 +86,19 @@ namespace Projent
                         {
                             var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
                                 navigationBase.mainPage.LoggedUser.Name,
-                                SelectedReceiver,
                                 DateTime.MinValue);
                             messages = Converter.GetLocalMessageList(messagesOList.ToList());
 
                         }
                         if (messages != null)
                         {
-                            UpdateMessagesList(messages);
+                            var latestMessage = messages.OrderByDescending(m => m.Time).FirstOrDefault();
+                            latestMessageTime = latestMessage.Time;
+                            UpdateMessagesList(
+                                messages.Where(
+                                    message => 
+                                    ( message.sender == navigationBase.mainPage.LoggedUser.Name && message.receiver == SelectedReceiver) ||
+                                    ( message.sender == SelectedReceiver && message.receiver == navigationBase.mainPage.LoggedUser.Name)).ToList());
                         }
 
                     }
@@ -350,6 +357,21 @@ namespace Projent
             LoadDirectUsers();
             navigationBase.loadedChatPanel = this;
 
+            ChatTimer.Interval = new TimeSpan(0, 0, 1);
+            ChatTimer.Tick += ChatTimer_Tick;
+            ChatTimer.Start();
+        }
+
+        private async void ChatTimer_Tick(object sender, object e)
+        {
+            var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+            if (isNewMessagesAvailable)
+            {
+                // get the new messages list from the latest message time
+                // show the toast notifications if the user is the receiver
+                // if the user is the sender, and the selected receiver is the new message receiver update the message list
+                // 
+            }
         }
 
         private async void LoadDirectUsers()

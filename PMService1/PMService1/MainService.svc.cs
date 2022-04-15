@@ -117,6 +117,7 @@ namespace PMService1
 
         private void UserTimer_Tick(object sender)
         {
+            undedUsers.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Log("Resetting User Status");
             FetchUsers();

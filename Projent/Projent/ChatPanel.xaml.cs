@@ -32,7 +32,7 @@ namespace Projent
     public sealed partial class ChatPanel : Page
     {
         NavigationBase navigationBase;
-        private string SelectedReceiver = "Amoeher";
+        private string SelectedReceiver = "LilyKi";
 
         public ChatPanel()
         {
@@ -348,12 +348,84 @@ namespace Projent
             stack_users.Children.Clear();  // Clear all Test Users
 
             LoadDirectUsers();
+            navigationBase.loadedChatPanel = this;
 
         }
 
-        private void LoadDirectUsers()
+        private async void LoadDirectUsers()
         {
+            stack_users.Children.Clear();
             var DirectUserList = DataStore.FetchDirectUsers();
+            navigationBase.directUsers = DirectUserList;
+            if (DirectUserList != null && DirectUserList.Count > 0)
+            {
+                foreach (var user in DirectUserList)
+                {
+                    Button directUserButton = new Button();
+                    directUserButton.Style = Resources["UserButton"] as Style;
+                    directUserButton.Tag = user;
+
+                    var DirectUserImage = new Image();
+
+                    if (!await IsFilePresent(user.Name + ".png"))
+                    {
+                        var imageBuffer = await Server.MainServer.mainServiceClient.RequestUserImageAsync(user.Name);
+
+                        var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                        var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(user.Name + ".png", CreationCollisionOption.OpenIfExists);
+
+                        await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
+
+                        using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                        {
+                            BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                            await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                            DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
+                        }
+
+                    }
+                    else
+                    {
+                        var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                        var ProfilePicFile = await ProfilePicFolder.GetFileAsync(user.Name + ".png");
+
+                        using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                        {
+                            BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                            await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                            DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
+                        }
+                    }
+
+                    directUserButton.Content = DirectUserImage;
+                    directUserButton.RightTapped += DirectUserButton_RightTapped;
+                    directUserButton.Tapped += DirectUserButton_Tapped;
+                    FlyoutBase.SetAttachedFlyout(directUserButton, Resources["UserInfo"] as Flyout);
+
+                    stack_users.Children.Add(directUserButton);
+                }
+            }
+        }
+
+        private void DirectUserButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            list_messages.Items.Clear();
+            SelectedReceiver = ((sender as Button).Tag as DirectUser).Name;
+            FetchMessages();
+        }
+
+        private void DirectUserButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var user = (sender as Button).Tag as DirectUser;
+            lbl_DirectUserEmail.Text = user.Email;
+            lbl_DirectUsername.Text = user.Name;
+
+            img_directUserImage.Source = ((sender as Button).Content as Image).Source;
+
+            btn_removeDirectuser.Tag = user;
+            btn_removeClearChat.Tag = user;
+
+            FlyoutBase.ShowAttachedFlyout(sender as Button);
         }
 
         private async void NewDirectUser_Click(object sender, RoutedEventArgs e)
@@ -371,12 +443,59 @@ namespace Projent
                     var DirectUserListItem = new ListViewItem();
                     DirectUserListItem.Style = Resources["DirectUserItem"] as Style;
                     DirectUserListItem.Content = directUserControl;
+                    DirectUserListItem.Tag = new DirectUser() { Name = user.Name, Email = user.Email };
+                    DirectUserListItem.Tapped += DirectUserListItem_Tapped;
 
                     list_directUsers.Items.Add(DirectUserListItem);
 
                 }
             }
 
+        }
+
+        public void SetUserStaus(DirectUser directUser, DataStore.Status status)
+        {
+            var DirectUsersButtons = stack_users.Children;
+
+            foreach (var DirectUserButton in DirectUsersButtons)
+            {
+                var btn = DirectUserButton as Button;
+                var dr = btn.Tag as DirectUser;
+                if(dr != null)
+                    if(dr.Email == directUser.Email)
+                    {
+                        btn.BorderBrush = GetColorForStatus(status);
+                    }
+
+            }
+        }
+
+        internal SolidColorBrush GetColorForStatus(DataStore.Status status)
+        {
+            switch (status)
+            {
+                case DataStore.Status.Offline: 
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)74, (byte)74, (byte)74));
+                case DataStore.Status.Online:
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)36, (byte)230, (byte)13));
+                case DataStore.Status.Busy:
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)237, (byte)14, (byte)55));
+                case DataStore.Status.Invisible:
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)0, (byte)0, (byte)0));
+                case DataStore.Status.Idle:
+                    return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)247, (byte)195, (byte)51));
+                default: return null;
+            }
+        }
+
+        private void DirectUserListItem_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var user = (sender as ListViewItem).Tag as DirectUser;
+            if (user != null)
+            {
+                var isSuccess = DataStore.NewDirectUser(user);
+            }
+            LoadDirectUsers();
         }
 
         private void ShowSendButton(bool state)
@@ -479,5 +598,30 @@ namespace Projent
         {
 
         }
+
+        private void btn_removeDirectuser_Click(object sender, RoutedEventArgs e)
+        {
+            var user = (sender as Button).Tag as DirectUser;
+
+            var DirectUsersButtons = stack_users.Children;
+
+            foreach (var DirectUserButton in DirectUsersButtons)
+            {
+                var btn = DirectUserButton as Button;
+                var dr = btn.Tag as DirectUser;
+                if(dr.Name == user.Name)
+                    stack_users.Children.Remove(DirectUserButton);
+
+
+            }
+
+            DataStore.RemoveDirectUser(user);
+        }
+
+        private void btn_removeClearChat_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }

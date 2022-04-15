@@ -23,6 +23,13 @@ namespace PMService2
             Console.ResetColor();
         }
 
+        public bool RequestState(string DeviceID)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Log($"PC Client {DeviceID} Requested Server State");
+            return true;
+        }
+
         public void IntializeDatabaseService()
         {
             //Directory.CreateDirectory("ProfilePics");

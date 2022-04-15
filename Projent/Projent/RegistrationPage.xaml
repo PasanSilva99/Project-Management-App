@@ -128,15 +128,25 @@
                                Foreground="red"
                                Text="* Re Password Error Text"
                                Visibility="Collapsed" />
-                    <Button Content="Register"
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button Content="Cancel"
+                                x:Name="btn_cancel"
+                                CornerRadius="10 10 10 10"
+                                Margin="0,10,10,0"
+                                Padding="20,4,20,5"
+                                Click="btn_cancel_Click" />
+
+                        <Button Content="Register"
                             x:Name="btn_register"
                             CornerRadius="10 10 10 10"
                             Margin="0,10,0,0"
-                            HorizontalAlignment="Right"
+                            
                             Padding="20,4,20,5"
                             Background="{ThemeResource SystemAccentColor}"
                             Foreground="White"
                             Click="btn_register_Click" />
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 

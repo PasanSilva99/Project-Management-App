@@ -36,6 +36,7 @@ namespace PMService1
     // NOTE: In order to launch WCF Test Client for testing this service, please select MainService.svc or MainService.svc.cs at the Solution Explorer and start debugging.
     public class MainService : IMainService
     {
+        Timer UserTimer;
         public static String DBName { get; set; } = "PMService1DB.db"; // Server
         private static List<User> lodedUsers = new List<User>();
         private static List<UserStatus> undedUsers = new List<UserStatus>();
@@ -43,6 +44,14 @@ namespace PMService1
         public static void Log(string v)
         {
             Console.WriteLine($"[{DateTime.Now.ToString("G")}] >> {v}");
+            Console.ResetColor();
+        }
+
+        public bool RequestState(string DeviceID)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Log($"PC Client {DeviceID} Requested Server State");
+            return true;
         }
 
         /// <summary>
@@ -101,12 +110,14 @@ namespace PMService1
 
         public void StartUserTimers()
         {
-            Timer UserTimer = new Timer(UserTimer_Tick, null, 0, 30000);
+            UserTimer = new Timer(UserTimer_Tick, null, 0, 30000);
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Log("User Reset Timers Started");
         }
 
         private void UserTimer_Tick(object sender)
         {
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Log("Resetting User Status");
             FetchUsers();
             foreach (User user in lodedUsers)
@@ -118,7 +129,6 @@ namespace PMService1
         public bool SetUserStatus(User user, Status status)
         {
             Log($"User {user.Name} connected.");
-            FetchUsers();
             foreach (UserStatus ustatus in undedUsers)
             {
                 if (ustatus.User.Name == user.Name)
@@ -181,6 +191,9 @@ namespace PMService1
                         cmd.Parameters.AddWithValue("@password", password.ToUpper());
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
+
+                        undedUsers.Add(new UserStatus() { User = new User() { Email= email, Name=name, Password=password.ToUpper()}, Status = Status.Offline });
+
                         Console.ForegroundColor = ConsoleColor.Green;
                         Log($"Successfully Registered User {name}");
                         Console.ResetColor();
@@ -196,6 +209,7 @@ namespace PMService1
 
 
             }
+            FetchUsers();
             Console.ForegroundColor = ConsoleColor.Red;
             Log($"Failed to register user {name}");
             Console.ResetColor();

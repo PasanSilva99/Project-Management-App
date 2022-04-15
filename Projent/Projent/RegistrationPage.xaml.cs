@@ -333,6 +333,7 @@ namespace Projent
             }
 
             login.SetUser(new User() { Email = email, Password = EncOperator.EncryptString(Login.key, tb_password.Password) });
+            login.ResetRegistration();
 
         }
 
@@ -466,6 +467,11 @@ namespace Projent
             StorageFile sampleFile = await storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBytesAsync(sampleFile, imageBuffer);
             return sampleFile;
+        }
+
+        private void btn_cancel_Click(object sender, RoutedEventArgs e)
+        {
+            login.ResetRegistration();
         }
     }
 }

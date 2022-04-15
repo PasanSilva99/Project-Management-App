@@ -49,6 +49,12 @@
   <wsdl:message name="IMainService_GetSqliteVersion_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetSqliteVersionResponse" />
   </wsdl:message>
+  <wsdl:message name="IMainService_RequestState_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestState" />
+  </wsdl:message>
+  <wsdl:message name="IMainService_RequestState_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestStateResponse" />
+  </wsdl:message>
   <wsdl:message name="IMainService_SetUserStatus_InputMessage">
     <wsdl:part name="parameters" element="tns:SetUserStatus" />
   </wsdl:message>
@@ -112,6 +118,10 @@
       <wsdl:input wsaw:Action="http://tempuri.org/IMainService/GetSqliteVersion" message="tns:IMainService_GetSqliteVersion_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMainService/GetSqliteVersionResponse" message="tns:IMainService_GetSqliteVersion_OutputMessage" />
     </wsdl:operation>
+    <wsdl:operation name="RequestState">
+      <wsdl:input wsaw:Action="http://tempuri.org/IMainService/RequestState" message="tns:IMainService_RequestState_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IMainService/RequestStateResponse" message="tns:IMainService_RequestState_OutputMessage" />
+    </wsdl:operation>
     <wsdl:operation name="SetUserStatus">
       <wsdl:input wsaw:Action="http://tempuri.org/IMainService/SetUserStatus" message="tns:IMainService_SetUserStatus_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IMainService/SetUserStatusResponse" message="tns:IMainService_SetUserStatus_OutputMessage" />
@@ -162,6 +172,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetSqliteVersion">
       <soap:operation soapAction="http://tempuri.org/IMainService/GetSqliteVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestState">
+      <soap:operation soapAction="http://tempuri.org/IMainService/RequestState" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -265,6 +284,15 @@
     </wsdl:operation>
     <wsdl:operation name="GetSqliteVersion">
       <soap12:operation soapAction="http://tempuri.org/IMainService/GetSqliteVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestState">
+      <soap12:operation soapAction="http://tempuri.org/IMainService/RequestState" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

@@ -504,6 +504,86 @@
             </Setter>
         </Style>
 
+        <LinearGradientBrush x:Key="FlyoutBackground" EndPoint="0.5,1"
+                             StartPoint="0.5,0">
+            <LinearGradientBrush.RelativeTransform>
+                <CompositeTransform CenterY="0.5"
+                                    CenterX="0.5"
+                                    Rotation="40.236" />
+            </LinearGradientBrush.RelativeTransform>
+            <GradientStop Color="#FFE3E6FF" />
+            <GradientStop Color="#FFF0D2FF"
+                          Offset="1" />
+        </LinearGradientBrush>
+
+        <Flyout x:Key="UserInfo"
+                Placement="Right">
+            <Flyout.FlyoutPresenterStyle>
+                <Style TargetType="FlyoutPresenter">
+                    <Setter Property="CornerRadius"
+                            Value="10" />
+                    <Setter Property="Background"
+                            Value="{StaticResource FlyoutBackground}" />
+                </Style>
+            </Flyout.FlyoutPresenterStyle>
+
+            <Grid Padding="5 5 5 5"
+                  MinWidth="300">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Width="45"
+                        Height="45"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Margin="0 0 10 0" CornerRadius="45 45 45 45">
+                    <Image x:Name="img_directUserImage"
+                           Source="/Assets/Icons/user.png" />
+
+                </Border>
+
+                <StackPanel Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0 0 0 10">
+                    <TextBlock Text="username"
+                               FontWeight="Bold"
+                               x:Name="lbl_DirectUsername" />
+                    <TextBlock Text="email@email.email"
+                               x:Name="lbl_DirectUserEmail" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Spacing="10">
+                    <Button Content="Clear Chat"
+                            CornerRadius="5 5 5 5"
+                            x:Name="btn_removeClearChat"
+                            Click="btn_removeClearChat_Click"
+                            Padding="10 2 10 2" />
+
+                    <Button Content="Remove"
+                            Background="#EE6363"
+                            Foreground="#FFFFFF"
+                            CornerRadius="5 5 5 5"
+                            x:Name="btn_removeDirectuser"
+                            Click="btn_removeDirectuser_Click"
+                            Padding="10 2 10 2">
+
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+
+        </Flyout>
 
     </Page.Resources>
 
@@ -560,7 +640,8 @@
                            Margin="-5 -5 -5 -5" />
 
                     <Button.Flyout>
-                        <Flyout Placement="LeftEdgeAlignedTop" Opened="Flyout_Opened">
+                        <Flyout Placement="LeftEdgeAlignedTop"
+                                Opened="Flyout_Opened">
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">
                                     <Setter Property="CornerRadius"
@@ -602,7 +683,8 @@
                                 </Grid>
 
                                 <ListView Grid.Row="1"
-                                          Margin="0 10 0 0" x:Name="list_directUsers">
+                                          Margin="0 10 0 0"
+                                          x:Name="list_directUsers">
                                     <ListViewItem Style="{StaticResource DirectUserItem}">
                                     </ListViewItem>
                                 </ListView>

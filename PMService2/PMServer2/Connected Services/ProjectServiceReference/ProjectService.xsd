@@ -14,7 +14,8 @@
   <xs:element name="FindDirectMessagesFor">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="loggedUser" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="sender" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="receiver" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="lastMessage" type="xs:dateTime" />
       </xs:sequence>
     </xs:complexType>

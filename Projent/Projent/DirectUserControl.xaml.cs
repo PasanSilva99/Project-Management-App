@@ -1,11 +1,14 @@
 ﻿using Projent.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,24 +43,54 @@ namespace Projent
             }
         }
 
+        public async Task<bool> IsFilePresent(string fileName)
+        {
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+            var item = await storageFolder.TryGetItemAsync(fileName);
+            return item != null;
+        }
+
         private async void LoadImageAsync()
         {
-            using (InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream())
+            try
             {
-                // Writes the image byte array in an InMemoryRandomAccessStream
-                // that is needed to set the source of BitmapImage.
-                using (DataWriter writer = new DataWriter(ms.GetOutputStreamAt(0)))
+                if (!await IsFilePresent(_directUser.Name + ".png"))
                 {
                     var imageBuffer = await Server.MainServer.mainServiceClient.RequestUserImageAsync(_directUser.Name);
-                    writer.WriteBytes(imageBuffer);
-                    await writer.StoreAsync();
-                    await writer.FlushAsync();
+
+                    var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                    var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(_directUser.Name + ".png", CreationCollisionOption.OpenIfExists);
+
+                    await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
+
+                    using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                        await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                        img_profilePic.Source = bitmapImage;  // sets the created bitmap as an image source
+                    }
+
+                }
+                else
+                {
+                    var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                    var ProfilePicFile = await ProfilePicFolder.GetFileAsync(_directUser.Name + ".png");
+
+                    using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                    {
+                        BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                        await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                        img_profilePic.Source = bitmapImage;  // sets the created bitmap as an image source
+                    }
                 }
 
-                var image = new BitmapImage();
-                await image.SetSourceAsync(ms);
-                img_profilePic.Source = image;
-                ms.Dispose();
+                
+
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 

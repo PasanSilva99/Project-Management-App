@@ -51,8 +51,6 @@ namespace Projent
             //# Server.PMServer2.IntializeDatabaseService1();
             Server.ProjectServer.InitializeServer();
 
-            Server.ProjectServer.projectServiceClient.IntializeDatabaseServiceAsync();
-
             CheckConnectionAsync();
         }
 
@@ -298,8 +296,20 @@ namespace Projent
             tb_password.Password = EncOperator.DecryptString(key, user.Password);
         }
 
+
+        public void ResetRegistration()
+        {
+            frame_register.Navigate(typeof(Page));
+            frame_register.BackStack.Clear();
+            btn_login.IsEnabled = true;
+            RightPanelMinimize.Begin();
+        }
         private void ShowRegisterDialog(String email, String password)
         {
+            frame_register.Navigate(typeof(RegistrationPage),
+                    new RegisterData() { user = new User() { Email = email, Password = EncOperator.EncryptString(key, password) }, login = this });
+
+            frame_register.Tag = new User() { Email = email, Password = password };
 
             if (frame_register.SourcePageType != null)
             {
@@ -323,10 +333,6 @@ namespace Projent
 
             else
             {
-                frame_register.Navigate(typeof(RegistrationPage),
-                    new RegisterData() { user = new User() { Email = email, Password = EncOperator.EncryptString(key, password) }, login = this });
-
-                frame_register.Tag = new User() { Email = email, Password = password };
                 if (targ.X == 500)
                     RightPanelExpand.Begin();
             }

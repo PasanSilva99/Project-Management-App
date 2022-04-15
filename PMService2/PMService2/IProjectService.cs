@@ -20,5 +20,8 @@ namespace PMService2
 
         [OperationContract]
         bool NewMessage(Message message);
+
+        [OperationContract]
+        bool RequestState(string DeviceID);
     }
 }

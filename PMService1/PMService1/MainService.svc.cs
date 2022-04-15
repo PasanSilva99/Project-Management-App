@@ -39,7 +39,6 @@ namespace PMService1
         public static String DBName { get; set; } = "PMService1DB.db"; // Server
         private static List<User> lodedUsers = new List<User>();
         private static List<UserStatus> undedUsers = new List<UserStatus>();
-        private static string pathTODB = "";
 
         public static void Log(string v)
         {
@@ -54,14 +53,13 @@ namespace PMService1
             try
             {
 
-                System.IO.Directory.CreateDirectory("ProfilePics");
-                var dbFile = File.Open(DBName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                Directory.CreateDirectory("ProfilePics");
 
-                string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(MainService)).CodeBase);
-                pathTODB = Path.Combine(path, DBName);
-                Log("Database Path Set to " + pathTODB);
+                if (!File.Exists(DBName))
+                    File.Create(DBName);
 
-                dbFile.Close();
+                Log("Database Path Set");
+
 
                 using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
                 {
@@ -88,8 +86,6 @@ namespace PMService1
                     sqliteCommand.ExecuteNonQuery();
 
                     Log("Server Database Initialized");
-
-                    dbFile.Close();
                     con.Close();
                 }
             }

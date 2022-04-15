@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PMService2.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -12,6 +13,12 @@ namespace PMService2
     public interface IProjectService
     {
         [OperationContract]
-        void DoWork();
+        void IntializeDatabaseService();
+
+        [OperationContract]
+        List<Message> FindDirectMessagesFor(string sender, string receiver, DateTime lastMessage);
+
+        [OperationContract]
+        bool NewMessage(Message message);
     }
 }

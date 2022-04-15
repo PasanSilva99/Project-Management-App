@@ -15,11 +15,23 @@ namespace PMServer2.ProjectServiceReference {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ProjectServiceReference.IProjectService")]
     public interface IProjectService {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DoWork", ReplyAction="http://tempuri.org/IProjectService/DoWorkResponse")]
-        void DoWork();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/IntializeDatabaseService", ReplyAction="http://tempuri.org/IProjectService/IntializeDatabaseServiceResponse")]
+        void IntializeDatabaseService();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DoWork", ReplyAction="http://tempuri.org/IProjectService/DoWorkResponse")]
-        System.Threading.Tasks.Task DoWorkAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/IntializeDatabaseService", ReplyAction="http://tempuri.org/IProjectService/IntializeDatabaseServiceResponse")]
+        System.Threading.Tasks.Task IntializeDatabaseServiceAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
+        PMService2.Model.Message[] FindDirectMessagesFor(string loggedUser, System.DateTime lastMessage);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
+        System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string loggedUser, System.DateTime lastMessage);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
+        bool NewMessage(PMService2.Model.Message message);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
+        System.Threading.Tasks.Task<bool> NewMessageAsync(PMService2.Model.Message message);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -49,12 +61,28 @@ namespace PMServer2.ProjectServiceReference {
                 base(binding, remoteAddress) {
         }
         
-        public void DoWork() {
-            base.Channel.DoWork();
+        public void IntializeDatabaseService() {
+            base.Channel.IntializeDatabaseService();
         }
         
-        public System.Threading.Tasks.Task DoWorkAsync() {
-            return base.Channel.DoWorkAsync();
+        public System.Threading.Tasks.Task IntializeDatabaseServiceAsync() {
+            return base.Channel.IntializeDatabaseServiceAsync();
+        }
+        
+        public PMService2.Model.Message[] FindDirectMessagesFor(string loggedUser, System.DateTime lastMessage) {
+            return base.Channel.FindDirectMessagesFor(loggedUser, lastMessage);
+        }
+        
+        public System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string loggedUser, System.DateTime lastMessage) {
+            return base.Channel.FindDirectMessagesForAsync(loggedUser, lastMessage);
+        }
+        
+        public bool NewMessage(PMService2.Model.Message message) {
+            return base.Channel.NewMessage(message);
+        }
+        
+        public System.Threading.Tasks.Task<bool> NewMessageAsync(PMService2.Model.Message message) {
+            return base.Channel.NewMessageAsync(message);
         }
     }
 }

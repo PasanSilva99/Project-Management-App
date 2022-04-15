@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,9 +58,15 @@ namespace Projent.Model
 
         public static PMServer2.Message ToServerMessage(Message message)
         {
+            ObservableCollection<string> mentionedUsers = new ObservableCollection<string>();
+
+            if (message.MentionedUsers != null)
+            {
+                mentionedUsers = new ObservableCollection<string>(message.MentionedUsers);
+            }
             return new PMServer2.Message() {
                 isSticker = message.isSticker,
-                MentionedUsers = new System.Collections.ObjectModel.ObservableCollection<string>(message.MentionedUsers),
+                MentionedUsers = mentionedUsers,
                 MessageContent = message.MessageContent,
                 receiver = message.receiver,
                 sender = message.sender,
@@ -68,11 +75,18 @@ namespace Projent.Model
 
         public static Message ToLocalMessage(PMServer2.Message smessage)
         {
+            List<string> mentionedUsers = new List<string>();
+
+            if (smessage.MentionedUsers != null)
+            {
+                mentionedUsers = smessage.MentionedUsers.ToList();
+            }
+
             return new Message()
             {
                 isSticker = smessage.isSticker,
                 MessageContent = smessage.MessageContent,
-                MentionedUsers = smessage.MentionedUsers.ToList(),
+                MentionedUsers = mentionedUsers,
                 receiver = smessage.receiver,
                 sender = smessage.sender,
                 Time = smessage.Time

@@ -16,7 +16,7 @@ namespace PMService2
         void IntializeDatabaseService();
 
         [OperationContract]
-        List<Message> FindDirectMessagesFor(string loggedUser, Message lastMessage);
+        List<Message> FindDirectMessagesFor(string sender, string receiver, DateTime lastMessage);
 
         [OperationContract]
         bool NewMessage(Message message);

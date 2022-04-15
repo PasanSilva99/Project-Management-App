@@ -17,7 +17,6 @@ namespace PMService2
     public class ProjectService : IProjectService
     {
         public static String DBName { get; set; } = "PMService2DB.db";
-        private static string pathTODB = "";
         public static void Log(string v)
         {
             Console.WriteLine($"[{DateTime.Now.ToString("G")}] >> {v}");
@@ -27,13 +26,11 @@ namespace PMService2
         public void IntializeDatabaseService()
         {
             //Directory.CreateDirectory("ProfilePics");
-            var dbFile = File.Open(DBName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            if (!File.Exists(DBName))
+                File.Create(DBName);
 
-            string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ProjectService)).CodeBase);
-            pathTODB = Path.Combine(path, DBName);
-            Log("Database Path Set to " + pathTODB);
+            Log("Database Path Set");
 
-            dbFile.Close();
             try
             {
                 using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
@@ -62,24 +59,65 @@ namespace PMService2
 
         }
 
-        public List<Message> FindDirectMessagesFor(string loggedUser, Message lastMessage)
+        public List<Message> FindDirectMessagesFor(string sender, string receiver, DateTime lastMessage)
         {
-            Log($"Requested Direct messages For {loggedUser}");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Log($"Requested Direct messages For the relation {sender} and {receiver}");
 
-            Log("Generating Dummy Messages");
-            var messages = new List<Message>();
-            messages.Add(new Message() { isSticker = false, MentionedUsers = null, MessageContent = "Test From server 1", receiver = "Amoeher", sender = "Server", Time = DateTime.Now });
-            messages.Add(new Message() { isSticker = false, MentionedUsers = null, MessageContent = "If received, Server is healthy. and runnding on test mode. 😀😁", receiver = "Amoeher", sender = "Server", Time = DateTime.Now });
-            messages.Add(new Message() { isSticker = false, MentionedUsers = null, MessageContent = "This is a personal message for LiliKi From the server 😉", receiver = "LiliKi", sender = "Server", Time = DateTime.Now });
-
-            var allMessagesForUser = messages.Where(message => message.sender == loggedUser || message.receiver == loggedUser).ToList();
+            Log("FetchingMessages from the database");
+            var allMessagesForUser = new List<Message>();
             var newMessages = new List<Message>();
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                if (con.State == System.Data.ConnectionState.Closed)
+                    con.Open();
+
+                string dbScript = "SELECT MessageContent, isSticker, sender, receiver, Time, MentionedUsers FROM message WHERE (sender = @sender AND receiver = @receiver) OR (sender = @sreceiver AND receiver = @rsender)";
+                SQLiteCommand sqliteCommand = new SQLiteCommand(dbScript, con);
+                sqliteCommand.Parameters.AddWithValue("@sender", sender);
+                sqliteCommand.Parameters.AddWithValue("@receiver", receiver);
+                sqliteCommand.Parameters.AddWithValue("@rsender", sender);
+                sqliteCommand.Parameters.AddWithValue("@sreceiver", receiver);
+
+                SQLiteDataReader reader = sqliteCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var MentionedUserList = new List<string>();
+                    var mentionedUsers = reader.GetString(5);
+                    if (mentionedUsers.Contains(','))
+                    {
+                        MentionedUserList = mentionedUsers.Split(',').ToList();
+                    }
+                    else if (mentionedUsers.Length > 0)
+                    {
+                        MentionedUserList.Add(mentionedUsers);
+                    }
+                    else
+                    {
+                        MentionedUserList = new List<string>();
+                    }
+
+                    allMessagesForUser.Add(new Message()
+                    {
+                        MessageContent = reader.GetString(0),
+                        isSticker = reader.GetInt32(1) == 0 ? false : true,
+                        sender = reader.GetString(2),
+                        receiver = reader.GetString(3),
+                        Time = DateTime.Parse(reader.GetString(4)),
+                        MentionedUsers = MentionedUserList
+                    }) ;
+                }
+                Log($"Found {allMessagesForUser.Count} Messages For the Requsted Relation");
+                con.Close();
+            }
+
             if (lastMessage != null)
             {
-                Log($"Filtering Messages From {lastMessage.Time.ToString("g")}");
+                Log($"Filtering Messages From {lastMessage.ToString("g")}");
                 foreach (var message in allMessagesForUser)
                 {
-                    if (message.Time >= lastMessage.Time)
+                    if (message.Time > lastMessage)
                     {
                         newMessages.Add(message);
                     }
@@ -135,19 +173,31 @@ namespace PMService2
                             }
                             command.Parameters.AddWithValue("@mentionedUsers", mentionUserString.ToString().Substring(0, mentionUserString[mentionUserString.Length - 1]));
                         }
-                        else
+                        else if(message.MentionedUsers.Count > 0)
                         {
                             Log($"Found {message.MentionedUsers.Count} Mentioned Users");
                             command.Parameters.AddWithValue("@mentionedUsers", message.MentionedUsers.ToArray()[0]);
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@mentionedUsers", "");
                         }
                     }
                     else
                     {
                         command.Parameters.AddWithValue("@mentionedUsers", "");
                     }
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Log("Successfully saved the message");
-                    return true;
+
+                    var affRows = command.ExecuteNonQuery();
+
+                    if (affRows > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Log("Successfully saved the message");
+                        con.Close();
+                        return true;
+                    }
+                    
                 }
                 catch (Exception ex)
                 {

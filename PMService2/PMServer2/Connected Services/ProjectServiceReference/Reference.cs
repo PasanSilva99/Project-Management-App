@@ -22,10 +22,10 @@ namespace PMServer2.ProjectServiceReference {
         System.Threading.Tasks.Task IntializeDatabaseServiceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
-        PMService2.Model.Message[] FindDirectMessagesFor(string loggedUser, PMService2.Model.Message lastMessage);
+        PMService2.Model.Message[] FindDirectMessagesFor(string loggedUser, System.DateTime lastMessage);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
-        System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string loggedUser, PMService2.Model.Message lastMessage);
+        System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string loggedUser, System.DateTime lastMessage);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
         bool NewMessage(PMService2.Model.Message message);
@@ -69,11 +69,11 @@ namespace PMServer2.ProjectServiceReference {
             return base.Channel.IntializeDatabaseServiceAsync();
         }
         
-        public PMService2.Model.Message[] FindDirectMessagesFor(string loggedUser, PMService2.Model.Message lastMessage) {
+        public PMService2.Model.Message[] FindDirectMessagesFor(string loggedUser, System.DateTime lastMessage) {
             return base.Channel.FindDirectMessagesFor(loggedUser, lastMessage);
         }
         
-        public System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string loggedUser, PMService2.Model.Message lastMessage) {
+        public System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string loggedUser, System.DateTime lastMessage) {
             return base.Channel.FindDirectMessagesForAsync(loggedUser, lastMessage);
         }
         

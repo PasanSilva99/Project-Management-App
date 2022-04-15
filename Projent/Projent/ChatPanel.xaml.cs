@@ -83,10 +83,10 @@ namespace Projent
                         else
                         {
                             var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, 
-                                SelectedReceiver, 
+                                navigationBase.mainPage.LoggedUser.Name,
+                                SelectedReceiver,
                                 DateTime.MinValue);
-                            messages = Converter.GetLocalMessageList( messagesOList.ToList());
+                            messages = Converter.GetLocalMessageList(messagesOList.ToList());
 
                         }
                         if (messages != null)
@@ -344,10 +344,38 @@ namespace Projent
 
             navigationBase = e.Parameter as NavigationBase;
             FetchMessages();
+
+            stack_users.Children.Clear();  // Clear all Test Users
+
+            LoadDirectUsers();
+
         }
 
-        private void NewDirectUser_Click(object sender, RoutedEventArgs e)
+        private void LoadDirectUsers()
         {
+            var DirectUserList = DataStore.FetchDirectUsers();
+        }
+
+        private async void NewDirectUser_Click(object sender, RoutedEventArgs e)
+        {
+            list_directUsers.Items.Clear();
+            var users = await Server.MainServer.mainServiceClient.FetchUsersAsync();
+
+            List<DirectUser> directUsers = new List<DirectUser>();
+
+            if (users != null && users.Count > 0)
+            {
+                foreach (var user in users)
+                {
+                    var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
+                    var DirectUserListItem = new ListViewItem();
+                    DirectUserListItem.Style = Resources["DirectUserItem"] as Style;
+                    DirectUserListItem.Content = directUserControl;
+
+                    list_directUsers.Items.Add(DirectUserListItem);
+
+                }
+            }
 
         }
 
@@ -445,6 +473,11 @@ namespace Projent
             StorageFile sampleFile = await storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteBytesAsync(sampleFile, imageBuffer);
             return sampleFile;
+        }
+
+        private void Flyout_Opened(object sender, object e)
+        {
+
         }
     }
 }

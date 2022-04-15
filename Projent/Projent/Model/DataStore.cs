@@ -115,8 +115,7 @@ namespace Projent.Model
                         "CREATE TABLE IF NOT EXISTS " +
                     "DirectUsers (" +   // Saved Direct users
                         "Email TEXT, " +
-                        "Name TEXT, " +
-                        "ImagePath TEXT); ";
+                        "Name TEXT); ";
 
                     SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
                     sqliteCommand.ExecuteNonQuery();
@@ -432,6 +431,89 @@ namespace Projent.Model
             return pixels;
         }
 
+        internal static List<DirectUser> FetchDirectUsers()
+        {
+            List<DirectUser> users = new List<DirectUser>();
+
+            string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+
+            using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+            {
+                if (con.State == System.Data.ConnectionState.Closed)
+                    con.Open();
+
+                string dbScript = "SELECT Email, Name FROM DirectUsers";
+                SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
+                SqliteDataReader reader = sqliteCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    users.Add(new DirectUser() { Email = reader.GetString(0), Name = reader.GetString(1) });
+                }
+
+                con.Close();
+            }
+
+            return users;
+        }
+
+        public static bool NewDirectUser(DirectUser directUser)
+        {
+            if (!string.IsNullOrEmpty(directUser.Name) &&
+                !string.IsNullOrEmpty(directUser.Email))
+            {
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+                {
+                    try
+                    {
+                        con.Open();
+
+                        SqliteCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "INSERT INTO DirectUsers VALUES(@email, @name);";
+                        cmd.Parameters.AddWithValue("@email", directUser.Email);
+                        cmd.Parameters.AddWithValue("@name", directUser.Name);
+                        cmd.Connection = con;
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static bool RemoveDirectUser(DirectUser directUser)
+        {
+            if (!string.IsNullOrEmpty(directUser.Name))
+            {
+                string pathToDB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+
+                using (SqliteConnection con = new SqliteConnection($"filename={pathToDB}"))
+                {
+                    try
+                    {
+                        con.Open();
+
+                        SqliteCommand cmd = con.CreateCommand();
+                        cmd.CommandText = "DELETE FROM DirectUsers Where Name=@name";
+                        cmd.Parameters.AddWithValue("@name", directUser.Name);
+                        cmd.Connection = con;
+                        cmd.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
 

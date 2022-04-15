@@ -141,6 +141,9 @@
     <Compile Include="DashboardPage.xaml.cs">
       <DependentUpon>DashboardPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DirectUserControl.xaml.cs">
+      <DependentUpon>DirectUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -199,6 +202,7 @@
     <Content Include="Assets\Icons\emogi_icon.png" />
     <Content Include="Assets\Icons\PeopleIcon.png" />
     <Content Include="Assets\Icons\ProjectsIcon.png" />
+    <Content Include="Assets\Icons\search.png" />
     <Content Include="Assets\Icons\sned.png" />
     <Content Include="Assets\Icons\StickyNoteIcon.png" />
     <Content Include="Assets\Icons\user.png" />
@@ -299,6 +303,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DashboardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DirectUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

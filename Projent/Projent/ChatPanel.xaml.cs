@@ -1,6 +1,7 @@
 ﻿using Projent.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace Projent
     public sealed partial class ChatPanel : Page
     {
         NavigationBase navigationBase;
-        private string SelectedReceiver;
+        private string SelectedReceiver = "Amoeher";
 
         public ChatPanel()
         {
@@ -57,15 +58,34 @@ namespace Projent
                         List<Message> messages = null;
                         if (list_messages.Items.Count > 0)
                         {
-                            var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, 
-                                Converter.ToServerMessage(list_messages.Items[list_messages.Items.Count - 1] as Message));
+                            var MessageControlList = list_messages.Items;
+
+                            var LastMessageControl = MessageControlList[MessageControlList.Count - 1] as ListViewItem;
+
+                            var LastMessage = LastMessageControl.Content;
+
+                            var messagesOList = new ObservableCollection<PMServer2.Message>();
+
+                            if (LastMessageControl.Content.GetType() == typeof(ReceiveMessageControl))
+                            {
+                                messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
+                                navigationBase.mainPage.LoggedUser.Name, SelectedReceiver, (LastMessage as ReceiveMessageControl).Time);
+                            }
+                            else
+                            {
+                                messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
+                                navigationBase.mainPage.LoggedUser.Name, SelectedReceiver, (LastMessage as SendMessageControl).Time);
+                            }
+                            //Debug.WriteLine(LastMessage.ToString());
 
                             messages = Converter.GetLocalMessageList(messagesOList.ToList());
                         }
                         else
                         {
-                            var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, null);
+                            var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
+                                navigationBase.mainPage.LoggedUser.Name, 
+                                SelectedReceiver, 
+                                DateTime.MinValue);
                             messages = Converter.GetLocalMessageList( messagesOList.ToList());
 
                         }
@@ -186,13 +206,13 @@ namespace Projent
                         else
                         {
                             Debug.WriteLine("Requesting Sender Image");
-                            //var image = await Server.PMServer1.RequestUserImage(message.sender);
-                            //Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
+                            var image = await Server.MainServer.mainServiceClient.RequestUserImageAsync(message.sender);
+                            Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
 
                             var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
                             var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
 
-                            //await FileIO.WriteBytesAsync(ProfilePicFile, image);
+                            await FileIO.WriteBytesAsync(ProfilePicFile, image);
 
                             using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
                             {
@@ -221,7 +241,7 @@ namespace Projent
             {
                 Message message = new Message();
                 message.sender = navigationBase.mainPage.LoggedUser.Name;
-                message.receiver = "LilyKi";
+                message.receiver = SelectedReceiver;
                 message.MessageContent = tb_message.Text;
                 message.isSticker = false;
                 message.MentionedUsers = null;
@@ -234,18 +254,24 @@ namespace Projent
                         try
                         {
                             bool isSussess = false;
-                            if (list_messages.Items.Count > 0)
-                            {
-                                //isSussess = Server.PMServer2.NewMessage(message);
-                            }
-                            else
-                            {
-                                //isSussess = Server.PMServer2.NewMessage(message);
 
-                            }
+                            isSussess = await Server.ProjectServer.projectServiceClient.NewMessageAsync(Converter.ToServerMessage(message));
+
                             if (isSussess)
                             {
                                 FetchMessages();
+
+                                tb_message.Text = "";
+                            }
+                            else
+                            {
+                                ContentDialog dialog = new ContentDialog();
+                                dialog.Title = "UnExpected Error";
+                                dialog.CloseButtonText = "Ok";
+                                dialog.DefaultButton = ContentDialogButton.Primary;
+                                dialog.Content = "Couldnt Send the message.";
+
+                                await dialog.ShowAsync();
                             }
 
                         }
@@ -256,7 +282,7 @@ namespace Projent
                             dialog.PrimaryButtonText = "Retry";
                             dialog.SecondaryButtonText = "Close";
                             dialog.DefaultButton = ContentDialogButton.Primary;
-                            dialog.Content = "Unexpected Error Occured 0x4368617450616E656C3633";
+                            dialog.Content = $"Unexpected Error Occured\n{ex.Message}";
 
                             var result = await dialog.ShowAsync();  // show the messgae and get the result
                             if (result == ContentDialogResult.Primary)
@@ -350,7 +376,6 @@ namespace Projent
             if (!string.IsNullOrWhiteSpace(tb_message.Text))
             {
                 SendMessage();
-                FetchMessages();
             }
         }
 
@@ -377,6 +402,7 @@ namespace Projent
             }
             else
             {
+                tb_message.AcceptsReturn = false;
                 if (e.Key == Windows.System.VirtualKey.Enter)
                 {
                     SendMessage();

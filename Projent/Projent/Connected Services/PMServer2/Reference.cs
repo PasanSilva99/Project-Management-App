@@ -128,7 +128,7 @@ namespace Projent.PMServer2 {
         System.Threading.Tasks.Task IntializeDatabaseServiceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string loggedUser, Projent.PMServer2.Message lastMessage);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string sender, string receiver, System.DateTime lastMessage);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
         System.Threading.Tasks.Task<bool> NewMessageAsync(Projent.PMServer2.Message message);
@@ -175,8 +175,8 @@ namespace Projent.PMServer2 {
             return base.Channel.IntializeDatabaseServiceAsync();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string loggedUser, Projent.PMServer2.Message lastMessage) {
-            return base.Channel.FindDirectMessagesForAsync(loggedUser, lastMessage);
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string sender, string receiver, System.DateTime lastMessage) {
+            return base.Channel.FindDirectMessagesForAsync(sender, receiver, lastMessage);
         }
         
         public System.Threading.Tasks.Task<bool> NewMessageAsync(Projent.PMServer2.Message message) {

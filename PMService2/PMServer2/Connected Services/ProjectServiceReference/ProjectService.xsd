@@ -15,21 +15,21 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" name="loggedUser" nillable="true" type="xs:string" />
-        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/PMService2.Model" minOccurs="0" name="lastMessage" nillable="true" type="q1:Message" />
+        <xs:element minOccurs="0" name="lastMessage" type="xs:dateTime" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="FindDirectMessagesForResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/PMService2.Model" minOccurs="0" name="FindDirectMessagesForResult" nillable="true" type="q2:ArrayOfMessage" />
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/PMService2.Model" minOccurs="0" name="FindDirectMessagesForResult" nillable="true" type="q1:ArrayOfMessage" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="NewMessage">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/PMService2.Model" minOccurs="0" name="message" nillable="true" type="q3:Message" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/PMService2.Model" minOccurs="0" name="message" nillable="true" type="q2:Message" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

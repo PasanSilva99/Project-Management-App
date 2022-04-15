@@ -22,8 +22,12 @@ namespace PMService1
         /// <summary>
         /// Gets the SQLite version
         /// </summary>
+        /// 
         [OperationContract]
         void GetSqliteVersion();
+
+        [OperationContract]
+        bool RequestState(string DeviceID);
 
         [OperationContract]
         bool SetUserStatus(User user, Status status);

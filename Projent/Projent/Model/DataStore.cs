@@ -57,11 +57,17 @@ namespace Projent.Model
         {
             try
             {
+                if (user != null)
+                {
+                    PMServer1.User serverUser = new PMServer1.User() { Email = user.Email, Name = user.Name, Password = user.Password };
 
-                PMServer1.User serverUser = new PMServer1.User() { Email = user.Email, Name = user.Name, Password = user.Password };
-
-                await Server.MainServer.mainServiceClient.SetUserStatusAsync(Converter.ToServerUser(user), Converter.ToServerStatus(status));
-                return true;
+                    await Server.MainServer.mainServiceClient.SetUserStatusAsync(Converter.ToServerUser(user), Converter.ToServerStatus(status));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -115,6 +121,7 @@ namespace Projent.Model
                         "IsEmogi INTEGER ); " + // is this a emogi / Sticker
                         "CREATE TABLE IF NOT EXISTS " +
                     "DirectUsers (" +   // Saved Direct users
+                        "User TEXT," +
                         "Email TEXT, " +
                         "Name TEXT); ";
 
@@ -431,7 +438,7 @@ namespace Projent.Model
             return pixels;
         }
 
-        internal static List<DirectUser> FetchDirectUsers()
+        internal static List<DirectUser> FetchDirectUsers(string user)
         {
             List<DirectUser> users = new List<DirectUser>();
 
@@ -442,8 +449,9 @@ namespace Projent.Model
                 if (con.State == System.Data.ConnectionState.Closed)
                     con.Open();
 
-                string dbScript = "SELECT Email, Name FROM DirectUsers";
+                string dbScript = "SELECT Email, Name FROM DirectUsers WHERE User=@user";
                 SqliteCommand sqliteCommand = new SqliteCommand(dbScript, con);
+                sqliteCommand.Parameters.AddWithValue("@user", user);
                 SqliteDataReader reader = sqliteCommand.ExecuteReader();
 
                 while (reader.Read())
@@ -457,7 +465,7 @@ namespace Projent.Model
             return users;
         }
 
-        public static bool NewDirectUser(DirectUser directUser)
+        public static bool NewDirectUser(DirectUser directUser, string addedBy)
         {
             if (!string.IsNullOrEmpty(directUser.Name) &&
                 !string.IsNullOrEmpty(directUser.Email))
@@ -471,7 +479,8 @@ namespace Projent.Model
                         con.Open();
 
                         SqliteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "INSERT INTO DirectUsers VALUES(@email, @name);";
+                        cmd.CommandText = "INSERT INTO DirectUsers VALUES(@user, @email, @name);";
+                        cmd.Parameters.AddWithValue("@user", addedBy);
                         cmd.Parameters.AddWithValue("@email", directUser.Email);
                         cmd.Parameters.AddWithValue("@name", directUser.Name);
                         cmd.Connection = con;
@@ -487,7 +496,7 @@ namespace Projent.Model
             return false;
         }
 
-        public static bool RemoveDirectUser(DirectUser directUser)
+        public static bool RemoveDirectUser(DirectUser directUser, string removeFrom)
         {
             if (!string.IsNullOrEmpty(directUser.Name))
             {
@@ -500,8 +509,9 @@ namespace Projent.Model
                         con.Open();
 
                         SqliteCommand cmd = con.CreateCommand();
-                        cmd.CommandText = "DELETE FROM DirectUsers Where Name=@name";
+                        cmd.CommandText = "DELETE FROM DirectUsers Where Name=@name AND User=@user";
                         cmd.Parameters.AddWithValue("@name", directUser.Name);
+                        cmd.Parameters.AddWithValue("@user", removeFrom);
                         cmd.Connection = con;
                         cmd.ExecuteNonQuery();
                         return true;

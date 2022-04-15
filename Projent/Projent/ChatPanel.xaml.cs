@@ -355,7 +355,7 @@ namespace Projent
         private async void LoadDirectUsers()
         {
             stack_users.Children.Clear();
-            var DirectUserList = DataStore.FetchDirectUsers();
+            var DirectUserList = DataStore.FetchDirectUsers(navigationBase.mainPage.LoggedUser.Name);
             navigationBase.directUsers = DirectUserList;
             if (DirectUserList != null && DirectUserList.Count > 0)
             {
@@ -493,7 +493,7 @@ namespace Projent
             var user = (sender as ListViewItem).Tag as DirectUser;
             if (user != null)
             {
-                var isSuccess = DataStore.NewDirectUser(user);
+                var isSuccess = DataStore.NewDirectUser(user, navigationBase.mainPage.LoggedUser.Name);
             }
             LoadDirectUsers();
         }
@@ -615,7 +615,7 @@ namespace Projent
 
             }
 
-            DataStore.RemoveDirectUser(user);
+            DataStore.RemoveDirectUser(user, navigationBase.mainPage.LoggedUser.Name);
         }
 
         private void btn_removeClearChat_Click(object sender, RoutedEventArgs e)

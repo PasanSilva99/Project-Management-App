@@ -261,9 +261,18 @@ namespace Projent
             }
         }
 
-        private void ContinueToNavigator(String email, String password)
+        private async void ContinueToNavigator(String email, String password)
         {
-            var user = FindUserLocal(email, password);
+            User user;
+            try
+            {
+                user = Converter.ToLocalUser(await Server.MainServer.mainServiceClient.GetUserAsync(email, password));
+            }
+            catch
+            {
+                user = FindUserLocal(email, password);
+            }
+            
             mainPage.LoggedUser = user;
             mainPage.NavigateToNavigationBase();
 

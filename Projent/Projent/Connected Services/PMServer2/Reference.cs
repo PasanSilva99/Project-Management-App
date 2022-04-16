@@ -138,6 +138,9 @@ namespace Projent.PMServer2 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CheckNewMessagesFor", ReplyAction="http://tempuri.org/IProjectService/CheckNewMessagesForResponse")]
         System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteMessagesFrom", ReplyAction="http://tempuri.org/IProjectService/DeleteMessagesFromResponse")]
+        System.Threading.Tasks.Task<bool> DeleteMessagesFromAsync(string sender, string receiver);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -195,6 +198,10 @@ namespace Projent.PMServer2 {
         
         public System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime) {
             return base.Channel.CheckNewMessagesForAsync(username, latestMessageTime);
+        }
+        
+        public System.Threading.Tasks.Task<bool> DeleteMessagesFromAsync(string sender, string receiver) {
+            return base.Channel.DeleteMessagesFromAsync(sender, receiver);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {

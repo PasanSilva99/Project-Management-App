@@ -32,6 +32,12 @@ namespace PMServer2.ProjectServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
         System.Threading.Tasks.Task<bool> NewMessageAsync(PMService2.Model.Message message);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/RequestState", ReplyAction="http://tempuri.org/IProjectService/RequestStateResponse")]
+        bool RequestState(string DeviceID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/RequestState", ReplyAction="http://tempuri.org/IProjectService/RequestStateResponse")]
+        System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -83,6 +89,14 @@ namespace PMServer2.ProjectServiceReference {
         
         public System.Threading.Tasks.Task<bool> NewMessageAsync(PMService2.Model.Message message) {
             return base.Channel.NewMessageAsync(message);
+        }
+        
+        public bool RequestState(string DeviceID) {
+            return base.Channel.RequestState(DeviceID);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID) {
+            return base.Channel.RequestStateAsync(DeviceID);
         }
     }
 }

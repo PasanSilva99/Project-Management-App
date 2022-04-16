@@ -16,12 +16,15 @@ namespace PMService2
         void IntializeDatabaseService();
 
         [OperationContract]
-        List<Message> FindDirectMessagesFor(string sender, string receiver, DateTime lastMessage);
+        List<Message> FindDirectMessagesFor(string sender, DateTime lastMessage);
 
         [OperationContract]
         bool NewMessage(Message message);
 
         [OperationContract]
         bool RequestState(string DeviceID);
+
+        [OperationContract]
+        bool CheckNewMessagesFor(string username, DateTime latestMessageTime);
     }
 }

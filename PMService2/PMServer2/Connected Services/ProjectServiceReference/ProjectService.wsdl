@@ -26,6 +26,12 @@
   <wsdl:message name="IProjectService_NewMessage_OutputMessage">
     <wsdl:part name="parameters" element="tns:NewMessageResponse" />
   </wsdl:message>
+  <wsdl:message name="IProjectService_RequestState_InputMessage">
+    <wsdl:part name="parameters" element="tns:RequestState" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_RequestState_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RequestStateResponse" />
+  </wsdl:message>
   <wsdl:portType name="IProjectService">
     <wsdl:operation name="IntializeDatabaseService">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/IntializeDatabaseService" message="tns:IProjectService_IntializeDatabaseService_InputMessage" />
@@ -38,6 +44,10 @@
     <wsdl:operation name="NewMessage">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/NewMessage" message="tns:IProjectService_NewMessage_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/NewMessageResponse" message="tns:IProjectService_NewMessage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="RequestState">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/RequestState" message="tns:IProjectService_RequestState_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/RequestStateResponse" message="tns:IProjectService_RequestState_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProjectService" type="tns:IProjectService">
@@ -62,6 +72,15 @@
     </wsdl:operation>
     <wsdl:operation name="NewMessage">
       <soap:operation soapAction="http://tempuri.org/IProjectService/NewMessage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RequestState">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/RequestState" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

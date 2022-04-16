@@ -26,5 +26,8 @@ namespace PMService2
 
         [OperationContract]
         bool CheckNewMessagesFor(string username, DateTime latestMessageTime);
+
+        [OperationContract]
+        bool DeleteMessagesFrom(string sender, string receiver);
     }
 }

@@ -342,7 +342,7 @@ namespace Projent.Model
             }
         }
 
-        public async static Task<bool> SaveDashboardBGAsync(User user, byte[] imageBuffer)
+        public static bool SaveDashboardBGAsync(User user, byte[] imageBuffer)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using Projent.Model;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using Projent.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -32,7 +34,11 @@ namespace Projent
     public sealed partial class ChatPanel : Page
     {
         NavigationBase navigationBase;
-        private string SelectedReceiver = "LilyKi";
+        private string SelectedReceiver = "";
+        public DispatcherTimer ChatTimer = new DispatcherTimer();
+        public DateTime latestMessageTime = DateTime.MinValue;
+        public bool isInCooldown = false;
+        public object LastMessage = new SendMessageControl();
 
         public ChatPanel()
         {
@@ -69,12 +75,12 @@ namespace Projent
                             if (LastMessageControl.Content.GetType() == typeof(ReceiveMessageControl))
                             {
                                 messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, SelectedReceiver, (LastMessage as ReceiveMessageControl).Time);
+                                navigationBase.mainPage.LoggedUser.Name, (LastMessage as ReceiveMessageControl).Time);
                             }
                             else
                             {
                                 messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, SelectedReceiver, (LastMessage as SendMessageControl).Time);
+                                navigationBase.mainPage.LoggedUser.Name, (LastMessage as SendMessageControl).Time);
                             }
                             //Debug.WriteLine(LastMessage.ToString());
 
@@ -84,14 +90,20 @@ namespace Projent
                         {
                             var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
                                 navigationBase.mainPage.LoggedUser.Name,
-                                SelectedReceiver,
                                 DateTime.MinValue);
                             messages = Converter.GetLocalMessageList(messagesOList.ToList());
 
                         }
-                        if (messages != null)
+                        if (messages != null && latestMessageTime != null)
                         {
-                            UpdateMessagesList(messages);
+                            var latestMessage = messages.OrderByDescending(m => m.Time).FirstOrDefault();
+                            if(latestMessage != null)
+                                latestMessageTime = latestMessage.Time;
+                            UpdateMessagesList(
+                                messages.Where(
+                                    message =>
+                                    (message.sender == navigationBase.mainPage.LoggedUser.Name && message.receiver == SelectedReceiver) ||
+                                    (message.sender == SelectedReceiver && message.receiver == navigationBase.mainPage.LoggedUser.Name)).ToList());
                         }
 
                     }
@@ -165,8 +177,16 @@ namespace Projent
             return item != null;
         }
 
+        public async Task<bool> IsFilePresent(string fileName, string foldername)
+        {
+            StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(foldername, CreationCollisionOption.OpenIfExists);
+            var item = await storageFolder.TryGetItemAsync(fileName);
+            return item != null;
+        }
+
         private async void UpdateMessagesList(List<Message> messages)
         {
+            isInCooldown = true;
             foreach (var message in messages)
             {
                 if (!message.isSticker)
@@ -232,13 +252,15 @@ namespace Projent
                     }
                 }
             }
+            isInCooldown = false;
         }
 
         private async void SendMessage()
         {
 
-            if (!string.IsNullOrWhiteSpace(tb_message.Text))
+            if (!string.IsNullOrWhiteSpace(tb_message.Text) && !isInCooldown)
             {
+                isInCooldown = true;
                 Message message = new Message();
                 message.sender = navigationBase.mainPage.LoggedUser.Name;
                 message.receiver = SelectedReceiver;
@@ -259,9 +281,17 @@ namespace Projent
 
                             if (isSussess)
                             {
-                                FetchMessages();
+                                LastMessage = new SendMessageControl()
+                                {
+                                    sender = message.sender,
+                                    MessageContent = message.MessageContent,
+                                    ProfileImage = navigationBase.profileImageSource,
+                                    Time = message.Time
+                                };
 
+                                FetchMessages();
                                 tb_message.Text = "";
+                                isInCooldown = false;
                             }
                             else
                             {
@@ -350,10 +380,88 @@ namespace Projent
             LoadDirectUsers();
             navigationBase.loadedChatPanel = this;
 
+            ChatTimer.Interval = new TimeSpan(0, 0, 1);
+            ChatTimer.Tick += ChatTimer_Tick;
+            ChatTimer.Start();
         }
+
+        private async void ChatTimer_Tick(object sender, object e)
+        {
+            try
+            {
+                var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+                if (isNewMessagesAvailable)
+                {
+                    //latestMessageTime = DateTime.Now;
+                    // Requires Microsoft.Toolkit.Uwp.Notifications NuGet package version 7.0 or greater
+
+                    FetchMessages();
+
+                    /*Temp*/
+
+
+                    // get the new messages list from the latest message time
+                    var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+
+
+                    // show the toast notifications if the user is the receiver
+
+                    foreach (var message in newMessages)
+                    {
+                        if (message != null)
+                        {
+                            if (message.receiver == navigationBase.mainPage.LoggedUser.Name)
+                            {
+                                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                                Uri imageURI;
+                                if (await IsFilePresent(message.sender + ".png", "Cache"))
+                                {
+                                    Debug.WriteLine("Has Sender Image");
+                                    StorageFile imageFile = await storageFolder.GetFileAsync(message.sender + ".png");
+
+                                    imageURI = new Uri(imageFile.Path);
+                                }
+                                else
+                                {
+                                    Debug.WriteLine("Requesting Sender Image");
+                                    var image = await Server.MainServer.mainServiceClient.RequestUserImageAsync(message.sender);
+                                    Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
+
+                                    var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                                    var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
+
+                                    await FileIO.WriteBytesAsync(ProfilePicFile, image);
+
+                                    imageURI = new Uri(ProfilePicFile.Path);
+
+                                }
+
+                                new ToastContentBuilder()
+                                        .AddAppLogoOverride(imageURI)
+                                        .AddArgument("action", "viewConversation")
+                                        .AddArgument("conversationId", 9813)
+                                        .AddText(message.sender)
+                                        .AddText(message.MessageContent)
+                                        .Show();
+                            }
+                        }
+                    }
+                }
+
+                // if the user is the sender, and the selected receiver is the new message receiver update the message list
+                // 
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+        }
+
 
         private async void LoadDirectUsers()
         {
+            isInCooldown = true;
             stack_users.Children.Clear();
             var DirectUserList = DataStore.FetchDirectUsers(navigationBase.mainPage.LoggedUser.Name);
             navigationBase.directUsers = DirectUserList;
@@ -405,13 +513,16 @@ namespace Projent
                     stack_users.Children.Add(directUserButton);
                 }
             }
+            isInCooldown = false;
         }
 
         private void DirectUserButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            isInCooldown = true;
             list_messages.Items.Clear();
             SelectedReceiver = ((sender as Button).Tag as DirectUser).Name;
             FetchMessages();
+            isInCooldown = false;
         }
 
         private void DirectUserButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -461,8 +572,8 @@ namespace Projent
             {
                 var btn = DirectUserButton as Button;
                 var dr = btn.Tag as DirectUser;
-                if(dr != null)
-                    if(dr.Email == directUser.Email)
+                if (dr != null)
+                    if (dr.Email == directUser.Email)
                     {
                         btn.BorderBrush = GetColorForStatus(status);
                     }
@@ -474,7 +585,7 @@ namespace Projent
         {
             switch (status)
             {
-                case DataStore.Status.Offline: 
+                case DataStore.Status.Offline:
                     return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)74, (byte)74, (byte)74));
                 case DataStore.Status.Online:
                     return new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)36, (byte)230, (byte)13));
@@ -609,7 +720,7 @@ namespace Projent
             {
                 var btn = DirectUserButton as Button;
                 var dr = btn.Tag as DirectUser;
-                if(dr.Name == user.Name)
+                if (dr.Name == user.Name)
                     stack_users.Children.Remove(DirectUserButton);
 
 

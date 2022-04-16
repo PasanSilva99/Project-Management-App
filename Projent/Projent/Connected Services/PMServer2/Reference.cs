@@ -128,13 +128,16 @@ namespace Projent.PMServer2 {
         System.Threading.Tasks.Task IntializeDatabaseServiceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
-        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string sender, string receiver, System.DateTime lastMessage);
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string sender, System.DateTime lastMessage);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
         System.Threading.Tasks.Task<bool> NewMessageAsync(Projent.PMServer2.Message message);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/RequestState", ReplyAction="http://tempuri.org/IProjectService/RequestStateResponse")]
         System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CheckNewMessagesFor", ReplyAction="http://tempuri.org/IProjectService/CheckNewMessagesForResponse")]
+        System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -178,8 +181,8 @@ namespace Projent.PMServer2 {
             return base.Channel.IntializeDatabaseServiceAsync();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string sender, string receiver, System.DateTime lastMessage) {
-            return base.Channel.FindDirectMessagesForAsync(sender, receiver, lastMessage);
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Message>> FindDirectMessagesForAsync(string sender, System.DateTime lastMessage) {
+            return base.Channel.FindDirectMessagesForAsync(sender, lastMessage);
         }
         
         public System.Threading.Tasks.Task<bool> NewMessageAsync(Projent.PMServer2.Message message) {
@@ -188,6 +191,10 @@ namespace Projent.PMServer2 {
         
         public System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID) {
             return base.Channel.RequestStateAsync(DeviceID);
+        }
+        
+        public System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime) {
+            return base.Channel.CheckNewMessagesForAsync(username, latestMessageTime);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {

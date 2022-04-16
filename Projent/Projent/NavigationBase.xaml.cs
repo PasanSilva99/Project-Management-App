@@ -247,6 +247,14 @@ namespace Projent
             mainPage = e.Parameter as MainPage;
             UserVerificationTimer.Start();
             ValidateLoggedUser();
+
+            if(frame_tools.SourcePageType == null)
+                frame_tools.Navigate(typeof(ChatPanel), this);
+
+            if (!loadedChatPanel.ChatTimer.IsEnabled)
+            {
+                loadedChatPanel.ChatTimer.Start();
+            }
         }
 
         private void NavigateTo(object sender, RoutedEventArgs e)

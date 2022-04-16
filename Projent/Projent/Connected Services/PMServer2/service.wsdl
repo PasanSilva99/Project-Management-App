@@ -67,6 +67,12 @@
   <wsdl:message name="IProjectService_CheckNewMessagesFor_OutputMessage">
     <wsdl:part name="parameters" element="tns:CheckNewMessagesForResponse" />
   </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteMessagesFrom_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteMessagesFrom" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteMessagesFrom_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteMessagesFromResponse" />
+  </wsdl:message>
   <wsdl:portType name="IProjectService">
     <wsdl:operation name="IntializeDatabaseService">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/IntializeDatabaseService" message="tns:IProjectService_IntializeDatabaseService_InputMessage" />
@@ -87,6 +93,10 @@
     <wsdl:operation name="CheckNewMessagesFor">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/CheckNewMessagesFor" message="tns:IProjectService_CheckNewMessagesFor_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/CheckNewMessagesForResponse" message="tns:IProjectService_CheckNewMessagesFor_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMessagesFrom">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/DeleteMessagesFrom" message="tns:IProjectService_DeleteMessagesFrom_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/DeleteMessagesFromResponse" message="tns:IProjectService_DeleteMessagesFrom_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProjectService" type="tns:IProjectService">
@@ -136,6 +146,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="DeleteMessagesFrom">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/DeleteMessagesFrom" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="NetTcpBinding_IProjectService" type="tns:IProjectService">
     <wsp:PolicyReference URI="#NetTcpBinding_IProjectService_policy" />
@@ -178,6 +197,15 @@
     </wsdl:operation>
     <wsdl:operation name="CheckNewMessagesFor">
       <soap12:operation soapAction="http://tempuri.org/IProjectService/CheckNewMessagesFor" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMessagesFrom">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/DeleteMessagesFrom" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

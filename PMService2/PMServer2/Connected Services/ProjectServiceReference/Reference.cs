@@ -22,10 +22,10 @@ namespace PMServer2.ProjectServiceReference {
         System.Threading.Tasks.Task IntializeDatabaseServiceAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
-        PMService2.Model.Message[] FindDirectMessagesFor(string sender, string receiver, System.DateTime lastMessage);
+        PMService2.Model.Message[] FindDirectMessagesFor(string sender, System.DateTime lastMessage);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FindDirectMessagesFor", ReplyAction="http://tempuri.org/IProjectService/FindDirectMessagesForResponse")]
-        System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string sender, string receiver, System.DateTime lastMessage);
+        System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string sender, System.DateTime lastMessage);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/NewMessage", ReplyAction="http://tempuri.org/IProjectService/NewMessageResponse")]
         bool NewMessage(PMService2.Model.Message message);
@@ -38,6 +38,12 @@ namespace PMServer2.ProjectServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/RequestState", ReplyAction="http://tempuri.org/IProjectService/RequestStateResponse")]
         System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CheckNewMessagesFor", ReplyAction="http://tempuri.org/IProjectService/CheckNewMessagesForResponse")]
+        bool CheckNewMessagesFor(string username, System.DateTime latestMessageTime);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CheckNewMessagesFor", ReplyAction="http://tempuri.org/IProjectService/CheckNewMessagesForResponse")]
+        System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -75,12 +81,12 @@ namespace PMServer2.ProjectServiceReference {
             return base.Channel.IntializeDatabaseServiceAsync();
         }
         
-        public PMService2.Model.Message[] FindDirectMessagesFor(string sender, string receiver, System.DateTime lastMessage) {
-            return base.Channel.FindDirectMessagesFor(sender, receiver, lastMessage);
+        public PMService2.Model.Message[] FindDirectMessagesFor(string sender, System.DateTime lastMessage) {
+            return base.Channel.FindDirectMessagesFor(sender, lastMessage);
         }
         
-        public System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string sender, string receiver, System.DateTime lastMessage) {
-            return base.Channel.FindDirectMessagesForAsync(sender, receiver, lastMessage);
+        public System.Threading.Tasks.Task<PMService2.Model.Message[]> FindDirectMessagesForAsync(string sender, System.DateTime lastMessage) {
+            return base.Channel.FindDirectMessagesForAsync(sender, lastMessage);
         }
         
         public bool NewMessage(PMService2.Model.Message message) {
@@ -97,6 +103,14 @@ namespace PMServer2.ProjectServiceReference {
         
         public System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID) {
             return base.Channel.RequestStateAsync(DeviceID);
+        }
+        
+        public bool CheckNewMessagesFor(string username, System.DateTime latestMessageTime) {
+            return base.Channel.CheckNewMessagesFor(username, latestMessageTime);
+        }
+        
+        public System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime) {
+            return base.Channel.CheckNewMessagesForAsync(username, latestMessageTime);
         }
     }
 }

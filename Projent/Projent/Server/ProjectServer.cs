@@ -13,9 +13,16 @@ namespace Projent.Server
         public static PMServer2.ProjectServiceClient projectServiceClient;
         public async static void InitializeServer()
         {
-            projectServiceClient = new PMServer2.ProjectServiceClient(PMServer2.ProjectServiceClient.EndpointConfiguration.BasicHttpBinding_IProjectService);
-            Debug.WriteLine("Project Client Initalized");
-            await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+            try
+            {
+                projectServiceClient = new PMServer2.ProjectServiceClient(PMServer2.ProjectServiceClient.EndpointConfiguration.BasicHttpBinding_IProjectService);
+                Debug.WriteLine("Project Client Initalized");
+                await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 }

@@ -13,9 +13,16 @@ namespace Projent.Server
         public static PMServer1.MainServiceClient mainServiceClient = null;
         public async static void InitializeServer()
         {
-            mainServiceClient = new PMServer1.MainServiceClient(PMServer1.MainServiceClient.EndpointConfiguration.BasicHttpBinding_IMainService);
-            Debug.WriteLine("PMServer1 Client Started");
-            await mainServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+            try
+            {
+                mainServiceClient = new PMServer1.MainServiceClient(PMServer1.MainServiceClient.EndpointConfiguration.BasicHttpBinding_IMainService);
+                Debug.WriteLine("PMServer1 Client Started");
+                await mainServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 }

@@ -389,65 +389,67 @@ namespace Projent
         {
             try
             {
-                var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
-                if (isNewMessagesAvailable)
+                if (navigationBase.mainPage.LoggedUser != null)
                 {
-                    //latestMessageTime = DateTime.Now;
-                    // Requires Microsoft.Toolkit.Uwp.Notifications NuGet package version 7.0 or greater
-
-                    FetchMessages();
-
-                    /*Temp*/
-
-
-                    // get the new messages list from the latest message time
-                    var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
-
-
-                    // show the toast notifications if the user is the receiver
-
-                    foreach (var message in newMessages)
+                    var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+                    if (isNewMessagesAvailable)
                     {
-                        if (message != null)
+                        //latestMessageTime = DateTime.Now;
+                        // Requires Microsoft.Toolkit.Uwp.Notifications NuGet package version 7.0 or greater
+
+                        FetchMessages();
+
+                        /*Temp*/
+
+
+                        // get the new messages list from the latest message time
+                        var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+
+
+                        // show the toast notifications if the user is the receiver
+
+                        foreach (var message in newMessages)
                         {
-                            if (message.receiver == navigationBase.mainPage.LoggedUser.Name)
+                            if (message != null)
                             {
-                                StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
-                                Uri imageURI;
-                                if (await IsFilePresent(message.sender + ".png", "Cache"))
+                                if (message.receiver == navigationBase.mainPage.LoggedUser.Name)
                                 {
-                                    Debug.WriteLine("Has Sender Image");
-                                    StorageFile imageFile = await storageFolder.GetFileAsync(message.sender + ".png");
+                                    StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                                    Uri imageURI;
+                                    if (await IsFilePresent(message.sender + ".png", "Cache"))
+                                    {
+                                        Debug.WriteLine("Has Sender Image");
+                                        StorageFile imageFile = await storageFolder.GetFileAsync(message.sender + ".png");
 
-                                    imageURI = new Uri(imageFile.Path);
+                                        imageURI = new Uri(imageFile.Path);
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine("Requesting Sender Image");
+                                        var image = await Server.MainServer.mainServiceClient.RequestUserImageAsync(message.sender);
+                                        Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
+
+                                        var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                                        var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
+
+                                        await FileIO.WriteBytesAsync(ProfilePicFile, image);
+
+                                        imageURI = new Uri(ProfilePicFile.Path);
+
+                                    }
+
+                                    new ToastContentBuilder()
+                                            .AddAppLogoOverride(imageURI)
+                                            .AddArgument("action", "viewConversation")
+                                            .AddArgument("conversationId", 9813)
+                                            .AddText(message.sender)
+                                            .AddText(message.MessageContent)
+                                            .Show();
                                 }
-                                else
-                                {
-                                    Debug.WriteLine("Requesting Sender Image");
-                                    var image = await Server.MainServer.mainServiceClient.RequestUserImageAsync(message.sender);
-                                    Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
-
-                                    var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
-                                    var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
-
-                                    await FileIO.WriteBytesAsync(ProfilePicFile, image);
-
-                                    imageURI = new Uri(ProfilePicFile.Path);
-
-                                }
-
-                                new ToastContentBuilder()
-                                        .AddAppLogoOverride(imageURI)
-                                        .AddArgument("action", "viewConversation")
-                                        .AddArgument("conversationId", 9813)
-                                        .AddText(message.sender)
-                                        .AddText(message.MessageContent)
-                                        .Show();
                             }
                         }
                     }
                 }
-
                 // if the user is the sender, and the selected receiver is the new message receiver update the message list
                 // 
 
@@ -523,6 +525,7 @@ namespace Projent
             SelectedReceiver = ((sender as Button).Tag as DirectUser).Name;
             FetchMessages();
             isInCooldown = false;
+            ShowMessagePannel(true);
         }
 
         private void DirectUserButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -710,9 +713,27 @@ namespace Projent
 
         }
 
+        private void ShowMessagePannel(bool visibility)
+        {
+            if (visibility)
+            {
+                grid_MessagePanel.Visibility = Visibility.Visible;
+                grid_selectUser.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                grid_MessagePanel.Visibility = Visibility.Collapsed;
+                grid_selectUser.Visibility = Visibility.Visible;
+            }
+        }
+
         private void btn_removeDirectuser_Click(object sender, RoutedEventArgs e)
         {
+            
             var user = (sender as Button).Tag as DirectUser;
+
+            if(SelectedReceiver == user.Name)
+                ShowMessagePannel(false);
 
             var DirectUsersButtons = stack_users.Children;
 
@@ -731,7 +752,18 @@ namespace Projent
 
         private void btn_removeClearChat_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                var btn = sender as Button;
+                var directUser = (sender as Button).Tag as DirectUser;
+                Server.ProjectServer.projectServiceClient.DeleteMessagesFromAsync(navigationBase.mainPage.LoggedUser.Name, directUser.Name);
+                FetchMessages();
+                list_messages.Items.Clear();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);    
+            }
         }
 
     }

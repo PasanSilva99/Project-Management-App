@@ -17,6 +17,7 @@ namespace PMService2
     public class ProjectService : IProjectService
     {
         public static String DBName { get; set; } = "PMService2DB.db";
+        public static List<Message> messagesCache = new List<Message>();
         public static void Log(string v)
         {
             Console.WriteLine($"[{DateTime.Now.ToString("G")}] >> {v}");
@@ -64,12 +65,14 @@ namespace PMService2
                 Log(ex.ToString());
             }
 
+            FetchAllMessages();
+
         }
 
-        public List<Message> FindDirectMessagesFor(string sender, string receiver, DateTime lastMessage)
+        public List<Message> FindDirectMessagesFor(string user, DateTime lastMessage)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
-            Log($"Requested Direct messages For the relation {sender} and {receiver}");
+            Log($"Requested Direct messages For the relation {user}");
 
             Log("FetchingMessages from the database");
             var allMessagesForUser = new List<Message>();
@@ -79,12 +82,10 @@ namespace PMService2
                 if (con.State == System.Data.ConnectionState.Closed)
                     con.Open();
 
-                string dbScript = "SELECT MessageContent, isSticker, sender, receiver, Time, MentionedUsers FROM message WHERE (sender = @sender AND receiver = @receiver) OR (sender = @sreceiver AND receiver = @rsender)";
+                string dbScript = "SELECT MessageContent, isSticker, sender, receiver, Time, MentionedUsers FROM message WHERE sender = @sender OR receiver = @rsender";
                 SQLiteCommand sqliteCommand = new SQLiteCommand(dbScript, con);
-                sqliteCommand.Parameters.AddWithValue("@sender", sender);
-                sqliteCommand.Parameters.AddWithValue("@receiver", receiver);
-                sqliteCommand.Parameters.AddWithValue("@rsender", sender);
-                sqliteCommand.Parameters.AddWithValue("@sreceiver", receiver);
+                sqliteCommand.Parameters.AddWithValue("@sender", user);
+                sqliteCommand.Parameters.AddWithValue("@rsender", user);
 
                 SQLiteDataReader reader = sqliteCommand.ExecuteReader();
 
@@ -148,6 +149,92 @@ namespace PMService2
 
         }
 
+        public List<Message> FetchAllMessages()
+        {
+            messagesCache.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Log($"Updating Message Cache");
+
+            Log("Fetching Messages from the database");
+            var allMessagesForUser = new List<Message>();
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                if (con.State == System.Data.ConnectionState.Closed)
+                    con.Open();
+
+                string dbScript = "SELECT MessageContent, isSticker, sender, receiver, Time, MentionedUsers FROM message";
+                SQLiteCommand sqliteCommand = new SQLiteCommand(dbScript, con);
+
+                SQLiteDataReader reader = sqliteCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var MentionedUserList = new List<string>();
+                    var mentionedUsers = reader.GetString(5);
+                    if (mentionedUsers.Contains(','))
+                    {
+                        MentionedUserList = mentionedUsers.Split(',').ToList();
+                    }
+                    else if (mentionedUsers.Length > 0)
+                    {
+                        MentionedUserList.Add(mentionedUsers);
+                    }
+                    else
+                    {
+                        MentionedUserList = new List<string>();
+                    }
+
+                    messagesCache.Add(new Message()
+                    {
+                        MessageContent = reader.GetString(0),
+                        isSticker = reader.GetInt32(1) == 0 ? false : true,
+                        sender = reader.GetString(2),
+                        receiver = reader.GetString(3),
+                        Time = DateTime.Parse(reader.GetString(4)),
+                        MentionedUsers = MentionedUserList
+                    });
+                }
+                Log($"Found {allMessagesForUser.Count} Total Messages");
+                con.Close();
+            }
+
+            
+
+            return messagesCache;
+
+            // Last message
+
+            // if the last message is null, Send the whole list.
+            // if the last message is not null, send the messages with a larger timestamp. 
+
+        }
+
+        public bool CheckNewMessagesFor(string username, DateTime latestMessageTime)
+        {
+            //Console.ForegroundColor = ConsoleColor.Blue;
+            //Log($"Requested Count Of New Messages For {username} From {latestMessageTime.ToShortTimeString()}");
+
+            //Log("FetchingMessages from the database");
+            var newMessages = 0;
+            
+            foreach (var message in messagesCache)
+            {
+                if((message.sender == username || message.receiver == username) && message.Time > latestMessageTime)
+                {
+                    newMessages++;
+                }
+            }
+
+            if(newMessages > 0)
+            {
+                Console.BackgroundColor = ConsoleColor.DarkCyan;
+                Log($"New Message For {username} as {latestMessageTime.ToString("G")}");
+                return true;
+            }
+                
+            return false;
+        }
+
         public bool NewMessage(Message message)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
@@ -202,6 +289,7 @@ namespace PMService2
                         Console.ForegroundColor = ConsoleColor.Green;
                         Log("Successfully saved the message");
                         con.Close();
+                        FetchAllMessages();
                         return true;
                     }
                     
@@ -212,6 +300,7 @@ namespace PMService2
                     Log(ex.ToString());
                 }
             }
+            FetchAllMessages();
             return false;
         }
     }

@@ -216,23 +216,67 @@ namespace PMService2
 
             //Log("FetchingMessages from the database");
             var newMessages = 0;
-            
+
             foreach (var message in messagesCache)
             {
-                if((message.sender == username || message.receiver == username) && message.Time > latestMessageTime)
+                if ((message.sender == username || message.receiver == username) && message.Time > latestMessageTime)
                 {
                     newMessages++;
                 }
             }
 
-            if(newMessages > 0)
+            if (newMessages > 0)
             {
                 Console.BackgroundColor = ConsoleColor.DarkCyan;
-                Log($"New Message For {username} as {latestMessageTime.ToString("G")}");
+                Log($"{newMessages} New Message(s) For {username} as {latestMessageTime.ToString("G")}");
                 return true;
             }
-                
+
             return false;
+        }
+
+        public bool DeleteMessagesFrom(string sender, string receiver)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Log($"Requested Delete Direct messages For the relation {sender} and {receiver}");
+
+            try
+            {
+                Log("Deleting Messages from the database");
+                var allMessagesForUser = new List<Message>();
+                var newMessages = new List<Message>();
+                using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+                {
+                    if (con.State == System.Data.ConnectionState.Closed)
+                        con.Open();
+
+                    string dbScript = "DELETE FROM message WHERE (sender=@sender AND receiver=@receiver) OR (sender=@sreceiver AND receiver=@rsender);";
+                    SQLiteCommand sqliteCommand = new SQLiteCommand(dbScript, con);
+                    sqliteCommand.Parameters.AddWithValue("@sender", sender);
+                    sqliteCommand.Parameters.AddWithValue("@receiver", receiver);
+                    sqliteCommand.Parameters.AddWithValue("@rsender", sender);
+                    sqliteCommand.Parameters.AddWithValue("@sreceiver", receiver);
+
+                    var affRows = sqliteCommand.ExecuteNonQuery();
+
+                    Log($"Deleted {affRows} Messages From the Database");
+                    con.Close();
+                    FetchAllMessages();
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Log(ex.ToString());
+                return false;
+            }
+            
+
+            // Last message
+
+            // if the last message is null, Send the whole list.
+            // if the last message is not null, send the messages with a larger timestamp. 
         }
 
         public bool NewMessage(Message message)

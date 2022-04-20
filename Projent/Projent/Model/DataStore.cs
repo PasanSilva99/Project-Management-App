@@ -545,6 +545,25 @@ namespace Projent.Model
             }
             return mac;
         }
+
+        internal async static Task<string> GetEmail(string sender, string calledBy)
+        {
+            try
+            {
+                var users = await Server.MainServer.mainServiceClient.FetchUsersAsync();
+                foreach (var user in users)
+                {
+                    if(user.Name == sender)
+                        return user.Email;
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
+            return null;
+        }
     }
 }
 

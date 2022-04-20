@@ -398,7 +398,7 @@ namespace Projent
                         // Requires Microsoft.Toolkit.Uwp.Notifications NuGet package version 7.0 or greater
 
                         FetchMessages();
-
+                        LoadDirectUsers();
                         /*Temp*/
 
 
@@ -445,6 +445,24 @@ namespace Projent
                                             .AddText(message.sender)
                                             .AddText(message.MessageContent)
                                             .Show();
+
+
+                                    List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
+                                    var AddedDRUControls = stack_users.Children;
+                                    foreach (var AddedDRUControl in AddedDRUControls)
+                                    {
+                                        var DRUControl = AddedDRUControl as Button;
+                                        var DRU = DRUControl.Tag as DirectUser;
+
+                                        AddedDirectUsersList.Add(DRU);
+                                    }
+
+                                    if (AddedDirectUsersList.Where(u => u.Name == message.sender).Count() == 0)
+                                    {
+                                        DataStore.NewDirectUser(new DirectUser { Name = message.sender, Email = await DataStore.GetEmail(message.sender, navigationBase.mainPage.LoggedUser.Name) },
+                                        navigationBase.mainPage.LoggedUser.Name);
+                                        LoadDirectUsers();
+                                    }
                                 }
                             }
                         }
@@ -546,12 +564,12 @@ namespace Projent
 
             FlyoutBase.ShowAttachedFlyout(sender as Button);
         }
-
+        List<PMServer1.User> AllDirectUsers = new List<PMServer1.User>();
         private async void NewDirectUser_Click(object sender, RoutedEventArgs e)
         {
             list_directUsers.Items.Clear();
             var users = await Server.MainServer.mainServiceClient.FetchUsersAsync();
-
+            AllDirectUsers = users.ToList();
             List<DirectUser> directUsers = new List<DirectUser>();
 
             if (users != null && users.Count > 0)
@@ -788,5 +806,49 @@ namespace Projent
             }
         }
 
+        private void tb_search_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
+        {
+            List<DirectUser> directUsers = new List<DirectUser>();
+            list_directUsers.Items.Clear();
+            if (AllDirectUsers != null && AllDirectUsers.Count > 0)
+            {
+                foreach (var user in AllDirectUsers)
+                {
+                    if (user.Name != navigationBase.mainPage.LoggedUser.Name)
+                    {
+                        List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
+                        var AddedDRUControls = stack_users.Children;
+                        foreach (var AddedDRUControl in AddedDRUControls)
+                        {
+                            var DRUControl = AddedDRUControl as Button;
+                            var DRU = DRUControl.Tag as DirectUser;
+
+                            AddedDirectUsersList.Add(DRU);
+                        }
+
+                        if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
+                        {
+                            if (user.Name.ToLower().Contains(tb_search.Text.ToLower()) || user.Email.ToLower().Contains(tb_search.Text.ToLower()))
+                            {
+                                var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
+                                var DirectUserListItem = new ListViewItem();
+                                DirectUserListItem.Style = Resources["DirectUserItem"] as Style;
+                                DirectUserListItem.Content = directUserControl;
+                                DirectUserListItem.Tag = new DirectUser() { Name = user.Name, Email = user.Email };
+                                DirectUserListItem.Tapped += DirectUserListItem_Tapped;
+
+                                list_directUsers.Items.Add(DirectUserListItem);
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            if(list_directUsers.Items.Count > 0)
+            {
+                list_directUsers.Items.Add("No Users Found!");
+            }
+        }
     }
 }

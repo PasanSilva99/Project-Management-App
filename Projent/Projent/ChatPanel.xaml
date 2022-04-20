@@ -642,7 +642,7 @@
                            Margin="-5 -5 -5 -5" />
 
                     <Button.Flyout>
-                        <Flyout Placement="LeftEdgeAlignedTop"
+                        <Flyout x:Name="fly_NewDRU" Placement="LeftEdgeAlignedTop"
                                 Opened="Flyout_Opened">
                             <Flyout.FlyoutPresenterStyle>
                                 <Style TargetType="FlyoutPresenter">

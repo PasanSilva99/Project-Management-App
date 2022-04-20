@@ -97,7 +97,7 @@ namespace Projent
                         if (messages != null && latestMessageTime != null)
                         {
                             var latestMessage = messages.OrderByDescending(m => m.Time).FirstOrDefault();
-                            if(latestMessage != null)
+                            if (latestMessage != null)
                                 latestMessageTime = latestMessage.Time;
                             UpdateMessagesList(
                                 messages.Where(
@@ -471,48 +471,53 @@ namespace Projent
             {
                 foreach (var user in DirectUserList)
                 {
-                    Button directUserButton = new Button();
-                    directUserButton.Style = Resources["UserButton"] as Style;
-                    directUserButton.Tag = user;
-
-                    var DirectUserImage = new Image();
-
-                    if (!await IsFilePresent(user.Name + ".png"))
+                    if (user.Name != navigationBase.mainPage.LoggedUser.Name)
                     {
-                        var imageBuffer = await Server.MainServer.mainServiceClient.RequestUserImageAsync(user.Name);
+                        Button directUserButton = new Button();
+                        directUserButton.Style = Resources["UserButton"] as Style;
+                        directUserButton.Tag = user;
 
-                        var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
-                        var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(user.Name + ".png", CreationCollisionOption.OpenIfExists);
 
-                        await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
 
-                        using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                        var DirectUserImage = new Image();
+
+                        if (!await IsFilePresent(user.Name + ".png"))
                         {
-                            BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
-                            await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
-                            DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
+                            var imageBuffer = await Server.MainServer.mainServiceClient.RequestUserImageAsync(user.Name);
+
+                            var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                            var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(user.Name + ".png", CreationCollisionOption.OpenIfExists);
+
+                            await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
+
+                            using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                            {
+                                BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                                await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                                DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
+                            }
+
+                        }
+                        else
+                        {
+                            var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                            var ProfilePicFile = await ProfilePicFolder.GetFileAsync(user.Name + ".png");
+
+                            using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
+                            {
+                                BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
+                                await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
+                                DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
+                            }
                         }
 
+                        directUserButton.Content = DirectUserImage;
+                        directUserButton.RightTapped += DirectUserButton_RightTapped;
+                        directUserButton.Tapped += DirectUserButton_Tapped;
+                        FlyoutBase.SetAttachedFlyout(directUserButton, Resources["UserInfo"] as Flyout);
+
+                        stack_users.Children.Add(directUserButton);
                     }
-                    else
-                    {
-                        var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
-                        var ProfilePicFile = await ProfilePicFolder.GetFileAsync(user.Name + ".png");
-
-                        using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
-                        {
-                            BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
-                            await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
-                            DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
-                        }
-                    }
-
-                    directUserButton.Content = DirectUserImage;
-                    directUserButton.RightTapped += DirectUserButton_RightTapped;
-                    directUserButton.Tapped += DirectUserButton_Tapped;
-                    FlyoutBase.SetAttachedFlyout(directUserButton, Resources["UserInfo"] as Flyout);
-
-                    stack_users.Children.Add(directUserButton);
                 }
             }
             isInCooldown = false;
@@ -553,14 +558,30 @@ namespace Projent
             {
                 foreach (var user in users)
                 {
-                    var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
-                    var DirectUserListItem = new ListViewItem();
-                    DirectUserListItem.Style = Resources["DirectUserItem"] as Style;
-                    DirectUserListItem.Content = directUserControl;
-                    DirectUserListItem.Tag = new DirectUser() { Name = user.Name, Email = user.Email };
-                    DirectUserListItem.Tapped += DirectUserListItem_Tapped;
+                    if (user.Name != navigationBase.mainPage.LoggedUser.Name)
+                    {
+                        List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
+                        var AddedDRUControls = stack_users.Children;
+                        foreach (var AddedDRUControl in AddedDRUControls)
+                        {
+                            var DRUControl = AddedDRUControl as Button;
+                            var DRU = DRUControl.Tag as DirectUser;
 
-                    list_directUsers.Items.Add(DirectUserListItem);
+                            AddedDirectUsersList.Add(DRU);
+                        }
+
+                        if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
+                        {
+                            var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
+                            var DirectUserListItem = new ListViewItem();
+                            DirectUserListItem.Style = Resources["DirectUserItem"] as Style;
+                            DirectUserListItem.Content = directUserControl;
+                            DirectUserListItem.Tag = new DirectUser() { Name = user.Name, Email = user.Email };
+                            DirectUserListItem.Tapped += DirectUserListItem_Tapped;
+
+                            list_directUsers.Items.Add(DirectUserListItem);
+                        }
+                    }
 
                 }
             }
@@ -607,9 +628,10 @@ namespace Projent
             var user = (sender as ListViewItem).Tag as DirectUser;
             if (user != null)
             {
-                var isSuccess = DataStore.NewDirectUser(user, navigationBase.mainPage.LoggedUser.Name);
+                DataStore.NewDirectUser(user, navigationBase.mainPage.LoggedUser.Name);
             }
             LoadDirectUsers();
+            fly_NewDRU.Hide();
         }
 
         private void ShowSendButton(bool state)
@@ -729,10 +751,10 @@ namespace Projent
 
         private void btn_removeDirectuser_Click(object sender, RoutedEventArgs e)
         {
-            
+
             var user = (sender as Button).Tag as DirectUser;
 
-            if(SelectedReceiver == user.Name)
+            if (SelectedReceiver == user.Name)
                 ShowMessagePannel(false);
 
             var DirectUsersButtons = stack_users.Children;
@@ -762,7 +784,7 @@ namespace Projent
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);    
+                Debug.WriteLine(ex.Message);
             }
         }
 

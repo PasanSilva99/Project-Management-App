@@ -584,10 +584,8 @@ namespace Projent
                         {
                             var DRUControl = AddedDRUControl as Button;
                             var DRU = DRUControl.Tag as DirectUser;
-
                             AddedDirectUsersList.Add(DRU);
                         }
-
                         if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
                         {
                             var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };

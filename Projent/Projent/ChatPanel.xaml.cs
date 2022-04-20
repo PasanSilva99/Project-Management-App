@@ -584,8 +584,10 @@ namespace Projent
                         {
                             var DRUControl = AddedDRUControl as Button;
                             var DRU = DRUControl.Tag as DirectUser;
+
                             AddedDirectUsersList.Add(DRU);
                         }
+
                         if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
                         {
                             var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
@@ -826,7 +828,7 @@ namespace Projent
 
                         if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
                         {
-                            if (user.Name.ToLower().Contains(tb_search.Text.ToLower()) || user.Email.ToLower().Contains(tb_search.Text.ToLower()))
+                            if (user.Name.ToLower().Trim().Contains(tb_search.Text.ToLower().Trim()) || user.Email.ToLower().Trim().Contains(tb_search.Text.ToLower().Trim()))
                             {
                                 var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
                                 var DirectUserListItem = new ListViewItem();
@@ -843,7 +845,7 @@ namespace Projent
                 }
             }
 
-            if(list_directUsers.Items.Count > 0)
+            if(list_directUsers.Items.Count == 0)
             {
                 list_directUsers.Items.Add("No Users Found!");
             }

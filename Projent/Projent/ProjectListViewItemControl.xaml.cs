@@ -19,6 +19,37 @@ namespace Projent
 {
     public sealed partial class ProjectListViewItemControl : UserControl
     {
+        private string _projectName;
+        private string _projectDescription;
+        private DateTime _projectDate;
+        private string _manager;
+        private List<string> _asignees;
+
+        public string ProjectName
+        {
+            get { return _projectName; }
+            set { _projectName = value; }
+        }
+        public string ProjectDescription
+        {
+            get { return _projectDescription; }
+            set { _projectDescription = value; }
+        }
+        public DateTime ProjectDate
+        {
+            get { return _projectDate; }
+            set { _projectDate = value; }
+        }
+        public string Manager
+        {
+            get { return _manager; }
+            set { _manager = value; }
+        }
+        public List<string> Asignees
+        {
+            get { return _asignees; }
+            set { _asignees = value; }
+        }
         public ProjectListViewItemControl()
         {
             this.InitializeComponent();

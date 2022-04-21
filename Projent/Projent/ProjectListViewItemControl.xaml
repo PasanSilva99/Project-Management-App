@@ -9,46 +9,56 @@
     d:DesignHeight="48"
     d:DesignWidth="1075">
 
-    <Grid Background="White">
-        <Grid Grid.Row="1"
-              CornerRadius="10 10 10 10"
-              Margin="10 15 10 10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*" />
-                <ColumnDefinition Width="5*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="3*" />
+    <Grid Grid.Row="1"
+          Background="White"
+          CornerRadius="10 10 10 10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
 
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0"
-                       Text="Name"
-                       Foreground="#FFA5A5A5"
-                       Margin="10,0,0,0" />
-            <TextBlock Grid.Column="1"
-                       Text="Description"
-                       Foreground="#FFA5A5A5"
-                       Margin="10,0,0,0" />
-            <TextBlock Grid.Column="2"
-                       Text="4/20/2022"
-                       Foreground="#FFA5A5A5"
-                       Margin="10,0,0,0" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0"
+                   Text="Name"
+                   Foreground="#FFA5A5A5"
+                   Margin="10,0,0,0"
+                   x:Name="lbl_name"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1"
+                   Text="Description"
+                   Foreground="#FFA5A5A5"
+                   Margin="10,0,0,0"
+                   x:Name="lbl_description"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Column="2"
+                   Text="4/20/2022"
+                   Foreground="#FFA5A5A5"
+                   Margin="10,0,0,0"
+                   x:Name="lbl_date"
+                   VerticalAlignment="Center" />
 
-            <StackPanel Grid.Column="3" Orientation="Horizontal" x:Name="stack_manager">
-                <StackPanel.ChildrenTransitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition IsStaggeringEnabled="True" />
-                    </TransitionCollection>
-                </StackPanel.ChildrenTransitions>
-            </StackPanel>
+        <StackPanel Grid.Column="3"
+                    Orientation="Horizontal"
+                    x:Name="stack_manager"
+                    VerticalAlignment="Center">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition IsStaggeringEnabled="True" />
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+        </StackPanel>
 
-            <StackPanel Grid.Column="4" Orientation="Horizontal" x:Name="stack_assignees">
-                <StackPanel.ChildrenTransitions>
-                    <TransitionCollection>
-                        <RepositionThemeTransition IsStaggeringEnabled="True" />
-                    </TransitionCollection>
-                </StackPanel.ChildrenTransitions>
-            </StackPanel>
-        </Grid>
+        <StackPanel Grid.Column="4"
+                    Orientation="Horizontal"
+                    x:Name="stack_assignees"
+                    VerticalAlignment="Center">
+            <StackPanel.ChildrenTransitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition IsStaggeringEnabled="True" />
+                </TransitionCollection>
+            </StackPanel.ChildrenTransitions>
+        </StackPanel>
     </Grid>
 </UserControl>

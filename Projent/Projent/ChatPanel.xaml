@@ -5,9 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
       mc:Ignorable="d"
-      d:Width="450"
-      Background="WHITE">
+      d:Width="450">
 
     <Page.Resources>
         <Style x:Key="ChatMessageStyle"
@@ -727,7 +727,7 @@
               Margin="5 5 5 5"
               Grid.Row="1"
               Background="AliceBlue"
-              x:Name="grid_selectUser">
+              x:Name="grid_selectUser" Visibility="Visible">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <Image Source="/Assets/Images/logo.png"
@@ -802,6 +802,21 @@
                 </ListViewItem>
 
             </ListView>
+
+
+            <Grid Grid.Row="0"
+                  CornerRadius="10 10 10 10" x:Name="grid_chatLoading" >
+                <Grid.Background>
+                    <media:BackdropBlurBrush  Amount="10"
+                                              FallbackColor="White" />
+                </Grid.Background>
+                <Rectangle Fill="#BAFFFFFF" />
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <ProgressRing IsActive="True" Width="50" Height="50"/>
+                    <TextBlock Text="Loading Messages..." />
+                </StackPanel>
+            </Grid>
 
             <controls:DropShadowPanel Grid.Row="1"
                                       HorizontalContentAlignment="Stretch"

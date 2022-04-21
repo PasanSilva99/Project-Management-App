@@ -55,6 +55,7 @@ namespace Projent
 
         private async void FetchMessages()
         {
+            
             if (DataStore.GlobalServiceType == DataStore.ServiceType.Online)
             {
                 if (DataStore.CheckConnectivity())
@@ -186,6 +187,10 @@ namespace Projent
 
         private async void UpdateMessagesList(List<Message> messages)
         {
+            if (messages.Count > 10)
+            {
+                grid_chatLoading.Visibility = Visibility.Visible;
+            }
             isInCooldown = true;
             foreach (var message in messages)
             {
@@ -253,6 +258,7 @@ namespace Projent
                 }
             }
             isInCooldown = false;
+            grid_chatLoading.Visibility = Visibility.Collapsed;
         }
 
         private async void SendMessage()
@@ -373,7 +379,9 @@ namespace Projent
             base.OnNavigatedTo(e);
 
             navigationBase = e.Parameter as NavigationBase;
+            grid_chatLoading.Visibility = Visibility.Visible;
             FetchMessages();
+            grid_chatLoading.Visibility = Visibility.Collapsed;
 
             stack_users.Children.Clear();  // Clear all Test Users
 
@@ -543,12 +551,23 @@ namespace Projent
 
         private void DirectUserButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            isInCooldown = true;
-            list_messages.Items.Clear();
-            SelectedReceiver = ((sender as Button).Tag as DirectUser).Name;
-            FetchMessages();
-            isInCooldown = false;
-            ShowMessagePannel(true);
+            try
+            {
+
+
+                grid_chatLoading.Visibility = Visibility.Visible;
+                isInCooldown = true;
+                list_messages.Items.Clear();
+                SelectedReceiver = ((sender as Button).Tag as DirectUser).Name;
+
+                FetchMessages();
+                isInCooldown = false;
+                ShowMessagePannel(true);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         private void DirectUserButton_RightTapped(object sender, RightTappedRoutedEventArgs e)

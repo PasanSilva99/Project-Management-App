@@ -345,7 +345,7 @@ namespace PCClient
         /// </summary>
         internal void NavigateToPeople()
         {
-            frame_page.Navigate(typeof(ProjectsPage), this);
+            frame_page.Navigate(typeof(PeoplePage), this);
 
         }
 

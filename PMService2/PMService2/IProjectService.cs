@@ -29,5 +29,26 @@ namespace PMService2
 
         [OperationContract]
         bool DeleteMessagesFrom(string sender, string receiver);
+
+        [OperationContract]
+        bool CreateProject(Project project);
+
+        /// <summary>
+        /// Project ID connot be changed. So, We can get all the details as a single project Object and match with the project ID
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool UpdateProject(Project project);
+
+        /// <summary>
+        /// Deletes the project from the database
+        /// </summary>
+        /// <param name="projectID">What Project</param>
+        /// <param name="computerID">Which computer is requesting this action</param>
+        /// <param name="userID">Name of the person that requests this change</param>
+        /// <returns></returns>
+        [OperationContract]
+        bool DeleteProject(string projectID, string username);
     }
 }

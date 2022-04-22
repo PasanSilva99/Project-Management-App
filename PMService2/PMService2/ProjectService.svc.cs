@@ -56,6 +56,7 @@ namespace PMService2
                     "project ( " +
                         "ProjectID TEXT, " +
                         "CreatedOn TEXT, " +
+                        "CreatedBy TEXT, " +
                         "Title TEXT, " +
                         "ProjectManager TEXT, " +
                         "Members TEXT, " +
@@ -358,6 +359,22 @@ namespace PMService2
             }
             FetchAllMessages();
             return false;
+        }
+
+
+        public bool CreateProject(Project project)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateProject(Project project)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteProject(string projectID, string username)
+        {
+            throw new NotImplementedException();
         }
     }
 }

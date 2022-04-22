@@ -51,7 +51,19 @@ namespace PMService2
                         "sender TEXT, " +
                         "receiver TEXT, " +
                         "Time TEXT, " +
-                        "MentionedUsers TEXT ); ";
+                        "MentionedUsers TEXT ); " +
+                    "CREATE TABLE IF NOT EXISTS " +
+                    "project ( " +
+                        "ProjectID TEXT, " +
+                        "CreatedOn TEXT, " +
+                        "Title TEXT, " +
+                        "ProjectManager TEXT, " +
+                        "Members TEXT, " +
+                        "Description TEXT, " +
+                        "Category TEXT, " +
+                        "StartDate TEXT, " +
+                        "EndDate TEXT, " +
+                        "Stats TEXT );";
 
                     SQLiteCommand SQLiteCommand = new SQLiteCommand(dbScript, con);
                     SQLiteCommand.ExecuteNonQuery();

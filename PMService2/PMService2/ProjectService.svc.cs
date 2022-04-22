@@ -361,20 +361,83 @@ namespace PMService2
             return false;
         }
 
-
+        /// <summary>
+        /// Creates anew project in the database
+        /// </summary>
+        /// <param name="project">Project object with all details</param>
+        /// <returns>True if successfull creation, False if something fails. Look at the Server console for more information</returns>
         public bool CreateProject(Project project)
         {
-            throw new NotImplementedException();
+            // Update the serve console
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Log($"Create Project Invoked by {project.ChreatedBy}");
+
+
+            // Create the SQLite Connection
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Saving Project");
+                    SQLiteCommand CMDSaveProject = new SQLiteCommand();
+                    CMDSaveProject.CommandText = "INSET INTO project";
+
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error on the server console
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Log(ex.ToString());
+                }
+            }
+                return false;
         }
 
-        public bool UpdateProject(Project project)
+        public bool UpdateProject(Project project, string username)
         {
-            throw new NotImplementedException();
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Log($"Update Project Invoked by {username}");
+            // Create the SQLite Connection
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error on the server console
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Log(ex.ToString());
+                }
+            }
+            return false;
+
         }
 
         public bool DeleteProject(string projectID, string username)
         {
-            throw new NotImplementedException();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Log($"Delet Project Invoked by {username}");
+            // Create the SQLite Connection
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error on the server console
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Log(ex.ToString());
+                }
+            }
+            return false;
         }
     }
 }

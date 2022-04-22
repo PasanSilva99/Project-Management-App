@@ -39,7 +39,7 @@ namespace PMService2
         /// <param name="project"></param>
         /// <returns></returns>
         [OperationContract]
-        bool UpdateProject(Project project);
+        bool UpdateProject(Project project, string username);
 
         /// <summary>
         /// Deletes the project from the database

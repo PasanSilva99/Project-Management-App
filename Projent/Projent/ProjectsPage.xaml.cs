@@ -47,6 +47,11 @@ namespace Projent
             list_projects.Items.Clear();
             var projectList = await DataStore.FetchAllProjectsAsync();
 
+            if(projectList == null)
+            {
+                projectList = new List<PMServer2.Project>();
+            }
+
             foreach (var project in projectList)
             {
                 MainProjectListViewItemControl projectListViewItemControl = new MainProjectListViewItemControl

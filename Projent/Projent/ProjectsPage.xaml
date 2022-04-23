@@ -414,12 +414,12 @@
                           CornerRadius="10 10 10 10"
                           BorderThickness="0" MinWidth="150">
                     <ComboBox.Items>
-                        <ComboBoxItem Content="ProjectID" />
-                        <ComboBoxItem Content="Category" />
-                        <ComboBoxItem Content="Title" />
-                        <ComboBoxItem Content="Manager" />
-                        <ComboBoxItem Content="Created Date" />
-                        <ComboBoxItem Content="Due Date" />
+                        <ComboBoxItem Content="ProjectID" Tag="ProjectID"/>
+                        <ComboBoxItem Content="Category" Tag="Category"/>
+                        <ComboBoxItem Content="Title" Tag="Title"/>
+                        <ComboBoxItem Content="Manager" Tag="Manager"/>
+                        <ComboBoxItem Content="Created Date" Tag="CreatedDate"/>
+                        <ComboBoxItem Content="Due Date" Tag="DueDate"/>
                     </ComboBox.Items>
                 </ComboBox>
             </StackPanel>
@@ -438,7 +438,8 @@
                   Padding="10 10 10 10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="1.5*" />
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="3*" />
@@ -453,15 +454,19 @@
                            Foreground="#FFA5A5A5"
                            Margin="10,0,0,0" />
                 <TextBlock Grid.Column="2"
+                           Text="Status"
+                           Foreground="#FFA5A5A5"
+                           Margin="25,0,0,0" />
+                <TextBlock Grid.Column="3"
                            Text="Date"
                            Foreground="#FFA5A5A5"
                            Margin="10,0,0,0" />
-                <TextBlock Grid.Column="3"
+                <TextBlock Grid.Column="4"
                            Margin="7 0 0 0"
                            Text="Manager"
                            Foreground="#FFA5A5A5"
                            TextAlignment="Center" />
-                <TextBlock Grid.Column="4"
+                <TextBlock Grid.Column="5"
                            Margin="7 0 0 0"
                            Text="Assignees"
                            Foreground="#FFA5A5A5"

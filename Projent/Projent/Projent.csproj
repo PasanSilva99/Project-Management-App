@@ -161,6 +161,9 @@
     <Compile Include="PeoplePage.xaml.cs">
       <DependentUpon>PeoplePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainProjectListViewItemControl.xaml.cs">
+      <DependentUpon>MainProjectListViewItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjectListViewItemControl.xaml.cs">
       <DependentUpon>ProjectListViewItemControl.xaml</DependentUpon>
     </Compile>
@@ -355,6 +358,10 @@
     <Page Include="PeoplePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainProjectListViewItemControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ProjectListViewItemControl.xaml">
       <SubType>Designer</SubType>

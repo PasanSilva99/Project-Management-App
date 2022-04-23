@@ -49,12 +49,15 @@ namespace Projent
 
             foreach (var project in projectList)
             {
-                ProjectListViewItemControl projectListViewItemControl = new ProjectListViewItemControl();
-                projectListViewItemControl.ProjectName = project.Title;
-                projectListViewItemControl.ProjectDescription = project.Description;
-                projectListViewItemControl.ProjectDate = project.EndDate;
-                projectListViewItemControl.Manager = project.ProjectManager;
-                projectListViewItemControl.Asignees = project.Assignees.ToList();
+                MainProjectListViewItemControl projectListViewItemControl = new MainProjectListViewItemControl
+                {
+                    ProjectName = project.Title,
+                    ProjectDescription = project.Description,
+                    ProjectStatus = project.Status,
+                    ProjectDate = project.EndDate,
+                    Manager = project.ProjectManager,
+                    Asignees = project.Assignees.ToList()
+                };
 
                 ListViewItem projectListViewItem = new ListViewItem();
                 projectListViewItem.Style = Resources["ProjectListItem"] as Style;

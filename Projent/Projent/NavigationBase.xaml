@@ -570,6 +570,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <Grid.Transitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </Grid.Transitions>
+        
         <!--\/ Top Logo \/-->
         <Image Grid.ColumnSpan="2"
                Grid.Column="0"
@@ -703,6 +709,12 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="85" />
             </Grid.ColumnDefinitions>
+
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </Grid.Transitions>
 
             <Frame x:Name="frame_page"
                    Margin="10 10 10 10"

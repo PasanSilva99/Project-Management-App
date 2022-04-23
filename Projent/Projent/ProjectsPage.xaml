@@ -4,6 +4,7 @@
       xmlns:local="using:Projent"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -144,7 +145,7 @@
             <Setter Property="Foreground" Value="{ThemeResource ToggleButtonForeground}"/>
             <Setter Property="BorderBrush" Value="{ThemeResource ToggleButtonBorderBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="30 3 30 3"/>
+            <Setter Property="Padding" Value="30 7 30 5"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
@@ -385,7 +386,7 @@
             <StackPanel Grid.Column="1" Spacing="5">
                 <TextBlock Text="Status" TextAlignment="Center"/>
                 <ComboBox PlaceholderText="Status" CornerRadius="10 10 10 10" BorderThickness="0">
-                    <ComboBoxItem Content="🔘All" IsSelected="True" Tag="All"/>
+                    <ComboBoxItem Content="🔘 All" IsSelected="True" Tag="All"/>
                     <ComboBoxItem Content="🟢 Active" Tag="Active"/>
                     <ComboBoxItem Content="🔴 Inactive" Tag="Inactive"/>
                     <ComboBoxItem Content="🔵 Finished" Tag="Finished"/>
@@ -398,7 +399,7 @@
                            TextAlignment="Center" />
                 <ComboBox PlaceholderText="Select Category"
                           CornerRadius="10 10 10 10"
-                          BorderThickness="0" IsEditable="True">
+                          BorderThickness="0" IsEditable="True" MinWidth="180">
                     <ComboBox.Items>
                         <ComboBoxItem Content="No Categories Available" />
                     </ComboBox.Items>
@@ -411,8 +412,7 @@
                            TextAlignment="Center" />
                 <ComboBox PlaceholderText="Sort By"
                           CornerRadius="10 10 10 10"
-                          BorderThickness="0"
-                          IsEditable="True" MinWidth="150">
+                          BorderThickness="0" MinWidth="150">
                     <ComboBox.Items>
                         <ComboBoxItem Content="ProjectID" />
                         <ComboBoxItem Content="Category" />
@@ -473,6 +473,23 @@
                       Margin="10 0 10 0">
 
             </ListView>
+
+            <Grid Grid.Row="0" Grid.RowSpan="2"
+                  CornerRadius="10 10 10 10"
+                  x:Name="grid_projectsLoading">
+                <Grid.Background>
+                    <media:BackdropBlurBrush  Amount="10"
+                                              FallbackColor="White" />
+                </Grid.Background>
+                <Rectangle Fill="#BAF4F4FF" />
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                    <ProgressRing IsActive="True"
+                                  Width="50"
+                                  Height="50" />
+                    <TextBlock Text="Loading Projects..." />
+                </StackPanel>
+            </Grid>
 
         </Grid>
     </Grid>

@@ -41,378 +41,7 @@ namespace Projent.Model
             using (HashAlgorithm algorithm = SHA256.Create())
                 return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
         }
-
-        public static async Task<bool> CreateProject(PMServer2.Project project)
-        {
-            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
-            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
-            // Create the SQLite Connection
-            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB};"))
-            {
-                try
-                {
-                    // open the connection
-                    con.Open();
-
-                    // Create the SQLite Command
-                    Console.WriteLine("Saving Project");
-                    SqliteCommand CMDSaveProject = new SqliteCommand();
-                    CMDSaveProject.CommandText =
-                        "INSET INTO project " +
-                        "VALUES(" +
-                            "ProjectID=@projectId, " +
-                            "CreatedOn=@createdOn, " +
-                            "CreatedBy=@createdBy, " +
-                            "Title=@title, " +
-                            "ProjectManager=@projectManager, " +
-                            "Members=@members, " +
-                            "Description=@description, " +
-                            "Category=@category, " +
-                            "StartDate=@startDate, " +
-                            "EndDate=@endDate, " +
-                            "Status=@status" +
-                        ");";
-
-                    // Assignees are sent as an list of string objects
-                    // we have to create a single string to save it in the database.
-                    StringBuilder assigneesString = new StringBuilder();
-
-                    if (project.Assignees != null && project.Assignees.Count > 1)
-                    {
-                        foreach (var assignee in project.Assignees)
-                        {
-                            // append the value with a comma for the string bulder.
-                            // this comma can be used to detect and create the list string back from the string.
-                            assigneesString.Append(assignee + ",");
-                        }
-                    }
-                    else
-                    {
-                        // of there is no more than 1 value, there is no need to seperate. Just append it to the builder.
-                        // of the count not one, it means, it dont have any values, in that case, append the string ans an empty value.
-                        if (project.Assignees.Count == 1)
-                            assigneesString.Append(project.Assignees.ToArray()[0]);
-                        else
-                            assigneesString.Append("");
-                    }
-
-                    // set the parameters
-                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
-                    CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
-                    CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
-                    CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
-                    CMDSaveProject.Parameters.AddWithValue("@projectManager", project.ProjectManager);
-                    CMDSaveProject.Parameters.AddWithValue("@members", assigneesString.ToString());
-                    CMDSaveProject.Parameters.AddWithValue("@description", project.Description);
-                    CMDSaveProject.Parameters.AddWithValue("@category", project.Category);
-                    CMDSaveProject.Parameters.AddWithValue("@startDate", project.StartDate.ToString("G"));
-                    CMDSaveProject.Parameters.AddWithValue("@endDate", project.EndDate.ToString("G"));
-                    CMDSaveProject.Parameters.AddWithValue("@status", project.Status);
-
-                    // set the connection for the command
-                    CMDSaveProject.Connection = con;
-
-                    // extecute the command aget the affected row count
-                    var affRows = CMDSaveProject.ExecuteNonQuery();
-
-                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
-                    // if not that means there is ban isuue occured.
-                    if (affRows > 0)
-                    {
-                        Debug.WriteLine($"Completedly Added project {project.Title}");
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"Failed to add project {project.Title}");
-                        return false;
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    // incase of an error, show the error
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-
-            return false;
-        }
-
-        public static async Task<bool> UpdateLocalProject(PMServer2.Project project)
-        {
-            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
-            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
-            // Create the SQLite Connection
-            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
-            {
-                try
-                {
-                    // open the connection
-                    con.Open();
-
-                    // Create the SQLite Command
-                    Console.WriteLine("Saving Project");
-                    SqliteCommand CMDSaveProject = new SqliteCommand();
-                    CMDSaveProject.CommandText =
-                        "UPDATE project " +
-                        "SET " +
-                            "CreatedOn=@createdOn, " +
-                            "CreatedBy=@createdBy, " +
-                            "Title=@title, " +
-                            "ProjectManager=@projectManager, " +
-                            "Members=@members, " +
-                            "Description=@description, " +
-                            "Category=@category, " +
-                            "StartDate=@startDate, " +
-                            "EndDate=@endDate, " +
-                            "Status=@status" +
-                        " WHERE " +
-                            "ProjectID=@projectId;";
-
-                    // Assignees are sent as an list of string objects
-                    // we have to create a single string to save it in the database.
-                    StringBuilder assigneesString = new StringBuilder();
-
-                    if (project.Assignees != null && project.Assignees.Count > 1)
-                    {
-                        foreach (var assignee in project.Assignees)
-                        {
-                            // append the value with a comma for the string bulder.
-                            // this comma can be used to detect and create the list string back from the string.
-                            assigneesString.Append(assignee + ",");
-                        }
-                    }
-                    else
-                    {
-                        // of there is no more than 1 value, there is no need to seperate. Just append it to the builder.
-                        // of the count not one, it means, it dont have any values, in that case, append the string ans an empty value.
-                        if (project.Assignees.Count == 1)
-                            assigneesString.Append(project.Assignees.ToArray()[0]);
-                        else
-                            assigneesString.Append("");
-                    }
-
-                    // set the parameters
-                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
-                    CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
-                    CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
-                    CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
-                    CMDSaveProject.Parameters.AddWithValue("@projectManager", project.ProjectManager);
-                    CMDSaveProject.Parameters.AddWithValue("@members", assigneesString.ToString());
-                    CMDSaveProject.Parameters.AddWithValue("@description", project.Description);
-                    CMDSaveProject.Parameters.AddWithValue("@category", project.Category);
-                    CMDSaveProject.Parameters.AddWithValue("@startDate", project.StartDate.ToString("G"));
-                    CMDSaveProject.Parameters.AddWithValue("@endDate", project.EndDate.ToString("G"));
-                    CMDSaveProject.Parameters.AddWithValue("@status", project.Status);
-
-                    // set the connection for the command
-                    CMDSaveProject.Connection = con;
-
-                    // extecute the command aget the affected row count
-                    var affRows = CMDSaveProject.ExecuteNonQuery();
-
-                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
-                    // if not that means there is ban isuue occured.
-                    if (affRows > 0)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"Failed to update project {project.Title}");
-                        return false;
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-            return false;
-
-        }
-
-        public static async Task<bool> DeleteProject(string projectID)
-        {
-            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
-            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
-            // Create the SQLite Connection
-            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
-            {
-                try
-                {
-                    // open the connection
-                    con.Open();
-
-                    // Create the SQLite Command
-                    Console.WriteLine("Saving Project");
-                    SqliteCommand CMDSaveProject = new SqliteCommand();
-                    CMDSaveProject.CommandText =
-                        "DELETE FROM project " +
-                        "WHERE " +
-                            "ProjectID=@projectId;";
-
-                    // set the parameters
-                    CMDSaveProject.Parameters.AddWithValue("@projectId", projectID);
-
-                    // set the connection for the command
-                    CMDSaveProject.Connection = con;
-
-                    // extecute the command aget the affected row count
-                    var affRows = CMDSaveProject.ExecuteNonQuery();
-
-                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
-                    // if not that means there is ban isuue occured.
-                    if (affRows > 0)
-                    {
-                        Debug.WriteLine($"Completedly Deleted Project {projectID}");
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.WriteLine($"Failed to delete project {projectID}");
-                        return false;
-                    }
-
-
-                }
-                catch (Exception ex)
-                {
-                    // incase of an error, show the error
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-
-            // Continuing to gete means abouve functions must have generates and uncaought error
-            // this can be an something to dfo with input data
-            return false;
-        }
-
-        internal static async Task<List<PMServer2.Project>> FetchAllLocalProjectsAsync()
-        {
-            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
-            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
-            // store the projects temporary
-            List<PMServer2.Project> allProjects = new List<PMServer2.Project>();
-
-            // Create the SQLite Connection
-            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
-            {
-                try
-                {
-                    // open the connection
-                    con.Open();
-
-                    // Create the SQLite Command
-                    Console.WriteLine("Saving Project");
-                    SqliteCommand CMDSaveProject = new SqliteCommand();
-                    CMDSaveProject.CommandText =
-                        "SELECT " +
-                        "ProjectID, CreatedOn, CreatedBy, Title, ProjectManager, Members, Description, Category, StartDate, EndDate, Status " +
-                        "FROM project;";
-
-                    // set the connection for the command
-                    CMDSaveProject.Connection = con;
-
-                    // extecute the command aget the affected row count
-                    var reader = CMDSaveProject.ExecuteReader();
-
-                    // Colelct the data
-                    while (reader.Read())
-                    {
-                        var assigneesString = reader.GetString(5);
-                        var assignees = assigneesString.Substring(0, assigneesString.Length - 1).Split(',');
-
-                        allProjects.Add(new PMServer2.Project()
-                        {
-                            ProjectId = reader.GetString(0),
-                            CreatedOn = DateTime.Parse(reader.GetString(1)),
-                            CreatedBy = reader.GetString(2),
-                            Title = reader.GetString(3),
-                            ProjectManager = reader.GetString(4),
-                            Assignees = new System.Collections.ObjectModel.ObservableCollection<string>(assignees),
-                            Description = reader.GetString(6),
-                            Category = reader.GetString(7),
-                            StartDate = DateTime.Parse(reader.GetString(8)),
-                            EndDate = DateTime.Parse(reader.GetString(9)),
-                            Status = reader.GetString(10)
-                        });
-                    }
-                    return allProjects;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-
-            return null;
-        }
-
-        public static string GetHashString(string inputString)
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (byte b in GetHash(inputString))
-                sb.Append(b.ToString("X2"));
-
-            return sb.ToString();
-        }
-
-
-
-        public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
-        public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
-
-        public static async Task<bool> SetUserStatus(User user, Status status)
-        {
-            try
-            {
-                if (user != null)
-                {
-                    PMServer1.User serverUser = new PMServer1.User() { Email = user.Email, Name = user.Name, Password = user.Password };
-
-                    await Server.MainServer.mainServiceClient.SetUserStatusAsync(Converter.ToServerUser(user), Converter.ToServerStatus(status));
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                return false;
-            }
-        }
-
-        internal static async Task<List<PMServer2.Project>> FetchAllProjectsAsync()
-        {
-            var projectlist = new List<PMServer2.Project>();
-            if (CheckConnectivity() && await CheckProjectServerConnectivityAsync() && GlobalProjectServiceType == ServiceType.Online)
-            {
-                try
-                {
-                    var projectlistCollection = await Server.ProjectServer.projectServiceClient.FetchAllProjectsAsync(MainPage.LoggedUser.Name);
-                    projectlist.AddRange(projectlistCollection);
-                    await Server.ProjectServer.SyncProjectsAsync();
-                    return projectlist;
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                    return null;
-                }
-            }
-            else
-            {
-                return await FetchAllLocalProjectsAsync();
-            }
-        }
+ 
 
         private static async Task<bool> CheckProjectServerConnectivityAsync()
         {
@@ -490,12 +119,12 @@ namespace Projent.Model
                 {
                     con.Open();
                     string dbScript = "CREATE TABLE IF NOT EXISTS " +
-                    "user (" +
+                    "user ( " +
                         "Email TEXT, " +
                         "Name TEXT, " +
-                        "Password TEXT ); " +
+                        "Password TEXT); " +
                     "CREATE TABLE IF NOT EXISTS " +
-                        "chat (" +
+                        "chat ( " +
                         "SentOn TEXT, " +       // The date sent
                         "Sender TEXT, " +       // Auther of the message
                         "ProjectID TEXT, " +    // if the message is on the project discussion, the project id
@@ -503,10 +132,10 @@ namespace Projent.Model
                         "Content TEXT, " +      // Message body
                         "IsEmogi INTEGER ); " + // is this a emogi / Sticker
                     "CREATE TABLE IF NOT EXISTS " +
-                    "DirectUsers (" +   // Saved Direct users
+                    "DirectUsers ( " +   // Saved Direct users
                         "User TEXT," +
                         "Email TEXT, " +
-                        "Name TEXT); " +
+                        "Name TEXT ); " +
                     "CREATE TABLE IF NOT EXISTS " +
                     "project ( " +
                         "ProjectID TEXT, " +
@@ -952,6 +581,378 @@ namespace Projent.Model
                 return null;
             }
             return null;
+        }
+
+        public static async Task<bool> CreateProject(PMServer2.Project project)
+        {
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
+            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+            // Create the SQLite Connection
+            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB};"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Saving Project");
+                    SqliteCommand CMDSaveProject = new SqliteCommand();
+                    CMDSaveProject.CommandText =
+                        "INSERT INTO project " +
+                        "VALUES(" +
+                            "@projectId, " +
+                            "@createdOn, " +
+                            "@createdBy, " +
+                            "@title, " +
+                            "@projectManager, " +
+                            "@members, " +
+                            "@description, " +
+                            "@category, " +
+                            "@startDate, " +
+                            "@endDate, " +
+                            "@status" +
+                        ");";
+
+                    // Assignees are sent as an list of string objects
+                    // we have to create a single string to save it in the database.
+                    StringBuilder assigneesString = new StringBuilder();
+
+                    if (project.Assignees != null && project.Assignees.Count > 1)
+                    {
+                        foreach (var assignee in project.Assignees)
+                        {
+                            // append the value with a comma for the string bulder.
+                            // this comma can be used to detect and create the list string back from the string.
+                            assigneesString.Append(assignee + ",");
+                        }
+                    }
+                    else
+                    {
+                        // of there is no more than 1 value, there is no need to seperate. Just append it to the builder.
+                        // of the count not one, it means, it dont have any values, in that case, append the string ans an empty value.
+                        if (project.Assignees.Count == 1)
+                            assigneesString.Append(project.Assignees.ToArray()[0]);
+                        else
+                            assigneesString.Append("");
+                    }
+
+                    // set the parameters
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
+                    CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
+                    CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
+                    CMDSaveProject.Parameters.AddWithValue("@projectManager", project.ProjectManager);
+                    CMDSaveProject.Parameters.AddWithValue("@members", assigneesString.ToString());
+                    CMDSaveProject.Parameters.AddWithValue("@description", project.Description);
+                    CMDSaveProject.Parameters.AddWithValue("@category", project.Category);
+                    CMDSaveProject.Parameters.AddWithValue("@startDate", project.StartDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@endDate", project.EndDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@status", project.Status);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var affRows = CMDSaveProject.ExecuteNonQuery();
+
+                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
+                    // if not that means there is ban isuue occured.
+                    if (affRows > 0)
+                    {
+                        Debug.WriteLine($"Completedly Added project {project.Title}");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Failed to add project {project.Title}");
+                        return false;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error
+                    Debug.WriteLine(ex.ToString());
+                }
+            }
+
+            return false;
+        }
+
+        public static async Task<bool> UpdateLocalProject(PMServer2.Project project)
+        {
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
+            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+            // Create the SQLite Connection
+            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Saving Project");
+                    SqliteCommand CMDSaveProject = new SqliteCommand();
+                    CMDSaveProject.CommandText =
+                        "UPDATE project " +
+                        "SET " +
+                            "CreatedOn=@createdOn, " +
+                            "CreatedBy=@createdBy, " +
+                            "Title=@title, " +
+                            "ProjectManager=@projectManager, " +
+                            "Members=@members, " +
+                            "Description=@description, " +
+                            "Category=@category, " +
+                            "StartDate=@startDate, " +
+                            "EndDate=@endDate, " +
+                            "Status=@status" +
+                        " WHERE " +
+                            "ProjectID=@projectId;";
+
+                    // Assignees are sent as an list of string objects
+                    // we have to create a single string to save it in the database.
+                    StringBuilder assigneesString = new StringBuilder();
+
+                    if (project.Assignees != null && project.Assignees.Count > 1)
+                    {
+                        foreach (var assignee in project.Assignees)
+                        {
+                            // append the value with a comma for the string bulder.
+                            // this comma can be used to detect and create the list string back from the string.
+                            assigneesString.Append(assignee + ",");
+                        }
+                    }
+                    else
+                    {
+                        // of there is no more than 1 value, there is no need to seperate. Just append it to the builder.
+                        // of the count not one, it means, it dont have any values, in that case, append the string ans an empty value.
+                        if (project.Assignees.Count == 1)
+                            assigneesString.Append(project.Assignees.ToArray()[0]);
+                        else
+                            assigneesString.Append("");
+                    }
+
+                    // set the parameters
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
+                    CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
+                    CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
+                    CMDSaveProject.Parameters.AddWithValue("@projectManager", project.ProjectManager);
+                    CMDSaveProject.Parameters.AddWithValue("@members", assigneesString.ToString());
+                    CMDSaveProject.Parameters.AddWithValue("@description", project.Description);
+                    CMDSaveProject.Parameters.AddWithValue("@category", project.Category);
+                    CMDSaveProject.Parameters.AddWithValue("@startDate", project.StartDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@endDate", project.EndDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@status", project.Status);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var affRows = CMDSaveProject.ExecuteNonQuery();
+
+                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
+                    // if not that means there is ban isuue occured.
+                    if (affRows > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Failed to update project {project.Title}");
+                        return false;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+            }
+            return false;
+
+        }
+
+        public static async Task<bool> DeleteProject(string projectID)
+        {
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
+            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+            // Create the SQLite Connection
+            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Saving Project");
+                    SqliteCommand CMDSaveProject = new SqliteCommand();
+                    CMDSaveProject.CommandText =
+                        "DELETE FROM project " +
+                        "WHERE " +
+                            "ProjectID=@projectId;";
+
+                    // set the parameters
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", projectID);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var affRows = CMDSaveProject.ExecuteNonQuery();
+
+                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
+                    // if not that means there is ban isuue occured.
+                    if (affRows > 0)
+                    {
+                        Debug.WriteLine($"Completedly Deleted Project {projectID}");
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Failed to delete project {projectID}");
+                        return false;
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error
+                    Debug.WriteLine(ex.ToString());
+                }
+            }
+
+            // Continuing to gete means abouve functions must have generates and uncaought error
+            // this can be an something to dfo with input data
+            return false;
+        }
+
+        internal static async Task<List<PMServer2.Project>> FetchAllLocalProjectsAsync()
+        {
+            await ApplicationData.Current.LocalFolder.CreateFileAsync(DBName, CreationCollisionOption.OpenIfExists);
+            string pathTODB = Path.Combine(ApplicationData.Current.LocalFolder.Path, DBName);
+            // store the projects temporary
+            List<PMServer2.Project> allProjects = new List<PMServer2.Project>();
+
+            // Create the SQLite Connection
+            using (SqliteConnection con = new SqliteConnection($"filename={pathTODB}"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Saving Project");
+                    SqliteCommand CMDSaveProject = new SqliteCommand();
+                    CMDSaveProject.CommandText =
+                        "SELECT " +
+                        "ProjectID, CreatedOn, CreatedBy, Title, ProjectManager, Members, Description, Category, StartDate, EndDate, Status " +
+                        "FROM project;";
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var reader = CMDSaveProject.ExecuteReader();
+
+                    // Colelct the data
+                    while (reader.Read())
+                    {
+                        var assigneesString = reader.GetString(5);
+                        var assignees = assigneesString.Substring(0, assigneesString.Length - 1).Split(',');
+
+                        allProjects.Add(new PMServer2.Project()
+                        {
+                            ProjectId = reader.GetString(0),
+                            CreatedOn = DateTime.Parse(reader.GetString(1)),
+                            CreatedBy = reader.GetString(2),
+                            Title = reader.GetString(3),
+                            ProjectManager = reader.GetString(4),
+                            Assignees = new System.Collections.ObjectModel.ObservableCollection<string>(assignees),
+                            Description = reader.GetString(6),
+                            Category = reader.GetString(7),
+                            StartDate = DateTime.Parse(reader.GetString(8)),
+                            EndDate = DateTime.Parse(reader.GetString(9)),
+                            Status = reader.GetString(10)
+                        });
+                    }
+                    return allProjects;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
+            }
+
+            return null;
+        }
+
+        public static string GetHashString(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
+        }
+
+
+
+        public static String ApplicationName_Acronym { get; set; } = "Projent";  // Project name
+        public static String ApplicationName_full { get; set; } = "Collaborative Project Mnagement Platform";  // Project description
+
+        public static async Task<bool> SetUserStatus(User user, Status status)
+        {
+            try
+            {
+                if (user != null)
+                {
+                    PMServer1.User serverUser = new PMServer1.User() { Email = user.Email, Name = user.Name, Password = user.Password };
+
+                    await Server.MainServer.mainServiceClient.SetUserStatusAsync(Converter.ToServerUser(user), Converter.ToServerStatus(status));
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return false;
+            }
+        }
+
+        internal static async Task<List<PMServer2.Project>> FetchAllProjectsAsync()
+        {
+            var projectlist = new List<PMServer2.Project>();
+            if (CheckConnectivity() && await CheckProjectServerConnectivityAsync() && GlobalProjectServiceType == ServiceType.Online)
+            {
+                try
+                {
+                    var projectlistCollection = await Server.ProjectServer.projectServiceClient.FetchAllProjectsAsync(MainPage.LoggedUser.Name);
+                    projectlist.AddRange(projectlistCollection);
+                    await Server.ProjectServer.SyncProjectsAsync();
+                    return projectlist;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    return null;
+                }
+            }
+            else
+            {
+                return await FetchAllLocalProjectsAsync();
+            }
         }
     }
 }

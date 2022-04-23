@@ -22,9 +22,21 @@ namespace Projent.ProjectViews
     /// </summary>
     public sealed partial class OverviewPage : Page
     {
+        private NavigationBase basePage;
+        PMServer2.Project project;
+
         public OverviewPage()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            basePage = e.Parameter as NavigationBase;
+
+            project = ProjectsPage.Selectedproject;
         }
     }
 }

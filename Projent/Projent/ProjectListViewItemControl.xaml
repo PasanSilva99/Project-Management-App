@@ -244,12 +244,13 @@
                    Text="Name"
                    Margin="10,0,0,0"
                    x:Name="lbl_name"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
         <TextBlock Grid.Column="1"
                    Text="Description"
                    Margin="10,0,0,0"
                    x:Name="lbl_description"
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis" />
         <TextBlock Grid.Column="2"
                    Text="4/20/2022"
                    Margin="10,0,0,0"

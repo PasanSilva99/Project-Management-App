@@ -226,7 +226,8 @@
           CornerRadius="10 10 10 10"
           PointerEntered="Grid_PointerEntered"
           PointerExited="Grid_PointerExited"
-          Padding="0 5 0 5" Background="White">
+          Padding="0 5 0 5"
+          Background="White">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="4*" />
             <ColumnDefinition Width="4*" />
@@ -244,19 +245,26 @@
         <TextBlock Grid.Column="0"
                    Text="Name"
                    Margin="10,0,0,0"
+                   TextTrimming="CharacterEllipsis"
                    x:Name="lbl_name"
                    VerticalAlignment="Center" />
-        <TextBlock Grid.Column="1"
-                   Text="Description"
-                   Margin="10,0,0,0"
-                   x:Name="lbl_description"
-                   VerticalAlignment="Center" />
+
+            <TextBlock Grid.Column="1"
+                       Text="Description" 
+                       Margin="10 0 0 0"
+                       x:Name="lbl_description"
+                       TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Stretch">
+
+            </TextBlock>
+
         <TextBlock Grid.Column="2"
                    Text="🟢 Active"
                    Margin="10,0,0,0"
                    x:Name="lbl_status"
                    VerticalAlignment="Center" />
-        
+
         <TextBlock Grid.Column="3"
                    Text="4/20/2022"
                    Margin="10,0,0,0"

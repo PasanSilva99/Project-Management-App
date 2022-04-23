@@ -38,6 +38,9 @@ namespace Projent
             {
                 _projectName = value;
                 lbl_name.Text = value;
+                ToolTip nameTT = new ToolTip();
+                nameTT.Content = lbl_name.Text;
+                ToolTipService.SetToolTip(lbl_name, nameTT);
             }
         }
 
@@ -48,6 +51,9 @@ namespace Projent
             {
                 _projectDescription = value;
                 lbl_description.Text = value;
+                ToolTip descriptionTT = new ToolTip();
+                descriptionTT.Content = lbl_description.Text;
+                ToolTipService.SetToolTip(lbl_description, descriptionTT);
             }
         }
 
@@ -371,5 +377,6 @@ namespace Projent
             var grid = sender as Grid;
             grid.Background = new SolidColorBrush(Windows.UI.Colors.White);
         }
+
     }
 }

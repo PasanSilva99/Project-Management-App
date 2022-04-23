@@ -38,6 +38,30 @@
   <wsdl:message name="IProjectService_CheckNewMessagesFor_OutputMessage">
     <wsdl:part name="parameters" element="tns:CheckNewMessagesForResponse" />
   </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteMessagesFrom_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteMessagesFrom" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteMessagesFrom_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteMessagesFromResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_CreateProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateProject" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_CreateProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_UpdateProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateProject" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_UpdateProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteProject" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteProjectResponse" />
+  </wsdl:message>
   <wsdl:portType name="IProjectService">
     <wsdl:operation name="IntializeDatabaseService">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/IntializeDatabaseService" message="tns:IProjectService_IntializeDatabaseService_InputMessage" />
@@ -58,6 +82,22 @@
     <wsdl:operation name="CheckNewMessagesFor">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/CheckNewMessagesFor" message="tns:IProjectService_CheckNewMessagesFor_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/CheckNewMessagesForResponse" message="tns:IProjectService_CheckNewMessagesFor_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMessagesFrom">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/DeleteMessagesFrom" message="tns:IProjectService_DeleteMessagesFrom_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/DeleteMessagesFromResponse" message="tns:IProjectService_DeleteMessagesFrom_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/CreateProject" message="tns:IProjectService_CreateProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/CreateProjectResponse" message="tns:IProjectService_CreateProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/UpdateProject" message="tns:IProjectService_UpdateProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/UpdateProjectResponse" message="tns:IProjectService_UpdateProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/DeleteProject" message="tns:IProjectService_DeleteProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/DeleteProjectResponse" message="tns:IProjectService_DeleteProject_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProjectService" type="tns:IProjectService">
@@ -100,6 +140,42 @@
     </wsdl:operation>
     <wsdl:operation name="CheckNewMessagesFor">
       <soap:operation soapAction="http://tempuri.org/IProjectService/CheckNewMessagesFor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteMessagesFrom">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/DeleteMessagesFrom" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateProject">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/CreateProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProject">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/UpdateProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/DeleteProject" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>

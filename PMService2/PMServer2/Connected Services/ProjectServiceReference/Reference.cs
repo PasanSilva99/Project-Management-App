@@ -44,6 +44,30 @@ namespace PMServer2.ProjectServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CheckNewMessagesFor", ReplyAction="http://tempuri.org/IProjectService/CheckNewMessagesForResponse")]
         System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteMessagesFrom", ReplyAction="http://tempuri.org/IProjectService/DeleteMessagesFromResponse")]
+        bool DeleteMessagesFrom(string sender, string receiver);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteMessagesFrom", ReplyAction="http://tempuri.org/IProjectService/DeleteMessagesFromResponse")]
+        System.Threading.Tasks.Task<bool> DeleteMessagesFromAsync(string sender, string receiver);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CreateProject", ReplyAction="http://tempuri.org/IProjectService/CreateProjectResponse")]
+        bool CreateProject(PMService2.Model.Project project);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CreateProject", ReplyAction="http://tempuri.org/IProjectService/CreateProjectResponse")]
+        System.Threading.Tasks.Task<bool> CreateProjectAsync(PMService2.Model.Project project);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/UpdateProject", ReplyAction="http://tempuri.org/IProjectService/UpdateProjectResponse")]
+        bool UpdateProject(PMService2.Model.Project project, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/UpdateProject", ReplyAction="http://tempuri.org/IProjectService/UpdateProjectResponse")]
+        System.Threading.Tasks.Task<bool> UpdateProjectAsync(PMService2.Model.Project project, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteProject", ReplyAction="http://tempuri.org/IProjectService/DeleteProjectResponse")]
+        bool DeleteProject(string projectID, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteProject", ReplyAction="http://tempuri.org/IProjectService/DeleteProjectResponse")]
+        System.Threading.Tasks.Task<bool> DeleteProjectAsync(string projectID, string username);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -111,6 +135,38 @@ namespace PMServer2.ProjectServiceReference {
         
         public System.Threading.Tasks.Task<bool> CheckNewMessagesForAsync(string username, System.DateTime latestMessageTime) {
             return base.Channel.CheckNewMessagesForAsync(username, latestMessageTime);
+        }
+        
+        public bool DeleteMessagesFrom(string sender, string receiver) {
+            return base.Channel.DeleteMessagesFrom(sender, receiver);
+        }
+        
+        public System.Threading.Tasks.Task<bool> DeleteMessagesFromAsync(string sender, string receiver) {
+            return base.Channel.DeleteMessagesFromAsync(sender, receiver);
+        }
+        
+        public bool CreateProject(PMService2.Model.Project project) {
+            return base.Channel.CreateProject(project);
+        }
+        
+        public System.Threading.Tasks.Task<bool> CreateProjectAsync(PMService2.Model.Project project) {
+            return base.Channel.CreateProjectAsync(project);
+        }
+        
+        public bool UpdateProject(PMService2.Model.Project project, string username) {
+            return base.Channel.UpdateProject(project, username);
+        }
+        
+        public System.Threading.Tasks.Task<bool> UpdateProjectAsync(PMService2.Model.Project project, string username) {
+            return base.Channel.UpdateProjectAsync(project, username);
+        }
+        
+        public bool DeleteProject(string projectID, string username) {
+            return base.Channel.DeleteProject(projectID, username);
+        }
+        
+        public System.Threading.Tasks.Task<bool> DeleteProjectAsync(string projectID, string username) {
+            return base.Channel.DeleteProjectAsync(projectID, username);
         }
     }
 }

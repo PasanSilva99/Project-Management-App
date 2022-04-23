@@ -50,5 +50,11 @@ namespace PMService2
         /// <returns></returns>
         [OperationContract]
         bool DeleteProject(string projectID, string username);
+
+        [OperationContract]
+        List<Project> FetchAllProjects(string username);
+
+        [OperationContract]
+        List<Project> SyncAllProjects(string username);
     }
 }

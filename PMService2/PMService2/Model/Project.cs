@@ -8,8 +8,8 @@ namespace PMService2.Model
     public class Project
     {
         public string ProjectId {  get; set; }
-        public DateTime ChreatedOn { get; set; }
-        public string ChreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedBy { get; set; }
         public string Title { get; set; }
         public string ProjectManager { get; set; }
         public List<string> Assignees { get; set; }

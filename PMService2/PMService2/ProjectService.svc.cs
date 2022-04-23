@@ -64,7 +64,7 @@ namespace PMService2
                         "Category TEXT, " +
                         "StartDate TEXT, " +
                         "EndDate TEXT, " +
-                        "Stats TEXT );";
+                        "Status TEXT );";
 
                     SQLiteCommand SQLiteCommand = new SQLiteCommand(dbScript, con);
                     SQLiteCommand.ExecuteNonQuery();
@@ -370,7 +370,7 @@ namespace PMService2
         {
             // Update the serve console
             Console.ForegroundColor = ConsoleColor.Blue;
-            Log($"Create Project Invoked by {project.ChreatedBy}");
+            Log($"Create Project Invoked by {project.CreatedBy}");
 
 
             // Create the SQLite Connection
@@ -384,7 +384,79 @@ namespace PMService2
                     // Create the SQLite Command
                     Console.WriteLine("Saving Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
-                    CMDSaveProject.CommandText = "INSET INTO project";
+                    CMDSaveProject.CommandText = 
+                        "INSET INTO project " +
+                        "VALUES(" +
+                            "ProjectID=@projectId, " +
+                            "CreatedOn=@createdOn, " +
+                            "CreatedBy=@createdBy, " +
+                            "Title=@title, " +
+                            "ProjectManager=@projectManager, " +
+                            "Members=@members, " +
+                            "Description=@description, " +
+                            "Category=@category, " +
+                            "StartDate=@startDate, " +
+                            "EndDate=@endDate, " +
+                            "Status=@status" +
+                        ");";
+
+                    // Assignees are sent as an list of string objects
+                    // we have to create a single string to save it in the database.
+                    StringBuilder assigneesString = new StringBuilder();
+
+                    if (project.Assignees != null && project.Assignees.Count > 1)
+                    {
+                        foreach (var assignee in project.Assignees)
+                        {
+                            // append the value with a comma for the string bulder.
+                            // this comma can be used to detect and create the list string back from the string.
+                            assigneesString.Append(assignee+",");
+                        }
+                    }
+                    else
+                    {
+                        // of there is no more than 1 value, there is no need to seperate. Just append it to the builder.
+                        // of the count not one, it means, it dont have any values, in that case, append the string ans an empty value.
+                        if(project.Assignees.Count == 1)
+                            assigneesString.Append(project.Assignees.ToArray()[0]);
+                        else
+                            assigneesString.Append("");
+                    }
+                   
+                    // set the parameters
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
+                    CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
+                    CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
+                    CMDSaveProject.Parameters.AddWithValue("@projectManager", project.ProjectManager);
+                    CMDSaveProject.Parameters.AddWithValue("@members", assigneesString.ToString());
+                    CMDSaveProject.Parameters.AddWithValue("@description", project.Description);
+                    CMDSaveProject.Parameters.AddWithValue("@category", project.Category);
+                    CMDSaveProject.Parameters.AddWithValue("@startDate", project.StartDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@endDate", project.EndDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@status", project.Status);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var affRows = CMDSaveProject.ExecuteNonQuery();
+
+                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
+                    // if not that means there is ban isuue occured.
+                    if (affRows > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Log($"Completedly Added project {project.Title}");
+                        return true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Log($"Failed to add project {project.Title}");
+                        return false;
+                    }
+
 
                 }
                 catch (Exception ex)
@@ -394,18 +466,105 @@ namespace PMService2
                     Log(ex.ToString());
                 }
             }
-                return false;
+
+            // Continuing to gete means abouve functions must have generates and uncaought error
+            // this can be an something to dfo with input data
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log("Something Went Wrong");
+            return false;
         }
 
         public bool UpdateProject(Project project, string username)
         {
+            // Update the serve console
             Console.ForegroundColor = ConsoleColor.Blue;
-            Log($"Update Project Invoked by {username}");
+            Log($"Update Project Invoked by {project.CreatedBy}");
+
+
             // Create the SQLite Connection
             using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
             {
                 try
                 {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Updating Project");
+                    SQLiteCommand CMDSaveProject = new SQLiteCommand();
+                    CMDSaveProject.CommandText =
+                        "UPDATE project " +
+                        "SET " +
+                            "CreatedOn=@createdOn, " +
+                            "CreatedBy=@createdBy, " +
+                            "Title=@title, " +
+                            "ProjectManager=@projectManager, " +
+                            "Members=@members, " +
+                            "Description=@description, " +
+                            "Category=@category, " +
+                            "StartDate=@startDate, " +
+                            "EndDate=@endDate, " +
+                            "Status=@status" +
+                        " WHERE " +
+                            "ProjectID=@projectId;";
+
+                    // Assignees are sent as an list of string objects
+                    // we have to create a single string to save it in the database.
+                    StringBuilder assigneesString = new StringBuilder();
+
+                    if (project.Assignees != null && project.Assignees.Count > 1)
+                    {
+                        foreach (var assignee in project.Assignees)
+                        {
+                            // append the value with a comma for the string bulder.
+                            // this comma can be used to detect and create the list string back from the string.
+                            assigneesString.Append(assignee + ",");
+                        }
+                    }
+                    else
+                    {
+                        // of there is no more than 1 value, there is no need to seperate. Just append it to the builder.
+                        // of the count not one, it means, it dont have any values, in that case, append the string ans an empty value.
+                        if (project.Assignees.Count == 1)
+                            assigneesString.Append(project.Assignees.ToArray()[0]);
+                        else
+                            assigneesString.Append("");
+                    }
+
+                    // set the parameters
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
+                    CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
+                    CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
+                    CMDSaveProject.Parameters.AddWithValue("@projectManager", project.ProjectManager);
+                    CMDSaveProject.Parameters.AddWithValue("@members", assigneesString.ToString());
+                    CMDSaveProject.Parameters.AddWithValue("@description", project.Description);
+                    CMDSaveProject.Parameters.AddWithValue("@category", project.Category);
+                    CMDSaveProject.Parameters.AddWithValue("@startDate", project.StartDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@endDate", project.EndDate.ToString("G"));
+                    CMDSaveProject.Parameters.AddWithValue("@status", project.Status);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var affRows = CMDSaveProject.ExecuteNonQuery();
+
+                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
+                    // if not that means there is ban isuue occured.
+                    if (affRows > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Log($"Completedly Updated project {project.Title}");
+                        return true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Log($"Failed to update project {project.Title}");
+                        return false;
+                    }
+
 
                 }
                 catch (Exception ex)
@@ -415,19 +574,62 @@ namespace PMService2
                     Log(ex.ToString());
                 }
             }
+
+            // Continuing to gete means abouve functions must have generates and uncaought error
+            // this can be an something to dfo with input data
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log("Something Went Wrong");
             return false;
 
         }
 
         public bool DeleteProject(string projectID, string username)
         {
+            // Update the serve console
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Log($"Delet Project Invoked by {username}");
+            Log($"Delete Project Invoked by {projectID}");
+
+
             // Create the SQLite Connection
             using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
             {
                 try
                 {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Deleting Project");
+                    SQLiteCommand CMDSaveProject = new SQLiteCommand();
+                    CMDSaveProject.CommandText =
+                        "DELETE FROM project " +
+                        "WHERE " +
+                            "ProjectID=@projectId;";
+
+                    // set the parameters
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", projectID);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var affRows = CMDSaveProject.ExecuteNonQuery();
+
+                    // if the affected rows count is larger than 0 that means it is successfully recorded in the database
+                    // if not that means there is ban isuue occured.
+                    if (affRows > 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Log($"Completedly Deleted Project {projectID}");
+                        return true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Log($"Failed to delete project {projectID}");
+                        return false;
+                    }
+
 
                 }
                 catch (Exception ex)
@@ -437,7 +639,157 @@ namespace PMService2
                     Log(ex.ToString());
                 }
             }
+
+            // Continuing to gete means abouve functions must have generates and uncaought error
+            // this can be an something to dfo with input data
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log("Something Went Wrong");
             return false;
+        }
+
+        public List<Project> FetchAllProjects(string username)
+        {
+            // store the projects temporary
+            List<Project> allProjects = new List<Project>();
+
+            // Update the serve console
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Log($"Delete Project Invoked by {username}");
+
+
+            // Create the SQLite Connection
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    Console.WriteLine("Fetching Projects");
+                    SQLiteCommand CMDSaveProject = new SQLiteCommand();
+                    CMDSaveProject.CommandText =
+                        "SELECT " +
+                        "ProjectID, CreatedOn, CreatedBy, Title, ProjectManager, Members, Description, Category, StartDate, EndDate, Status " +
+                        "FROM project;";
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var reader = CMDSaveProject.ExecuteReader();
+
+                    // Colelct the data
+                    while (reader.Read())
+                    {
+                        var assigneesString = reader.GetString(5);
+                        var assignees = assigneesString.Substring(0, assigneesString.Length-1).Split(',');
+
+                        allProjects.Add(new Project()
+                        {
+                            ProjectId = reader.GetString(0),
+                            CreatedOn = DateTime.Parse(reader.GetString(1)),
+                            CreatedBy = reader.GetString(2),
+                            Title = reader.GetString(3),
+                            ProjectManager = reader.GetString(4),
+                            Assignees = assignees.ToList(),
+                            Description = reader.GetString(6),
+                            Category = reader.GetString(7),
+                            StartDate = DateTime.Parse(reader.GetString(8)),
+                            EndDate = DateTime.Parse(reader.GetString(9)),
+                            Status = reader.GetString(10)
+                        });
+                    }
+
+                    Log($"Found {allProjects.Count()} Projects in the organization");
+                    return allProjects;
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error on the server console
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Log(ex.ToString());
+                }
+            }
+
+            // Continuing to gete means abouve functions must have generates and uncaought error
+            // this can be an something to dfo with input data
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log("Something Went Wrong");
+            return null;
+        }
+
+        public List<Project> SyncAllProjects(string username)
+        {
+            // store the projects temporary
+            List<Project> allProjects = new List<Project>();
+
+            // Update the serve console
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Log($"Project Sync Invoked by {username}");
+
+
+            // Create the SQLite Connection
+            using (SQLiteConnection con = new SQLiteConnection($"Data Source={DBName}; Version=3;"))
+            {
+                try
+                {
+                    // open the connection
+                    con.Open();
+
+                    // Create the SQLite Command
+                    SQLiteCommand CMDSaveProject = new SQLiteCommand();
+                    CMDSaveProject.CommandText =
+                        "SELECT " +
+                        "ProjectID, CreatedOn, CreatedBy, Title, ProjectManager, Members, Description, Category, StartDate, EndDate, Status " +
+                        "FROM project WHERE CreatedBy=@username OR ProjectManager=@username OR Members=@username;";
+
+                    CMDSaveProject.Parameters.AddWithValue("@username", username);
+
+                    // set the connection for the command
+                    CMDSaveProject.Connection = con;
+
+                    // extecute the command aget the affected row count
+                    var reader = CMDSaveProject.ExecuteReader();
+
+                    // Colelct the data
+                    while (reader.Read())
+                    {
+                        var assigneesString = reader.GetString(5);
+                        var assignees = assigneesString.Substring(0, assigneesString.Length - 1).Split(',');
+
+                        allProjects.Add(new Project()
+                        {
+                            ProjectId = reader.GetString(0),
+                            CreatedOn = DateTime.Parse(reader.GetString(1)),
+                            CreatedBy = reader.GetString(2),
+                            Title = reader.GetString(3),
+                            ProjectManager = reader.GetString(4),
+                            Assignees = assignees.ToList(),
+                            Description = reader.GetString(6),
+                            Category = reader.GetString(7),
+                            StartDate = DateTime.Parse(reader.GetString(8)),
+                            EndDate = DateTime.Parse(reader.GetString(9)),
+                            Status = reader.GetString(10)
+                        });
+                    }
+
+                    Log($"Found {allProjects.Count()} Projects in the organization");
+                    return allProjects;
+                }
+                catch (Exception ex)
+                {
+                    // incase of an error, show the error on the server console
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Log(ex.ToString());
+                }
+            }
+
+            // Continuing to gete means abouve functions must have generates and uncaought error
+            // this can be an something to dfo with input data
+            Console.ForegroundColor = ConsoleColor.Red;
+            Log("Something Went Wrong");
+            return null;
         }
     }
 }

@@ -386,19 +386,19 @@ namespace PMService2
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText = 
                         "INSET INTO project " +
-                        "VALUES(" +
-                            "ProjectID=@projectId, " +
-                            "CreatedOn=@createdOn, " +
-                            "CreatedBy=@createdBy, " +
-                            "Title=@title, " +
-                            "ProjectManager=@projectManager, " +
-                            "Members=@members, " +
-                            "Description=@description, " +
-                            "Category=@category, " +
-                            "StartDate=@startDate, " +
-                            "EndDate=@endDate, " +
-                            "Status=@status" +
-                        ");";
+                        "VALUES( " +
+                            "@projectId, " +
+                            "@createdOn, " +
+                            "@createdBy, " +
+                            "@title, " +
+                            "@projectManager, " +
+                            "@members, " +
+                            "@description, " +
+                            "@category, " +
+                            "@startDate, " +
+                            "@endDate, " +
+                            "@status" +
+                        " );";
 
                     // Assignees are sent as an list of string objects
                     // we have to create a single string to save it in the database.

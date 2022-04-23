@@ -25,6 +25,7 @@ namespace Projent
         public ProjectsPage()
         {
             this.InitializeComponent();
+            projectBaseFrame.Navigate(typeof(ProjectSelection), this);
         }
     }
 }

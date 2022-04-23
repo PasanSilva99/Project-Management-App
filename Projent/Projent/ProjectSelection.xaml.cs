@@ -25,6 +25,20 @@ namespace Projent
         public ProjectSelection()
         {
             this.InitializeComponent();
+
+            ProjectListViewItemControl projectListViewItemControl = new ProjectListViewItemControl();
+            projectListViewItemControl.ProjectName = "Test Project";
+            projectListViewItemControl.ProjectDescription = "Test Descrption";
+            projectListViewItemControl.ProjectDate = DateTime.Now;
+            projectListViewItemControl.Manager = "Amoeher";
+            projectListViewItemControl.Asignees = new List<string> { "SandaruDev", "LilyKi"};
+
+            ListViewItem listViewItem = new ListViewItem();
+            listViewItem.Style = Resources["ProjectListItem"] as Style;
+            listViewItem.Content = projectListViewItemControl;
+            listViewItem.CornerRadius = new CornerRadius(10.0, 10.0, 10.0, 10.0);
+
+            list_projects.Items.Add(listViewItem);
         }
     }
 }

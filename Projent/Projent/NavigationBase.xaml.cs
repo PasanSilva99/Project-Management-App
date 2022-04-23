@@ -388,7 +388,6 @@ namespace Projent
         internal void NavigateToPeople()
         {
             frame_page.Navigate(typeof(PeoplePage), this);
-
         }
 
         /// <summary>
@@ -397,7 +396,6 @@ namespace Projent
         internal void NavigateToReports()
         {
             frame_page.Navigate(typeof(ReportsPage), this);
-
         }
 
         /// <summary>
@@ -406,7 +404,6 @@ namespace Projent
         internal void NavigateToProjects()
         {
             frame_page.Navigate(typeof(ProjectsPage), this);
-
         }
 
 

@@ -654,7 +654,7 @@ namespace PMService2
 
             // Update the serve console
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Log($"Delete Project Invoked by {username}");
+            Log($"Fetch Projects Invoked by {username}");
 
 
             // Create the SQLite Connection
@@ -666,7 +666,7 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Fetching Projects");
+                    Log("Fetching Projects");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText =
                         "SELECT " +

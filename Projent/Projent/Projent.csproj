@@ -170,6 +170,27 @@
     <Compile Include="ProjectsPage.xaml.cs">
       <DependentUpon>ProjectsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectViews\CalendarPage.xaml.cs">
+      <DependentUpon>CalendarPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectViews\DiscussionPage.xaml.cs">
+      <DependentUpon>DiscussionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectViews\FilesPage.xaml.cs">
+      <DependentUpon>FilesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectViews\GanttPage.xaml.cs">
+      <DependentUpon>GanttPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectViews\NotesPage.xaml.cs">
+      <DependentUpon>NotesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectViews\OverviewPage.xaml.cs">
+      <DependentUpon>OverviewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectViews\TasksPage.xaml.cs">
+      <DependentUpon>TasksPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiveMessageControl.xaml.cs">
       <DependentUpon>ReceiveMessageControl.xaml</DependentUpon>
@@ -279,6 +300,9 @@
     <None Include="Connected Services\PMServer2\Projent.PMServer2.Message.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Connected Services\PMServer2\Projent.PMServer2.Project.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Connected Services\PMServer2\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
@@ -341,6 +365,34 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ProjectsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\CalendarPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\DiscussionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\FilesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\GanttPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\NotesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\OverviewPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\TasksPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

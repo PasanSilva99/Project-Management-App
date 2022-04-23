@@ -55,7 +55,7 @@ namespace Projent
 
         private async void FetchMessages()
         {
-            
+
             if (DataStore.GlobalServiceType == DataStore.ServiceType.Online)
             {
                 if (DataStore.CheckConnectivity())
@@ -76,12 +76,12 @@ namespace Projent
                             if (LastMessageControl.Content.GetType() == typeof(ReceiveMessageControl))
                             {
                                 messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, (LastMessage as ReceiveMessageControl).Time);
+                                MainPage.LoggedUser.Name, (LastMessage as ReceiveMessageControl).Time);
                             }
                             else
                             {
                                 messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name, (LastMessage as SendMessageControl).Time);
+                                MainPage.LoggedUser.Name, (LastMessage as SendMessageControl).Time);
                             }
                             //Debug.WriteLine(LastMessage.ToString());
 
@@ -90,7 +90,7 @@ namespace Projent
                         else
                         {
                             var messagesOList = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(
-                                navigationBase.mainPage.LoggedUser.Name,
+                                MainPage.LoggedUser.Name,
                                 DateTime.MinValue);
                             messages = Converter.GetLocalMessageList(messagesOList.ToList());
 
@@ -103,8 +103,8 @@ namespace Projent
                             UpdateMessagesList(
                                 messages.Where(
                                     message =>
-                                    (message.sender == navigationBase.mainPage.LoggedUser.Name && message.receiver == SelectedReceiver) ||
-                                    (message.sender == SelectedReceiver && message.receiver == navigationBase.mainPage.LoggedUser.Name)).ToList());
+                                    (message.sender == MainPage.LoggedUser.Name && message.receiver == SelectedReceiver) ||
+                                    (message.sender == SelectedReceiver && message.receiver == MainPage.LoggedUser.Name)).ToList());
                         }
 
                     }
@@ -196,7 +196,7 @@ namespace Projent
             {
                 if (!message.isSticker)
                 {
-                    if (message.sender == navigationBase.mainPage.LoggedUser.Name)
+                    if (message.sender == MainPage.LoggedUser.Name)
                     {
                         SendMessageControl sendMessageControl = new SendMessageControl();
                         sendMessageControl.sender = message.sender;
@@ -268,7 +268,7 @@ namespace Projent
             {
                 isInCooldown = true;
                 Message message = new Message();
-                message.sender = navigationBase.mainPage.LoggedUser.Name;
+                message.sender = MainPage.LoggedUser.Name;
                 message.receiver = SelectedReceiver;
                 message.MessageContent = tb_message.Text;
                 message.isSticker = false;
@@ -397,9 +397,9 @@ namespace Projent
         {
             try
             {
-                if (navigationBase.mainPage.LoggedUser != null)
+                if (MainPage.LoggedUser != null)
                 {
-                    var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+                    var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(MainPage.LoggedUser.Name, latestMessageTime);
                     if (isNewMessagesAvailable)
                     {
                         //latestMessageTime = DateTime.Now;
@@ -411,16 +411,16 @@ namespace Projent
 
 
                         // get the new messages list from the latest message time
-                        var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(navigationBase.mainPage.LoggedUser.Name, latestMessageTime);
+                        var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(MainPage.LoggedUser.Name, latestMessageTime);
 
 
                         // show the toast notifications if the user is the receiver
-
+                        ChatTimer.Stop();
                         foreach (var message in newMessages)
                         {
                             if (message != null)
                             {
-                                if (message.receiver == navigationBase.mainPage.LoggedUser.Name)
+                                if (message.receiver == MainPage.LoggedUser.Name)
                                 {
                                     StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
                                     Uri imageURI;
@@ -445,16 +445,6 @@ namespace Projent
                                         imageURI = new Uri(ProfilePicFile.Path);
 
                                     }
-
-                                    new ToastContentBuilder()
-                                            .AddAppLogoOverride(imageURI)
-                                            .AddArgument("action", "viewConversation")
-                                            .AddArgument("conversationId", 9813)
-                                            .AddText(message.sender)
-                                            .AddText(message.MessageContent)
-                                            .Show();
-
-
                                     List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
                                     var AddedDRUControls = stack_users.Children;
                                     foreach (var AddedDRUControl in AddedDRUControls)
@@ -467,13 +457,24 @@ namespace Projent
 
                                     if (AddedDirectUsersList.Where(u => u.Name == message.sender).Count() == 0)
                                     {
-                                        DataStore.NewDirectUser(new DirectUser { Name = message.sender, Email = await DataStore.GetEmail(message.sender, navigationBase.mainPage.LoggedUser.Name) },
-                                        navigationBase.mainPage.LoggedUser.Name);
+                                        new ToastContentBuilder()
+                                            .AddAppLogoOverride(imageURI)
+                                            .AddArgument("action", "viewConversation")
+                                            .AddArgument("conversationId", 9813)
+                                            .AddText(message.sender)
+                                            .AddText(message.MessageContent)
+                                            .Show();
+
+
+
+                                        DataStore.NewDirectUser(new DirectUser { Name = message.sender, Email = await DataStore.GetEmail(message.sender, MainPage.LoggedUser.Name) },
+                                        MainPage.LoggedUser.Name);
                                         LoadDirectUsers();
                                     }
                                 }
                             }
                         }
+                        ChatTimer.Start();
                     }
                 }
                 // if the user is the sender, and the selected receiver is the new message receiver update the message list
@@ -491,13 +492,13 @@ namespace Projent
         {
             isInCooldown = true;
             stack_users.Children.Clear();
-            var DirectUserList = DataStore.FetchDirectUsers(navigationBase.mainPage.LoggedUser.Name);
+            var DirectUserList = DataStore.FetchDirectUsers(MainPage.LoggedUser.Name);
             navigationBase.directUsers = DirectUserList;
             if (DirectUserList != null && DirectUserList.Count > 0)
             {
                 foreach (var user in DirectUserList)
                 {
-                    if (user.Name != navigationBase.mainPage.LoggedUser.Name)
+                    if (user.Name != MainPage.LoggedUser.Name)
                     {
                         Button directUserButton = new Button();
                         directUserButton.Style = Resources["UserButton"] as Style;
@@ -595,7 +596,7 @@ namespace Projent
             {
                 foreach (var user in users)
                 {
-                    if (user.Name != navigationBase.mainPage.LoggedUser.Name)
+                    if (user.Name != MainPage.LoggedUser.Name)
                     {
                         List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
                         var AddedDRUControls = stack_users.Children;
@@ -665,7 +666,7 @@ namespace Projent
             var user = (sender as ListViewItem).Tag as DirectUser;
             if (user != null)
             {
-                DataStore.NewDirectUser(user, navigationBase.mainPage.LoggedUser.Name);
+                DataStore.NewDirectUser(user, MainPage.LoggedUser.Name);
             }
             LoadDirectUsers();
             fly_NewDRU.Hide();
@@ -806,7 +807,7 @@ namespace Projent
 
             }
 
-            DataStore.RemoveDirectUser(user, navigationBase.mainPage.LoggedUser.Name);
+            DataStore.RemoveDirectUser(user, MainPage.LoggedUser.Name);
         }
 
         private void btn_removeClearChat_Click(object sender, RoutedEventArgs e)
@@ -815,7 +816,7 @@ namespace Projent
             {
                 var btn = sender as Button;
                 var directUser = (sender as Button).Tag as DirectUser;
-                Server.ProjectServer.projectServiceClient.DeleteMessagesFromAsync(navigationBase.mainPage.LoggedUser.Name, directUser.Name);
+                Server.ProjectServer.projectServiceClient.DeleteMessagesFromAsync(MainPage.LoggedUser.Name, directUser.Name);
                 FetchMessages();
                 list_messages.Items.Clear();
             }
@@ -833,7 +834,7 @@ namespace Projent
             {
                 foreach (var user in AllDirectUsers)
                 {
-                    if (user.Name != navigationBase.mainPage.LoggedUser.Name)
+                    if (user.Name != MainPage.LoggedUser.Name)
                     {
                         List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
                         var AddedDRUControls = stack_users.Children;
@@ -864,7 +865,7 @@ namespace Projent
                 }
             }
 
-            if(list_directUsers.Items.Count == 0)
+            if (list_directUsers.Items.Count == 0)
             {
                 list_directUsers.Items.Add("No Users Found!");
             }

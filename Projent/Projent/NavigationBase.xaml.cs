@@ -210,7 +210,7 @@ namespace Projent
                 if (MainPage.LoggedUser == null)
                 {
                     ContentDialog dialog = new ContentDialog();
-                    dialog.Title = "Verification Faild";
+                    dialog.Title = "Verification Failed";
                     dialog.CloseButtonText = "Login Again";
                     dialog.DefaultButton = ContentDialogButton.Close;
                     dialog.Content = "Failed to verify User";
@@ -223,7 +223,7 @@ namespace Projent
                 else if (! await this.ValidateUser(MainPage.LoggedUser.Email, MainPage.LoggedUser.Password))
                 {
                     ContentDialog dialog = new ContentDialog();
-                    dialog.Title = "Verification Faild";
+                    dialog.Title = "Verification Failed";
                     dialog.CloseButtonText = "Login Again";
                     dialog.DefaultButton = ContentDialogButton.Close;
                     dialog.Content = "Failed to verify User";

@@ -250,10 +250,10 @@ namespace Projent.PMServer1 {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IMainService)) {
-                return new System.ServiceModel.EndpointAddress("http://localhost:8086/MainServiceReference");
+                return new System.ServiceModel.EndpointAddress("http://192.168.1.9:8086/MainServiceReference");
             }
             if ((endpointConfiguration == EndpointConfiguration.NetTcpBinding_IMainService)) {
-                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://localhost:8090/MainServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-DESKTOP\\Pasan"));
+                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://192.168.1.9:8090/MainServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-DESKTOP\\Pasan"));
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

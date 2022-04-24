@@ -57,6 +57,7 @@ namespace Projent
         DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(15.0) };
         public List<DirectUser> directUsers = new List<DirectUser>();
         public ChatPanel loadedChatPanel = null;
+        public ProjectsPage loadedProjectPage = null;
 
         public NavigationBase()
         {
@@ -147,10 +148,30 @@ namespace Projent
             }
         }
 
-        private void TopNavItem_Click(object sender, RoutedEventArgs e)
+        internal void TopNavItem_Click(object sender, RoutedEventArgs e)
         {
-            Type type = (sender as ToggleButton).Tag.GetType();
+            var topNavItem = sender as ToggleButton;
+            
+            foreach (var NavItem in TopNavStack.Children)
+            {
+                var item = NavItem as ToggleButton;
+                if (item != null)
+                    item.IsChecked = false;
+            }
 
+            topNavItem.IsChecked = true;
+
+            Type type = topNavItem.Tag as Type;
+
+            if (frame_page.SourcePageType != type)
+                frame_page.Navigate(type, this);
+        }
+
+        internal void ExternalNavigateRequst(object sender, Type type, int TopNavigationNumber)
+        {
+            var topNavItem = TopNavStack.Children[TopNavigationNumber];
+            if (topNavItem != null)
+                (topNavItem as ToggleButton).IsChecked = true;
             if (frame_page.SourcePageType != type)
                 frame_page.Navigate(type, this);
         }
@@ -378,6 +399,8 @@ namespace Projent
         }
 
 
+
+
         #endregion
 
         #region Left Navigation
@@ -387,6 +410,7 @@ namespace Projent
         /// </summary>
         internal void NavigateToPeople()
         {
+            TopNavStack.Children.Clear();
             frame_page.Navigate(typeof(PeoplePage), this);
         }
 
@@ -395,6 +419,8 @@ namespace Projent
         /// </summary>
         internal void NavigateToReports()
         {
+            TopNavStack.Children.Clear();
+
             frame_page.Navigate(typeof(ReportsPage), this);
         }
 
@@ -403,6 +429,8 @@ namespace Projent
         /// </summary>
         internal void NavigateToProjects()
         {
+            TopNavStack.Children.Clear();
+
             frame_page.Navigate(typeof(ProjectsPage), this);
         }
 
@@ -412,6 +440,8 @@ namespace Projent
         /// </summary>
         internal void NavigateToDashboard()
         {
+            TopNavStack.Children.Clear();
+
             frame_page.Navigate(typeof(DashboardPage), this);
         }
 

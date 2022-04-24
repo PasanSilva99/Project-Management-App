@@ -20,12 +20,11 @@ namespace Projent.ProjectViews
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class OverviewPage : Page
+    public sealed partial class CreateProject : Page
     {
         private NavigationBase basePage;
-        PMServer2.Project project;
 
-        public OverviewPage()
+        public CreateProject()
         {
             this.InitializeComponent();
         }
@@ -35,8 +34,11 @@ namespace Projent.ProjectViews
             base.OnNavigatedTo(e);
 
             basePage = e.Parameter as NavigationBase;
+        }
 
-            project = ProjectsPage.Selectedproject;
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            basePage.OpenRightPanel(typeof(CreateProject));
         }
     }
 }

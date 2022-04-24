@@ -73,7 +73,7 @@ namespace Projent
             set
             {
                 _projectDate = value;
-                lbl_date.Text = DateTime.Now.ToString("d");
+                lbl_date.Text = value.ToString("d");
             }
         }
 

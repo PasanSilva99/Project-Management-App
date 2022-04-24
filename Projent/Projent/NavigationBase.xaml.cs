@@ -57,6 +57,7 @@ namespace Projent
         DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(15.0) };
         public List<DirectUser> directUsers = new List<DirectUser>();
         public ChatPanel loadedChatPanel = null;
+        public ProjectsPage loadedProjectPage = null;
 
         public NavigationBase()
         {
@@ -396,6 +397,8 @@ namespace Projent
                     RightPanelExpand.Begin();
             }
         }
+
+
 
 
         #endregion

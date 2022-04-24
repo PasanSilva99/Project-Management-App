@@ -21,14 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://pasan-desktop:8086/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://192.168.1.9:8086/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="b688f164-4b20-4eee-88ef-b825ff23654c" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="63fae7a9-981f-4248-928b-8ce51939cee4" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="e2f3f1ee-4b40-4c1c-9f10-aaccd3034b1b" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="PMService1.Model.xsd" MetadataType="Schema" ID="79868cf8-22c3-49f3-9026-32e87c168946" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
-    <MetadataFile FileName="PMService1.xsd" MetadataType="Schema" ID="f1314a52-2d64-4984-9a7a-a8c09df4f53f" SourceId="1" SourceUrl="http://pasan-desktop:8086/mex" />
+    <MetadataFile FileName="service1.wsdl" MetadataType="Wsdl" ID="32eb0f03-8142-417f-9445-3a2c430a8878" SourceId="1" SourceUrl="http://192.168.1.9:8086/mex" />
+    <MetadataFile FileName="service2.xsd" MetadataType="Schema" ID="70369ec7-2c1b-47cd-aec1-0bbdbf30d066" SourceId="1" SourceUrl="http://192.168.1.9:8086/mex" />
+    <MetadataFile FileName="service21.xsd" MetadataType="Schema" ID="ab6f1c52-d5b9-416e-a78f-742eabce5d6b" SourceId="1" SourceUrl="http://192.168.1.9:8086/mex" />
+    <MetadataFile FileName="PMService1.Model1.xsd" MetadataType="Schema" ID="0d999cb4-a7d0-4fda-a1f3-0bf434feb6cc" SourceId="1" SourceUrl="http://192.168.1.9:8086/mex" />
+    <MetadataFile FileName="PMService11.xsd" MetadataType="Schema" ID="0fc9d410-e79a-4df5-a7f6-2ab19aba74f6" SourceId="1" SourceUrl="http://192.168.1.9:8086/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

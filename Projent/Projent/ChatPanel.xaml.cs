@@ -543,7 +543,8 @@ namespace Projent
                         directUserButton.Tapped += DirectUserButton_Tapped;
                         FlyoutBase.SetAttachedFlyout(directUserButton, Resources["UserInfo"] as Flyout);
 
-                        stack_users.Children.Add(directUserButton);
+                        if(!stack_users.Children.Contains(directUserButton))
+                            stack_users.Children.Add(directUserButton);
                     }
                 }
             }

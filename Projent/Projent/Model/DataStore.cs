@@ -938,6 +938,9 @@ namespace Projent.Model
             {
                 try
                 {
+                    ProjectsPage.projectServerError.IsOpen = false;
+
+                    GlobalProjectServiceType = ServiceType.Online;
                     var projectlistCollection = await Server.ProjectServer.projectServiceClient.FetchAllProjectsAsync(MainPage.LoggedUser.Name);
                     projectlist.AddRange(projectlistCollection);
                     await Server.ProjectServer.SyncProjectsAsync();
@@ -945,12 +948,17 @@ namespace Projent.Model
                 }
                 catch (Exception ex)
                 {
+                    ProjectsPage.projectServerError.IsOpen = true;
+
+                    GlobalProjectServiceType = ServiceType.Offline;
                     Debug.WriteLine(ex);
                     return null;
                 }
             }
             else
             {
+                ProjectsPage.projectServerError.IsOpen = true;
+                GlobalProjectServiceType = ServiceType.Offline;
                 return await FetchAllLocalProjectsAsync();
             }
         }

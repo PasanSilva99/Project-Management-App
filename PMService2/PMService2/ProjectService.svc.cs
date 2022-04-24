@@ -671,8 +671,10 @@ namespace PMService2
                     CMDSaveProject.CommandText =
                         "SELECT " +
                         "ProjectID, CreatedOn, CreatedBy, Title, ProjectManager, Members, Description, Category, StartDate, EndDate, Status " +
-                        "FROM project;";
-
+                        "FROM project WHERE CreatedBy=@username OR ProjectManager=@username OR (Members LIKE @lusername);";
+                    
+                    CMDSaveProject.Parameters.AddWithValue("@username", username);
+                    CMDSaveProject.Parameters.AddWithValue("@lusername", "%" + username + "%");
                     // set the connection for the command
                     CMDSaveProject.Connection = con;
 
@@ -742,9 +744,10 @@ namespace PMService2
                     CMDSaveProject.CommandText =
                         "SELECT " +
                         "ProjectID, CreatedOn, CreatedBy, Title, ProjectManager, Members, Description, Category, StartDate, EndDate, Status " +
-                        "FROM project WHERE CreatedBy=@username OR ProjectManager=@username OR Members=@username;";
+                        "FROM project WHERE CreatedBy=@username OR ProjectManager=@username OR Members LIKE @lusername;";
 
                     CMDSaveProject.Parameters.AddWithValue("@username", username);
+                    CMDSaveProject.Parameters.AddWithValue("@lusername", "%" + username + "%");
 
                     // set the connection for the command
                     CMDSaveProject.Connection = con;

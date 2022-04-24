@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="IProjectService.cs" />
     <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\Project.cs" />
     <Compile Include="ProjectService.svc.cs">
       <DependentUpon>ProjectService.svc</DependentUpon>
     </Compile>

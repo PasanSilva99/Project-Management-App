@@ -46,7 +46,7 @@ namespace Projent
 
             navigationBase = e.Parameter as NavigationBase;
 
-            FillUserSettings(navigationBase.mainPage.LoggedUser);
+            FillUserSettings(MainPage.LoggedUser);
         }
 
         private void FillUserSettings(User user)
@@ -176,7 +176,7 @@ namespace Projent
             User tempUser = new User();
             tempUser.Name = tb_username.Text;
             tempUser.Email = tb_email.Text;
-            tempUser.Password = navigationBase.mainPage.LoggedUser.Password;
+            tempUser.Password = MainPage.LoggedUser.Password;
 
             // Check the global Service type
 
@@ -193,7 +193,7 @@ namespace Projent
                         if (isValid)
                         {
                             // Using the Remote Service
-                            var isSuccess = await DataStore.UpdateUser(navigationBase.mainPage.LoggedUser, tempUser);
+                            var isSuccess = await DataStore.UpdateUser(MainPage.LoggedUser, tempUser);
 
                             if (isSuccess)
                             {
@@ -220,7 +220,7 @@ namespace Projent
 
                                 else if (result == ContentDialogResult.Secondary)  // if the user click Create Locally, 
                                 {
-                                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+                                    var isSuccessLocal = await DataStore.UpdateUserLocally(MainPage.LoggedUser, tempUser);
 
                                     if (!isSuccessLocal)
                                     {
@@ -363,7 +363,7 @@ namespace Projent
         private void btn_ChangePassword_Click(object sender, RoutedEventArgs e)
         {
             navigationBase.OpenRightPanel(typeof(ChangePassword));
-            navigationBase.tempUser = new User() { Name = tb_username.Text, Email = tb_email.Text, Password = navigationBase.mainPage.LoggedUser.Password};
+            navigationBase.tempUser = new User() { Name = tb_username.Text, Email = tb_email.Text, Password = MainPage.LoggedUser.Password};
         }
     }
 }

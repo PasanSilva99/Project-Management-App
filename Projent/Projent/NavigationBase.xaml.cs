@@ -57,6 +57,7 @@ namespace Projent
         DispatcherTimer UserVerificationTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(15.0) };
         public List<DirectUser> directUsers = new List<DirectUser>();
         public ChatPanel loadedChatPanel = null;
+        public ProjectsPage loadedProjectPage = null;
 
         public NavigationBase()
         {
@@ -67,7 +68,7 @@ namespace Projent
 
         private async void Timer_Tick(object sender, object e)
         {
-            await DataStore.SetUserStatus(mainPage.LoggedUser, userStatus);
+            await DataStore.SetUserStatus(MainPage.LoggedUser, userStatus);
 
             if (CheckConnectivity())
             {
@@ -147,10 +148,30 @@ namespace Projent
             }
         }
 
-        private void TopNavItem_Click(object sender, RoutedEventArgs e)
+        internal void TopNavItem_Click(object sender, RoutedEventArgs e)
         {
-            Type type = (sender as ToggleButton).Tag.GetType();
+            var topNavItem = sender as ToggleButton;
+            
+            foreach (var NavItem in TopNavStack.Children)
+            {
+                var item = NavItem as ToggleButton;
+                if (item != null)
+                    item.IsChecked = false;
+            }
 
+            topNavItem.IsChecked = true;
+
+            Type type = topNavItem.Tag as Type;
+
+            if (frame_page.SourcePageType != type)
+                frame_page.Navigate(type, this);
+        }
+
+        internal void ExternalNavigateRequst(object sender, Type type, int TopNavigationNumber)
+        {
+            var topNavItem = TopNavStack.Children[TopNavigationNumber];
+            if (topNavItem != null)
+                (topNavItem as ToggleButton).IsChecked = true;
             if (frame_page.SourcePageType != type)
                 frame_page.Navigate(type, this);
         }
@@ -186,7 +207,7 @@ namespace Projent
         {
             try
             {
-                if (mainPage.LoggedUser == null)
+                if (MainPage.LoggedUser == null)
                 {
                     ContentDialog dialog = new ContentDialog();
                     dialog.Title = "Verification Faild";
@@ -199,7 +220,7 @@ namespace Projent
                     LogoutUser();
 
                 }
-                else if (! await this.ValidateUser(mainPage.LoggedUser.Email, mainPage.LoggedUser.Password))
+                else if (! await this.ValidateUser(MainPage.LoggedUser.Email, MainPage.LoggedUser.Password))
                 {
                     ContentDialog dialog = new ContentDialog();
                     dialog.Title = "Verification Faild";
@@ -217,7 +238,7 @@ namespace Projent
                     {
                         // Get the user image
                         StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("ProfilePics", CreationCollisionOption.OpenIfExists);
-                        StorageFile profilePicture = await storageFolder.GetFileAsync(mainPage.LoggedUser.Name + ".png");
+                        StorageFile profilePicture = await storageFolder.GetFileAsync(MainPage.LoggedUser.Name + ".png");
                         Debug.WriteLine("File Path " + storageFolder.Path);
                         ProfilePhoto = profilePicture;
 
@@ -378,6 +399,8 @@ namespace Projent
         }
 
 
+
+
         #endregion
 
         #region Left Navigation
@@ -387,8 +410,8 @@ namespace Projent
         /// </summary>
         internal void NavigateToPeople()
         {
-            frame_page.Navigate(typeof(ProjectsPage), this);
-
+            TopNavStack.Children.Clear();
+            frame_page.Navigate(typeof(PeoplePage), this);
         }
 
         /// <summary>
@@ -396,8 +419,9 @@ namespace Projent
         /// </summary>
         internal void NavigateToReports()
         {
-            frame_page.Navigate(typeof(ReportsPage), this);
+            TopNavStack.Children.Clear();
 
+            frame_page.Navigate(typeof(ReportsPage), this);
         }
 
         /// <summary>
@@ -405,8 +429,9 @@ namespace Projent
         /// </summary>
         internal void NavigateToProjects()
         {
-            frame_page.Navigate(typeof(ProjectsPage), this);
+            TopNavStack.Children.Clear();
 
+            frame_page.Navigate(typeof(ProjectsPage), this);
         }
 
 
@@ -415,6 +440,8 @@ namespace Projent
         /// </summary>
         internal void NavigateToDashboard()
         {
+            TopNavStack.Children.Clear();
+
             frame_page.Navigate(typeof(DashboardPage), this);
         }
 
@@ -430,25 +457,25 @@ namespace Projent
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)28, (byte)255, (byte)21));
                     userStatus = Status.Online;
-                    await SetUserStatus(mainPage.LoggedUser, Status.Online);
+                    await SetUserStatus(MainPage.LoggedUser, Status.Online);
                 }
                 if (tag == "Idle")
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)242, (byte)255, (byte)15));
                     userStatus = Status.Idle;
-                    await SetUserStatus(mainPage.LoggedUser, Status.Idle);
+                    await SetUserStatus(MainPage.LoggedUser, Status.Idle);
                 }
                 if (tag == "Busy")
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)255, (byte)16, (byte)16));
                     userStatus = Status.Busy;
-                    await SetUserStatus(mainPage.LoggedUser, Status.Busy);
+                    await SetUserStatus(MainPage.LoggedUser, Status.Busy);
                 }
                 if (tag == "Invisible")
                 {
                     btn_profile.BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb((byte)255, (byte)36, (byte)35, (byte)35));
                     userStatus = Status.Busy;
-                    await SetUserStatus(mainPage.LoggedUser, Status.Busy);
+                    await SetUserStatus(MainPage.LoggedUser, Status.Busy);
                 }
                 if (tag == "logout")
                 {
@@ -472,7 +499,7 @@ namespace Projent
             ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
             localSettings.Values["RememberedUser"] = null;
             localSettings.Values["RememberedPassword"] = null;
-            mainPage.LoggedUser = null;
+            MainPage.LoggedUser = null;
             mainPage.NavigateToLoginPage();
             UserVerificationTimer.Stop();
         }

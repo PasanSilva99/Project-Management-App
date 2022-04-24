@@ -232,7 +232,7 @@ namespace Projent
 
                         if (result)
                         {
-                            mainPage.LoggedUser = FindUserLocal(email, password);
+                            MainPage.LoggedUser = FindUserLocal(email, password);
                             mainPage.NavigateToNavigationBase();
                         }
                         else
@@ -273,7 +273,7 @@ namespace Projent
                 user = FindUserLocal(email, password);
             }
             
-            mainPage.LoggedUser = user;
+            MainPage.LoggedUser = user;
             mainPage.NavigateToNavigationBase();
 
             if (RememberUser)

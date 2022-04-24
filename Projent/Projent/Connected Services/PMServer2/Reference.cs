@@ -120,6 +120,186 @@ namespace Projent.PMServer2 {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Project", Namespace="http://schemas.datacontract.org/2004/07/PMService2.Model")]
+    public partial class Project : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private System.Collections.ObjectModel.ObservableCollection<string> AssigneesField;
+        
+        private string CategoryField;
+        
+        private string CreatedByField;
+        
+        private System.DateTime CreatedOnField;
+        
+        private string DescriptionField;
+        
+        private System.DateTime EndDateField;
+        
+        private string ProjectIdField;
+        
+        private string ProjectManagerField;
+        
+        private System.DateTime StartDateField;
+        
+        private string StatusField;
+        
+        private string TitleField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.ObjectModel.ObservableCollection<string> Assignees {
+            get {
+                return this.AssigneesField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AssigneesField, value) != true)) {
+                    this.AssigneesField = value;
+                    this.RaisePropertyChanged("Assignees");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Category {
+            get {
+                return this.CategoryField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CategoryField, value) != true)) {
+                    this.CategoryField = value;
+                    this.RaisePropertyChanged("Category");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string CreatedBy {
+            get {
+                return this.CreatedByField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CreatedByField, value) != true)) {
+                    this.CreatedByField = value;
+                    this.RaisePropertyChanged("CreatedBy");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime CreatedOn {
+            get {
+                return this.CreatedOnField;
+            }
+            set {
+                if ((this.CreatedOnField.Equals(value) != true)) {
+                    this.CreatedOnField = value;
+                    this.RaisePropertyChanged("CreatedOn");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Description {
+            get {
+                return this.DescriptionField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.DescriptionField, value) != true)) {
+                    this.DescriptionField = value;
+                    this.RaisePropertyChanged("Description");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime EndDate {
+            get {
+                return this.EndDateField;
+            }
+            set {
+                if ((this.EndDateField.Equals(value) != true)) {
+                    this.EndDateField = value;
+                    this.RaisePropertyChanged("EndDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProjectId {
+            get {
+                return this.ProjectIdField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProjectIdField, value) != true)) {
+                    this.ProjectIdField = value;
+                    this.RaisePropertyChanged("ProjectId");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ProjectManager {
+            get {
+                return this.ProjectManagerField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ProjectManagerField, value) != true)) {
+                    this.ProjectManagerField = value;
+                    this.RaisePropertyChanged("ProjectManager");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime StartDate {
+            get {
+                return this.StartDateField;
+            }
+            set {
+                if ((this.StartDateField.Equals(value) != true)) {
+                    this.StartDateField = value;
+                    this.RaisePropertyChanged("StartDate");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Status {
+            get {
+                return this.StatusField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.StatusField, value) != true)) {
+                    this.StatusField = value;
+                    this.RaisePropertyChanged("Status");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Title {
+            get {
+                return this.TitleField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TitleField, value) != true)) {
+                    this.TitleField = value;
+                    this.RaisePropertyChanged("Title");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="PMServer2.IProjectService")]
     public interface IProjectService {
@@ -141,6 +321,21 @@ namespace Projent.PMServer2 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteMessagesFrom", ReplyAction="http://tempuri.org/IProjectService/DeleteMessagesFromResponse")]
         System.Threading.Tasks.Task<bool> DeleteMessagesFromAsync(string sender, string receiver);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/CreateProject", ReplyAction="http://tempuri.org/IProjectService/CreateProjectResponse")]
+        System.Threading.Tasks.Task<bool> CreateProjectAsync(Projent.PMServer2.Project project);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/UpdateProject", ReplyAction="http://tempuri.org/IProjectService/UpdateProjectResponse")]
+        System.Threading.Tasks.Task<bool> UpdateProjectAsync(Projent.PMServer2.Project project, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/DeleteProject", ReplyAction="http://tempuri.org/IProjectService/DeleteProjectResponse")]
+        System.Threading.Tasks.Task<bool> DeleteProjectAsync(string projectID, string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/FetchAllProjects", ReplyAction="http://tempuri.org/IProjectService/FetchAllProjectsResponse")]
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Project>> FetchAllProjectsAsync(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/SyncAllProjects", ReplyAction="http://tempuri.org/IProjectService/SyncAllProjectsResponse")]
+        System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Project>> SyncAllProjectsAsync(string username);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -204,6 +399,26 @@ namespace Projent.PMServer2 {
             return base.Channel.DeleteMessagesFromAsync(sender, receiver);
         }
         
+        public System.Threading.Tasks.Task<bool> CreateProjectAsync(Projent.PMServer2.Project project) {
+            return base.Channel.CreateProjectAsync(project);
+        }
+        
+        public System.Threading.Tasks.Task<bool> UpdateProjectAsync(Projent.PMServer2.Project project, string username) {
+            return base.Channel.UpdateProjectAsync(project, username);
+        }
+        
+        public System.Threading.Tasks.Task<bool> DeleteProjectAsync(string projectID, string username) {
+            return base.Channel.DeleteProjectAsync(projectID, username);
+        }
+        
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Project>> FetchAllProjectsAsync(string username) {
+            return base.Channel.FetchAllProjectsAsync(username);
+        }
+        
+        public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Project>> SyncAllProjectsAsync(string username) {
+            return base.Channel.SyncAllProjectsAsync(username);
+        }
+        
         public virtual System.Threading.Tasks.Task OpenAsync() {
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
         }
@@ -233,10 +448,10 @@ namespace Projent.PMServer2 {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IProjectService)) {
-                return new System.ServiceModel.EndpointAddress("http://pasan-desktop:8076/ProjectServiceReference");
+                return new System.ServiceModel.EndpointAddress("http://localhost:8076/ProjectServiceReference");
             }
             if ((endpointConfiguration == EndpointConfiguration.NetTcpBinding_IProjectService)) {
-                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://pasan-desktop:8070/ProjectServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-DESKTOP\\Pasan"));
+                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://localhost:8070/ProjectServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-DESKTOP\\Pasan"));
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

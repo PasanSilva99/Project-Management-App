@@ -62,7 +62,7 @@ namespace Projent
                         if (isValid)
                         {
                             // Using the Remote Service
-                            var isSuccess = await DataStore.UpdateUser(navigationBase.mainPage.LoggedUser, tempUser);
+                            var isSuccess = await DataStore.UpdateUser(MainPage.LoggedUser, tempUser);
 
                             if (isSuccess)
                             {
@@ -89,7 +89,7 @@ namespace Projent
 
                                 else if (result == ContentDialogResult.Secondary)  // if the user click Create Locally, 
                                 {
-                                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+                                    var isSuccessLocal = await DataStore.UpdateUserLocally(MainPage.LoggedUser, tempUser);
 
                                     if (!isSuccessLocal)
                                     {
@@ -151,7 +151,7 @@ namespace Projent
 
                         if (IsUserValid)
                         {
-                            var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+                            var isSuccessLocal = await DataStore.UpdateUserLocally(MainPage.LoggedUser, tempUser);
 
                             if (!isSuccessLocal)
                             {
@@ -178,7 +178,7 @@ namespace Projent
 
                 if (IsUserValid)
                 {
-                    var isSuccessLocal = await DataStore.UpdateUserLocally(navigationBase.mainPage.LoggedUser, tempUser);
+                    var isSuccessLocal = await DataStore.UpdateUserLocally(MainPage.LoggedUser, tempUser);
 
                     if (!isSuccessLocal)
                     {

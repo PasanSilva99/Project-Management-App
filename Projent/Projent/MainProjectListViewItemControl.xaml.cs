@@ -22,10 +22,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Projent
 {
-    public sealed partial class ProjectListViewItemControl : UserControl
+    public sealed partial class MainProjectListViewItemControl : UserControl
     {
         private string _projectName;
         private string _projectDescription;
+        private string _projectStatus;
         private DateTime _projectDate;
         private string _manager;
         private List<string> _asignees;
@@ -56,13 +57,23 @@ namespace Projent
             }
         }
 
+        public string ProjectStatus
+        {
+            get { return _projectStatus; }
+            set
+            {
+                _projectStatus = value;
+                lbl_status.Text = value;
+            }
+        }
+
         public DateTime ProjectDate
         {
             get { return _projectDate; }
             set
             {
                 _projectDate = value;
-                lbl_date.Text = DateTime.Now.ToString("d");
+                lbl_date.Text = value.ToString("d");
             }
         }
 
@@ -350,7 +361,7 @@ namespace Projent
             border.Margin = new Thickness(5, 0, 5, 0);
         }
 
-        public ProjectListViewItemControl()
+        public MainProjectListViewItemControl()
         {
             this.InitializeComponent();
         }
@@ -366,5 +377,6 @@ namespace Projent
             var grid = sender as Grid;
             grid.Background = new SolidColorBrush(Windows.UI.Colors.White);
         }
+
     }
 }

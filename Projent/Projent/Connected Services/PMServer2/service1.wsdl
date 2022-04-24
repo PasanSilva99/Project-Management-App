@@ -73,6 +73,36 @@
   <wsdl:message name="IProjectService_DeleteMessagesFrom_OutputMessage">
     <wsdl:part name="parameters" element="tns:DeleteMessagesFromResponse" />
   </wsdl:message>
+  <wsdl:message name="IProjectService_CreateProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateProject" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_CreateProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_UpdateProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateProject" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_UpdateProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UpdateProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteProject" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_DeleteProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DeleteProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_FetchAllProjects_InputMessage">
+    <wsdl:part name="parameters" element="tns:FetchAllProjects" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_FetchAllProjects_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FetchAllProjectsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_SyncAllProjects_InputMessage">
+    <wsdl:part name="parameters" element="tns:SyncAllProjects" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_SyncAllProjects_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SyncAllProjectsResponse" />
+  </wsdl:message>
   <wsdl:portType name="IProjectService">
     <wsdl:operation name="IntializeDatabaseService">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/IntializeDatabaseService" message="tns:IProjectService_IntializeDatabaseService_InputMessage" />
@@ -97,6 +127,26 @@
     <wsdl:operation name="DeleteMessagesFrom">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/DeleteMessagesFrom" message="tns:IProjectService_DeleteMessagesFrom_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/DeleteMessagesFromResponse" message="tns:IProjectService_DeleteMessagesFrom_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/CreateProject" message="tns:IProjectService_CreateProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/CreateProjectResponse" message="tns:IProjectService_CreateProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/UpdateProject" message="tns:IProjectService_UpdateProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/UpdateProjectResponse" message="tns:IProjectService_UpdateProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/DeleteProject" message="tns:IProjectService_DeleteProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/DeleteProjectResponse" message="tns:IProjectService_DeleteProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FetchAllProjects">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/FetchAllProjects" message="tns:IProjectService_FetchAllProjects_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/FetchAllProjectsResponse" message="tns:IProjectService_FetchAllProjects_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SyncAllProjects">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/SyncAllProjects" message="tns:IProjectService_SyncAllProjects_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/SyncAllProjectsResponse" message="tns:IProjectService_SyncAllProjects_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProjectService" type="tns:IProjectService">
@@ -148,6 +198,51 @@
     </wsdl:operation>
     <wsdl:operation name="DeleteMessagesFrom">
       <soap:operation soapAction="http://tempuri.org/IProjectService/DeleteMessagesFrom" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateProject">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/CreateProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProject">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/UpdateProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/DeleteProject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchAllProjects">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/FetchAllProjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SyncAllProjects">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/SyncAllProjects" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -213,15 +308,60 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CreateProject">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/CreateProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateProject">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/UpdateProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteProject">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/DeleteProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FetchAllProjects">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/FetchAllProjects" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SyncAllProjects">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/SyncAllProjects" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="ProjectService">
     <wsdl:port name="BasicHttpBinding_IProjectService" binding="tns:BasicHttpBinding_IProjectService">
-      <soap:address location="http://pasan-desktop:8076/ProjectServiceReference" />
+      <soap:address location="http://localhost:8076/ProjectServiceReference" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_IProjectService" binding="tns:NetTcpBinding_IProjectService">
-      <soap12:address location="net.tcp://pasan-desktop:8070/ProjectServiceReference" />
+      <soap12:address location="net.tcp://localhost:8070/ProjectServiceReference" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://pasan-desktop:8070/ProjectServiceReference</wsa10:Address>
+        <wsa10:Address>net.tcp://localhost:8070/ProjectServiceReference</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
           <Upn>PASAN-DESKTOP\Pasan</Upn>
         </Identity>

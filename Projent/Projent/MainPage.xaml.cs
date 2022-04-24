@@ -26,7 +26,7 @@ namespace Projent
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        internal User LoggedUser;
+        internal static User LoggedUser;
         public MainPage()
         {
             this.InitializeComponent();

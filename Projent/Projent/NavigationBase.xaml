@@ -19,7 +19,7 @@
             <Setter Property="BorderBrush"
                     Value="{ThemeResource ToggleButtonBorderBrush}" />
             <Setter Property="BorderThickness"
-                    Value="{ThemeResource ToggleButtonBorderThemeThickness}" />
+                    Value="0" />
             <Setter Property="Padding"
                     Value="35,0,35,1" />
             <Setter Property="HorizontalAlignment"
@@ -297,7 +297,7 @@
             <Setter Property="BorderBrush"
                     Value="{ThemeResource ButtonBorderBrush}" />
             <Setter Property="BorderThickness"
-                    Value="{ThemeResource ButtonBorderThemeThickness}" />
+                    Value="0" />
             <Setter Property="Padding"
                     Value="{StaticResource ButtonPadding}" />
             <Setter Property="HorizontalAlignment"
@@ -414,7 +414,7 @@
             <Setter Property="BorderBrush"
                     Value="{ThemeResource ButtonBorderBrush}" />
             <Setter Property="BorderThickness"
-                    Value="{ThemeResource ButtonBorderThemeThickness}" />
+                    Value="0" />
             <Setter Property="Padding"
                     Value="{StaticResource ButtonPadding}" />
             <Setter Property="HorizontalAlignment"
@@ -570,6 +570,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <Grid.Transitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </Grid.Transitions>
+        
         <!--\/ Top Logo \/-->
         <Image Grid.ColumnSpan="2"
                Grid.Column="0"
@@ -703,6 +709,12 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="85" />
             </Grid.ColumnDefinitions>
+
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </Grid.Transitions>
 
             <Frame x:Name="frame_page"
                    Margin="10 10 10 10"

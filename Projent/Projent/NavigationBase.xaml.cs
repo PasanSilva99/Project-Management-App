@@ -169,6 +169,7 @@ namespace Projent
 
         internal void ExternalNavigateRequst(object sender, Type type, int TopNavigationNumber)
         {
+            Debug.WriteLine($"External Navigation Request {sender.GetType()}");
             var topNavItem = TopNavStack.Children[TopNavigationNumber];
             if (topNavItem != null)
                 (topNavItem as ToggleButton).IsChecked = true;

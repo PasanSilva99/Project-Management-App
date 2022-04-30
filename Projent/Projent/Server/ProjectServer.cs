@@ -28,7 +28,7 @@ namespace Projent.Server
 
         internal static async Task SyncProjectsAsync()
         {
-            if (DataStore.CheckConnectivity() && await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress()))
+            if (DataStore.CheckConnectivity() && await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress()) && MainPage.LoggedUser != null)
             {
                 var allProjectsFromServer = new List<PMServer2.Project>(await projectServiceClient.SyncAllProjectsAsync(MainPage.LoggedUser.Name));
                 var allProjectsFromLocal = await DataStore.FetchAllLocalProjectsAsync();

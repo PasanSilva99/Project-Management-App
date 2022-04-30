@@ -167,6 +167,9 @@
     <Compile Include="ProjectListViewItemControl.xaml.cs">
       <DependentUpon>ProjectListViewItemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProjectViews\ProjectMemberControl.xaml.cs">
+      <DependentUpon>ProjectMemberControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProjectSelection.xaml.cs">
       <DependentUpon>ProjectSelection.xaml</DependentUpon>
     </Compile>
@@ -227,13 +230,16 @@
   <ItemGroup>
     <Content Include="Assets\Icons\add.png" />
     <Content Include="Assets\Icons\addUser.png" />
+    <Content Include="Assets\Icons\Admin.png" />
     <Content Include="Assets\Icons\AnalysisIcon.png" />
+    <Content Include="Assets\Icons\back.png" />
     <Content Include="Assets\Icons\BookmarkIcon.png" />
     <Content Include="Assets\Icons\ChatIcon.png" />
     <Content Include="Assets\Icons\Cloud_offlineIcon.png" />
     <Content Include="Assets\Icons\Cloud_onlineIcon.png" />
     <Content Include="Assets\Icons\DashboardIcon.png" />
     <Content Include="Assets\Icons\emogi_icon.png" />
+    <Content Include="Assets\Icons\Owner.png" />
     <Content Include="Assets\Icons\PeopleIcon.png" />
     <Content Include="Assets\Icons\ProjectsIcon.png" />
     <Content Include="Assets\Icons\search.png" />
@@ -368,6 +374,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ProjectListViewItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProjectViews\ProjectMemberControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

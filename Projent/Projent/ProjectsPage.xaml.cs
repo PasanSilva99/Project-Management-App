@@ -165,7 +165,6 @@ namespace Projent
                 projectListViewItem.Content = projectListViewItemControl;
                 projectListViewItem.CornerRadius = new CornerRadius(10.0, 10.0, 10.0, 10.0);
                 projectListViewItem.Tapped += ProjectListViewItem_Tapped;
-                projectListViewItem.DoubleTapped += ProjectListViewItem_DoubleTapped;
                 projectListViewItem.RightTapped += ProjectListViewItem_RightTapped;
 
                 list_projects.Items.Add(projectListViewItem);
@@ -192,22 +191,21 @@ namespace Projent
             var project = listItem.Tag as PMServer2.Project;
         }
 
-        private void ProjectListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            var listItem = sender as ListViewItem;
-            var project = listItem.Tag as PMServer2.Project;
-            Selectedproject = project;
-            SetTopNavigation();
-            Debug.WriteLine($"Selected project {project.ProjectId}");
-            basePage.ExternalNavigateRequst(this, typeof(ProjectViews.OverviewPage), 0);
-        }
 
         private void ProjectListViewItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            SetTopNavigation();
             var listItem = sender as ListViewItem;
             var project = listItem.Tag as PMServer2.Project;
-            Selectedproject = project;
-            SetTopNavigation();
+            if (Selectedproject == project)
+            {
+                basePage.ExternalNavigateRequst(this, typeof(ProjectViews.OverviewPage), 1);
+            }
+            else
+            {
+                Selectedproject = project;
+            }
+            
             Debug.WriteLine($"Selected project {project.ProjectId}");
         }
 

@@ -448,10 +448,10 @@ namespace Projent.PMServer2 {
         
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IProjectService)) {
-                return new System.ServiceModel.EndpointAddress("http://192.168.1.9:8076/ProjectServiceReference");
+                return new System.ServiceModel.EndpointAddress("http://20.92.90.138:8076/ProjectServiceReference");
             }
             if ((endpointConfiguration == EndpointConfiguration.NetTcpBinding_IProjectService)) {
-                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://192.168.1.9:8070/ProjectServiceReference"), new System.ServiceModel.UpnEndpointIdentity("PASAN-DESKTOP\\Pasan"));
+                return new System.ServiceModel.EndpointAddress(new System.Uri("net.tcp://20.92.90.138:8070/ProjectServiceReference"), new System.ServiceModel.UpnEndpointIdentity("SLBFE\\adminSLBFE"));
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

@@ -356,14 +356,14 @@
   </wsdl:binding>
   <wsdl:service name="ProjectService">
     <wsdl:port name="BasicHttpBinding_IProjectService" binding="tns:BasicHttpBinding_IProjectService">
-      <soap:address location="http://192.168.1.9:8076/ProjectServiceReference" />
+      <soap:address location="http://localhost:8076/ProjectServiceReference" />
     </wsdl:port>
     <wsdl:port name="NetTcpBinding_IProjectService" binding="tns:NetTcpBinding_IProjectService">
-      <soap12:address location="net.tcp://192.168.1.9:8070/ProjectServiceReference" />
+      <soap12:address location="net.tcp://localhost:8070/ProjectServiceReference" />
       <wsa10:EndpointReference>
-        <wsa10:Address>net.tcp://192.168.1.9:8070/ProjectServiceReference</wsa10:Address>
+        <wsa10:Address>net.tcp://localhost:8070/ProjectServiceReference</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>PASAN-DESKTOP\Pasan</Upn>
+          <Upn>SLBFE\adminSLBFE</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>

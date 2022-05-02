@@ -1,14 +1,333 @@
-﻿<Page
-    x:Class="Projent.ProjectViews.OverviewPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Projent.ProjectViews"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+﻿<Page x:Class="Projent.ProjectViews.OverviewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:Projent.ProjectViews"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      mc:Ignorable="d"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls">
 
-    <Grid>
+    <ScrollViewer>
+        <Grid ColumnSpacing="10"
+              Padding="20 0 20 10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-    </Grid>
+            <Button Grid.Row="0"
+                    CornerRadius="10"
+                    Background="#ffe3e3e4"
+                    Padding="20 7 20 7"
+                    BorderThickness="0"
+                    Margin="-20 0 0 0">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10">
+                        <Image Source="/Assets/Icons/back.png"
+                               Height="25" />
+                        <TextBlock Text="All Projects"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+
+            <TextBlock Grid.Row="1"
+                       Text="DS Project Management APP"
+                       Margin="0 40 0 0"
+                       FontSize="18"
+                       x:Name="lbl_projectName" />
+            <TextBlock Grid.Row="2"
+                       Margin="0 10 0 0"
+                       x:Name="lbl_projectDescription"
+                       TextWrapping="WrapWholeWords"
+                       Foreground="#6f6f6f">
+                <TextBlock.Text>
+                    Project management application using the consepts of destributed systems. This system should be able to show a glance look on the projects that is ongoing, manage multiple projects, get reports based on the usage and tasks, create/ schedule tasks and all other functions that is used in project management process. Some main optiones are Stickey notes, Bookmarks, Live chat, reports, team management and live chat. More detailes will be available on the attached GitHub Repository.
+                </TextBlock.Text>
+            </TextBlock>
+
+            <controls:WrapPanel Grid.Row="3"
+                                Padding="0 0 0 0"
+                                Margin="0 30 0 0"
+                                VerticalSpacing="10"
+                                HorizontalSpacing="20"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            Width="220">
+                    <TextBlock Text="Category:"
+                               Foreground="#6f6f6f" />
+                    <TextBlock Text="University Project"
+                               x:Name="lbl_category"
+                               Foreground="#6f6f6f" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            Width="170">
+                    <TextBlock Text="Start Date:"
+                               Foreground="#6f6f6f" />
+                    <TextBlock Text="24 Jan 2022"
+                               x:Name="lbl_startDate"
+                               Foreground="#6f6f6f" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            Width="170">
+                    <TextBlock Text="End Date:"
+                               Foreground="#6f6f6f" />
+                    <TextBlock Text="2 Apr 2022"
+                               x:Name="lbl_endDate"
+                               Foreground="#6f6f6f" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            Width="130">
+                    <TextBlock Text="Status:"
+                               Foreground="#6f6f6f" />
+                    <TextBlock Text="Active"
+                               x:Name="lbl_status"
+                               Foreground="#6f6f6f" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="10"
+                            Width="170">
+                    <TextBlock Text="Created On:"
+                               Foreground="#6f6f6f" />
+                    <TextBlock Text="12 Jan 2022"
+                               x:Name="lbl_createdOn"
+                               Foreground="#6f6f6f" />
+                </StackPanel>
+            </controls:WrapPanel>
+            <controls:WrapPanel Grid.Row="4"
+                                Margin="-20 30 -20 -20"
+                                VerticalSpacing="10"
+                                HorizontalSpacing="20"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Padding="20">
+                <controls:DropShadowPanel BlurRadius="20"
+                                          Color="#19000000" >
+                    <Grid Width="320"
+                          Background="White"
+                          CornerRadius="20"
+                          Height="355"
+                          Padding="10">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="Overall Progress"
+                                   Foreground="#bbbbbb" Margin="10 0 0 0"/>
+
+                        <StackPanel Grid.Row="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <muxc:ProgressRing  Width="190"
+                                                Height="190"
+                                                Value="46"
+                                                IsIndeterminate="False"
+                                                Background="#FFC6E3F9"
+                                                Foreground="#FF5A73F1" />
+                            <TextBlock Text="Completed"
+                                       HorizontalAlignment="Center"
+                                       FontSize="22"
+                                       Margin="0 15 0 0" />
+                        </StackPanel>
+
+                        <TextBlock Text="36%"
+                                   Grid.Row="1"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="42"
+                                   Margin="11 0 0 40" />
+
+                    </Grid>
+                </controls:DropShadowPanel>
+                <StackPanel Spacing="10"
+                            Margin="-10 -10 -10 -10"
+                            Padding="10 10 10 10">
+                    <controls:DropShadowPanel BlurRadius="20"
+                                              Color="#19000000">
+                        <Grid Width="320"
+                              Background="White"
+                              CornerRadius="20"
+                              Height="100"
+                              Padding="10" RowSpacing="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="Project Manager"
+                                       Foreground="#bbbbbb"
+                                       Margin="10 0 0 0" />
+
+                            <local:ProjectMemberControl x:Name="user_owner" Grid.Row="1" />
+
+                        </Grid>
+                    </controls:DropShadowPanel>
+                    <controls:DropShadowPanel BlurRadius="20"
+                                              Color="#19000000">
+                        <Grid Width="320"
+                              Background="White"
+                              CornerRadius="20 20 20 20"
+                              Height="118"
+                              Padding="10 10 10 10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="Tasks"
+                                       Foreground="#bbbbbb"
+                                       Margin="10 0 0 0" />
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="20 10 0 0"
+                                        Spacing="5">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="10">
+                                    <TextBlock Text="Completed:"
+                                               FontSize="18" />
+                                    <TextBlock Text="16"
+                                               FontSize="18" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="10">
+                                    <TextBlock Text="To-Do:"
+                                               FontSize="18" />
+                                    <TextBlock Text="25"
+                                               FontSize="18" />
+                                </StackPanel>
+
+                            </StackPanel>
+
+                            <muxc:ProgressRing Grid.Column="1"
+                                               Grid.Row="0"
+                                               Grid.RowSpan="2"
+                                               Width="80"
+                                               Margin="0 0 15 0"
+                                               Height="80"
+                                               Value="65"
+                                               IsIndeterminate="False"
+                                               Background="#FFC6E3F9"
+                                               Foreground="#AF5AF1" />
+
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="0"
+                                       Grid.RowSpan="2"
+                                       FontSize="18"
+                                       Text="65%"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Margin="0 0 6 0" />
+                        </Grid>
+                    </controls:DropShadowPanel>
+                    <controls:DropShadowPanel BlurRadius="20"
+                                              Color="#19000000">
+                        <Grid Width="320"
+                              Background="White"
+                              CornerRadius="20"
+                              Height="118"
+                              Padding="10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="Issues"
+                                       Foreground="#bbbbbb"
+                                       Margin="10 0 0 0" />
+
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="0"
+                                        Margin="20 10 0 0"
+                                        Spacing="5">
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="10">
+                                    <TextBlock Text="Fixed:"
+                                               FontSize="18" />
+                                    <TextBlock Text="10"
+                                               FontSize="18" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="10">
+                                    <TextBlock Text="To-Do:"
+                                               FontSize="18" />
+                                    <TextBlock Text="24"
+                                               FontSize="18" />
+                                </StackPanel>
+
+                            </StackPanel>
+
+                            <muxc:ProgressRing Grid.Column="1"
+                                               Grid.Row="0"
+                                               Grid.RowSpan="2"
+                                               Width="80"
+                                               Margin="0 0 15 0"
+                                               Height="80"
+                                               Value="48"
+                                               IsIndeterminate="False"
+                                               Background="#FFC6E3F9"
+                                               Foreground="#F15A91" />
+
+                            <TextBlock Grid.Column="1"
+                                       Grid.Row="0"
+                                       Grid.RowSpan="2"
+                                       FontSize="18"
+                                       Text="48%"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Margin="0 0 6 0" />
+                        </Grid>
+                    </controls:DropShadowPanel>
+                </StackPanel>
+                <controls:DropShadowPanel BlurRadius="20"
+                                          Color="#19000000">
+                    <Grid Width="330"
+                          Background="White"
+                          CornerRadius="20"
+                          Height="355"
+                          Padding="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                   Text="Assigned Team"
+                                   Foreground="#bbbbbb"
+                                   Margin="10 0 0 0" />
+                        <ScrollViewer Grid.Row="1">
+                            <StackPanel x:Name="stack_assignees" />
+                        </ScrollViewer>
+                    </Grid>
+                </controls:DropShadowPanel>
+            </controls:WrapPanel>
+
+        </Grid>
+    </ScrollViewer>
 </Page>

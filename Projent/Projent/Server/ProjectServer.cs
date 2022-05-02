@@ -17,8 +17,8 @@ namespace Projent.Server
             try
             {
                 projectServiceClient = new PMServer2.ProjectServiceClient(PMServer2.ProjectServiceClient.EndpointConfiguration.BasicHttpBinding_IProjectService);
-                Debug.WriteLine("Project Client Initalized");
                 await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+                Debug.WriteLine("Project Client Initalized");
             }
             catch (Exception ex)
             {
@@ -28,7 +28,7 @@ namespace Projent.Server
 
         internal static async Task SyncProjectsAsync()
         {
-            if (DataStore.CheckConnectivity() && await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress()))
+            if (DataStore.CheckConnectivity() && await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress()) && MainPage.LoggedUser != null)
             {
                 var allProjectsFromServer = new List<PMServer2.Project>(await projectServiceClient.SyncAllProjectsAsync(MainPage.LoggedUser.Name));
                 var allProjectsFromLocal = await DataStore.FetchAllLocalProjectsAsync();

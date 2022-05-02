@@ -138,7 +138,7 @@ namespace Projent
                             RegistrationErrorDialog.Title = "UnSpecified Error";
                             RegistrationErrorDialog.CloseButtonText = "Retry";
                             RegistrationErrorDialog.DefaultButton = ContentDialogButton.Close;
-                            RegistrationErrorDialog.Content = "Please Contact Administrator 0x008E";
+                            RegistrationErrorDialog.Content = $"Please Contact Administrator 0x008E +\n{ex.Message}";
 
                             await RegistrationErrorDialog.ShowAsync();
 

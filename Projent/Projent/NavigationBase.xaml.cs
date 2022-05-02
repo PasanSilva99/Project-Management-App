@@ -151,7 +151,7 @@ namespace Projent
         internal void TopNavItem_Click(object sender, RoutedEventArgs e)
         {
             var topNavItem = sender as ToggleButton;
-            
+
             foreach (var NavItem in TopNavStack.Children)
             {
                 var item = NavItem as ToggleButton;
@@ -169,11 +169,22 @@ namespace Projent
 
         internal void ExternalNavigateRequst(object sender, Type type, int TopNavigationNumber)
         {
-            var topNavItem = TopNavStack.Children[TopNavigationNumber];
-            if (topNavItem != null)
-                (topNavItem as ToggleButton).IsChecked = true;
-            if (frame_page.SourcePageType != type)
-                frame_page.Navigate(type, this);
+            frame_page.BackStack.Clear();
+            try
+            {
+                Debug.WriteLine($"External Navigation Request {sender.GetType()}");
+
+                if (frame_page.SourcePageType != type)
+                    frame_page.Navigate(type, this);
+
+                var topNavItem = TopNavStack.Children[TopNavigationNumber - 1] as ToggleButton;
+                topNavItem.IsChecked = true;
+                Debug.WriteLine(topNavItem.Content as string);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         internal async Task<bool> ValidateUser(string email, string password)
@@ -210,7 +221,7 @@ namespace Projent
                 if (MainPage.LoggedUser == null)
                 {
                     ContentDialog dialog = new ContentDialog();
-                    dialog.Title = "Verification Faild";
+                    dialog.Title = "Verification Failed";
                     dialog.CloseButtonText = "Login Again";
                     dialog.DefaultButton = ContentDialogButton.Close;
                     dialog.Content = "Failed to verify User";
@@ -220,10 +231,10 @@ namespace Projent
                     LogoutUser();
 
                 }
-                else if (! await this.ValidateUser(MainPage.LoggedUser.Email, MainPage.LoggedUser.Password))
+                else if (!await this.ValidateUser(MainPage.LoggedUser.Email, MainPage.LoggedUser.Password))
                 {
                     ContentDialog dialog = new ContentDialog();
-                    dialog.Title = "Verification Faild";
+                    dialog.Title = "Verification Failed";
                     dialog.CloseButtonText = "Login Again";
                     dialog.DefaultButton = ContentDialogButton.Close;
                     dialog.Content = "Failed to verify User";
@@ -269,7 +280,7 @@ namespace Projent
             UserVerificationTimer.Start();
             ValidateLoggedUser();
 
-            if(frame_tools.SourcePageType == null)
+            if (frame_tools.SourcePageType == null)
                 frame_tools.Navigate(typeof(ChatPanel), this);
 
             if (!loadedChatPanel.ChatTimer.IsEnabled)

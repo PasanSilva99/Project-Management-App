@@ -170,6 +170,62 @@
                         <Button.Content>
                             <Image Source="/Assets/Icons/user.png" />
                         </Button.Content>
+                        <Button.Flyout>
+                            <Flyout Placement="BottomEdgeAlignedRight">
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="CornerRadius"
+                                                Value="10" />
+                                        <Setter Property="Background"
+                                                Value="White" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+
+                                <Grid Padding="5 5 5 5"
+                                      MinWidth="300">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border Width="45"
+                                            Height="45"
+                                            Grid.Column="0"
+                                            Grid.Row="0"
+                                            Margin="0 0 10 0"
+                                            CornerRadius="45 45 45 45">
+                                        <Image x:Name="img_directUserImage"
+                                               Source="/Assets/Icons/user.png" />
+
+                                    </Border>
+
+                                    <StackPanel Grid.Row="0"
+                                                Grid.Column="1"
+                                                Margin="0 0 0 10">
+                                        <TextBlock Text="username"
+                                                   FontWeight="Bold"
+                                                   x:Name="lbl_DirectUsername" />
+                                        <TextBlock Text="email@email.email"
+                                                   x:Name="lbl_DirectUserEmail" />
+                                    </StackPanel>
+
+                                    <Button Content="Remove"
+                                            CornerRadius="5 5 5 5"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Background="#ffef5859"
+                                            Foreground="#ffffffff"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom" />
+
+                                </Grid>
+
+                            </Flyout>
+                        </Button.Flyout>
                     </Button>
                 </StackPanel>
                     <Button Style="{StaticResource UserButton}">

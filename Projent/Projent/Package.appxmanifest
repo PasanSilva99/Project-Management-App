@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap mp uap3">
 
   <Identity
-    Name="1eb200cc-fd8b-48c6-818f-ddbc56bffa98"
-    Publisher="CN=pasan"
-    Version="1.0.0.0" />
+    Name="3566Tecxick.4187907F3F527"
+    Publisher="CN=F031A835-463B-4626-86A7-D12DB7CFDD6E"
+    Version="1.0.7.0" />
 
-  <mp:PhoneIdentity PhoneProductId="1eb200cc-fd8b-48c6-818f-ddbc56bffa98" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="a89c0408-c0ec-4091-b15e-41eed2295117" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Projent</DisplayName>
-    <PublisherDisplayName>pasan</PublisherDisplayName>
+    <PublisherDisplayName>Tecxick</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

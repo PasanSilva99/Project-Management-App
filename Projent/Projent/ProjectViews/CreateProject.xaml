@@ -8,22 +8,36 @@
       Background="white"
       d:Width="480">
     <Page.Resources>
-        <Style x:Key="UserButton" TargetType="Button">
-            <Setter Property="Background" Value="{ThemeResource ButtonBackground}"/>
-            <Setter Property="BackgroundSizing" Value="OuterBorderEdge"/>
-            <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}"/>
-            <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}"/>
-            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
-            <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}"/>
-            <Setter Property="FocusVisualMargin" Value="-3"/>
+        <Style x:Key="UserButton"
+               TargetType="Button">
+            <Setter Property="Background"
+                    Value="{ThemeResource ButtonBackground}" />
+            <Setter Property="BackgroundSizing"
+                    Value="OuterBorderEdge" />
+            <Setter Property="Foreground"
+                    Value="{ThemeResource ButtonForeground}" />
+            <Setter Property="BorderBrush"
+                    Value="{ThemeResource ButtonBorderBrush}" />
+            <Setter Property="BorderThickness"
+                    Value="{ThemeResource ButtonBorderThemeThickness}" />
+            <Setter Property="Padding"
+                    Value="0" />
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="FontFamily"
+                    Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontWeight"
+                    Value="Normal" />
+            <Setter Property="FontSize"
+                    Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="UseSystemFocusVisuals"
+                    Value="{StaticResource UseSystemFocusVisuals}" />
+            <Setter Property="FocusVisualMargin"
+                    Value="-3" />
             <Setter Property="CornerRadius"
-                    Value="55 55 55 55"/>
+                    Value="55 55 55 55" />
             <Setter Property="Width"
                     Value="55" />
             <Setter Property="Height"
@@ -33,53 +47,82 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" Background="{TemplateBinding Background}" BackgroundSizing="{TemplateBinding BackgroundSizing}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" CornerRadius="{TemplateBinding CornerRadius}" Content="{TemplateBinding Content}" ContentTransitions="{TemplateBinding ContentTransitions}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <ContentPresenter x:Name="ContentPresenter"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          Background="{TemplateBinding Background}"
+                                          BackgroundSizing="{TemplateBinding BackgroundSizing}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          CornerRadius="{TemplateBinding CornerRadius}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Padding="{TemplateBinding Padding}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup x:Name="CommonStates">
                                     <VisualState x:Name="Normal">
                                         <Storyboard>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="PointerOver">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="Background">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
-                                                                        Value="#D9D9D9"/>
+                                                                        Value="#D9D9D9" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPointerOver}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonBorderBrushPointerOver}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPointerOver}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonForegroundPointerOver}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="ContentPresenter" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Pressed">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundPressed}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonBackgroundPressed}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushPressed}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonBorderBrushPressed}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundPressed}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonForegroundPressed}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter"/>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState x:Name="Disabled">
                                         <Storyboard>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Background">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBackgroundDisabled}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="Background">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonBackgroundDisabled}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="BorderBrush">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonBorderBrushDisabled}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="BorderBrush">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonBorderBrushDisabled}" />
                                             </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonForegroundDisabled}"/>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
+                                                                           Storyboard.TargetProperty="Foreground">
+                                                <DiscreteObjectKeyFrame KeyTime="0"
+                                                                        Value="{ThemeResource ButtonForegroundDisabled}" />
                                             </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualState>
@@ -92,155 +135,294 @@
         </Style>
     </Page.Resources>
 
-    <Grid RowSpacing="10"
-          Padding="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
+    <ScrollViewer>
+        <Grid RowSpacing="25"
+              Padding="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"
-              Margin="-10 -10 -10 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Text="Add Project"
-                       Grid.Column="0" />
-            <Button Height="20"
-                    Grid.Column="1"
-                    Padding="0"
-                    Width="20"
-                    Margin="0,0,5,0"
-                    BorderThickness="0">
-                <Button.Content>
-                    <SymbolIcon Symbol="Help"
-                                RenderTransformOrigin="0.5,0.5">
-                        <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="0.5"
-                                                ScaleY="0.5" />
-                        </SymbolIcon.RenderTransform>
-                    </SymbolIcon>
-                </Button.Content>
-            </Button>
+            <Grid Grid.Row="0"
+                  Margin="-10 -10 -10 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Add Project"
+                           Grid.Column="0" />
+                <Button Height="20"
+                        Grid.Column="1"
+                        Padding="0"
+                        Width="20"
+                        Margin="0,0,5,0"
+                        BorderThickness="0">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Help"
+                                    RenderTransformOrigin="0.5,0.5">
+                            <SymbolIcon.RenderTransform>
+                                <CompositeTransform ScaleX="0.5"
+                                                    ScaleY="0.5" />
+                            </SymbolIcon.RenderTransform>
+                        </SymbolIcon>
+                    </Button.Content>
+                </Button>
 
-            <Button Height="20"
-                    Grid.Column="2"
-                    Padding="0"
-                    Width="20"
-                    Margin="0,0,5,0"
-                    BorderThickness="0"
-                    x:Name="btn_close"
-                    Click="btn_close_Click">
-                <Button.Content>
-                    <SymbolIcon Symbol="Cancel"
-                                RenderTransformOrigin="0.5,0.5">
-                        <SymbolIcon.RenderTransform>
-                            <CompositeTransform ScaleX="0.5"
-                                                ScaleY="0.5" />
-                        </SymbolIcon.RenderTransform>
-                    </SymbolIcon>
-                </Button.Content>
-            </Button>
-        </Grid>
+                <Button Height="20"
+                        Grid.Column="2"
+                        Padding="0"
+                        Width="20"
+                        Margin="0,0,5,0"
+                        BorderThickness="0"
+                        x:Name="btn_close"
+                        Click="btn_close_Click">
+                    <Button.Content>
+                        <SymbolIcon Symbol="Cancel"
+                                    RenderTransformOrigin="0.5,0.5">
+                            <SymbolIcon.RenderTransform>
+                                <CompositeTransform ScaleX="0.5"
+                                                    ScaleY="0.5" />
+                            </SymbolIcon.RenderTransform>
+                        </SymbolIcon>
+                    </Button.Content>
+                </Button>
+            </Grid>
 
-        <TextBox Grid.Row="1"
-                 Header="Title" />
+            <TextBox Grid.Row="1"
+                     Header="Title" />
 
-        <TextBox Grid.Row="2"
-                 Header="Description"
-                 AcceptsReturn="True"
-                 Height="100" />
+            <TextBox Grid.Row="2"
+                     Header="Description"
+                     AcceptsReturn="True"
+                     Height="100" />
 
-        <StackPanel Grid.Row="3"
-                    Spacing="10" >
-            <TextBlock Text="Assignees" />
-            <StackPanel x:Name="assignees"
-                        Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal"
-                            x:Name="stack_assigees">
-                    <Button Style="{StaticResource UserButton}">
-                        <Button.Content>
-                            <Image Source="/Assets/Icons/user.png" />
-                        </Button.Content>
-                        <Button.Flyout>
-                            <Flyout Placement="BottomEdgeAlignedRight">
-                                <Flyout.FlyoutPresenterStyle>
-                                    <Style TargetType="FlyoutPresenter">
-                                        <Setter Property="CornerRadius"
-                                                Value="10" />
-                                        <Setter Property="Background"
-                                                Value="White" />
-                                    </Style>
-                                </Flyout.FlyoutPresenterStyle>
+            <StackPanel Grid.Row="3"
+                        Spacing="10">
+                <TextBlock Text="Assignees" />
+                <StackPanel x:Name="assignees"
+                            Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal"
+                                x:Name="stack_assigees">
+                        <Button Style="{StaticResource UserButton}">
+                            <Button.Content>
+                                <Image Source="/Assets/Icons/user.png" />
+                            </Button.Content>
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedRight">
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="CornerRadius"
+                                                    Value="10" />
+                                            <Setter Property="Background"
+                                                    Value="White" />
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
 
-                                <Grid Padding="5 5 5 5"
-                                      MinWidth="300">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto" />
-                                        <RowDefinition Height="auto" />
-                                    </Grid.RowDefinitions>
+                                    <Grid Padding="5 5 5 5"
+                                          MinWidth="300">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
 
-                                    <Border Width="45"
-                                            Height="45"
-                                            Grid.Column="0"
-                                            Grid.Row="0"
-                                            Margin="0 0 10 0"
-                                            CornerRadius="45 45 45 45">
-                                        <Image x:Name="img_directUserImage"
-                                               Source="/Assets/Icons/user.png" />
+                                        <Border Width="45"
+                                                Height="45"
+                                                Grid.Column="0"
+                                                Grid.Row="0"
+                                                Margin="0 0 10 0"
+                                                CornerRadius="45 45 45 45">
+                                            <Image x:Name="img_directUserImage"
+                                                   Source="/Assets/Icons/user.png" />
 
-                                    </Border>
+                                        </Border>
 
-                                    <StackPanel Grid.Row="0"
+                                        <StackPanel Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Margin="0 0 0 10">
+                                            <TextBlock Text="username"
+                                                       FontWeight="Bold"
+                                                       x:Name="lbl_DirectUsername" />
+                                            <TextBlock Text="email@email.email"
+                                                       x:Name="lbl_DirectUserEmail" />
+                                        </StackPanel>
+
+                                        <Button Content="Remove"
+                                                CornerRadius="5 5 5 5"
+                                                Grid.Row="1"
                                                 Grid.Column="1"
-                                                Margin="0 0 0 10">
-                                        <TextBlock Text="username"
-                                                   FontWeight="Bold"
-                                                   x:Name="lbl_DirectUsername" />
-                                        <TextBlock Text="email@email.email"
-                                                   x:Name="lbl_DirectUserEmail" />
-                                    </StackPanel>
+                                                Background="#ffef5859"
+                                                Foreground="#ffffffff"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom" />
 
-                                    <Button Content="Remove"
-                                            CornerRadius="5 5 5 5"
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Background="#ffef5859"
-                                            Foreground="#ffffffff"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Bottom" />
+                                    </Grid>
 
-                                </Grid>
-
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
                     <Button Style="{StaticResource UserButton}">
                         <Button.Content>
                             <SymbolIcon Symbol="AddFriend"
                                         RenderTransformOrigin="0.5,0.5">
                                 <SymbolIcon.RenderTransform>
                                     <CompositeTransform ScaleX="1.5"
-                                                    ScaleY="1.5"
-                                                    TranslateX="0" />
+                                                        ScaleY="1.5"
+                                                        TranslateX="0" />
                                 </SymbolIcon.RenderTransform>
                             </SymbolIcon>
                         </Button.Content>
                     </Button>
                 </StackPanel>
-        </StackPanel>
-    </Grid>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4"
+                        Spacing="10">
+                <TextBlock Text="Assignees" />
+                <StackPanel x:Name="manager"
+                            Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal"
+                                x:Name="stack_projectManager">
+                        <Button Style="{StaticResource UserButton}">
+                            <Button.Content>
+                                <Image Source="/Assets/Icons/user.png" />
+                            </Button.Content>
+                            <Button.Flyout>
+                                <Flyout Placement="BottomEdgeAlignedRight">
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="CornerRadius"
+                                                    Value="10" />
+                                            <Setter Property="Background"
+                                                    Value="White" />
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+
+                                    <Grid Padding="5 5 5 5"
+                                          MinWidth="300">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <Border Width="45"
+                                                Height="45"
+                                                Grid.Column="0"
+                                                Grid.Row="0"
+                                                Margin="0 0 10 0"
+                                                CornerRadius="45 45 45 45">
+                                            <Image x:Name="img_managerImage"
+                                                   Source="/Assets/Icons/user.png" />
+
+                                        </Border>
+
+                                        <StackPanel Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Margin="0 0 0 10">
+                                            <TextBlock Text="username"
+                                                       FontWeight="Bold"
+                                                       x:Name="lbl_managerUsername" />
+                                            <TextBlock Text="email@email.email"
+                                                       x:Name="lbl_managerEmail" />
+                                        </StackPanel>
+
+                                        <Button Content="Remove"
+                                                CornerRadius="5 5 5 5"
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Background="#ffef5859"
+                                                Foreground="#ffffffff"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom" />
+
+                                    </Grid>
+
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                    <Button Style="{StaticResource UserButton}">
+                        <Button.Content>
+                            <SymbolIcon Symbol="AddFriend"
+                                        RenderTransformOrigin="0.5,0.5">
+                                <SymbolIcon.RenderTransform>
+                                    <CompositeTransform ScaleX="1.5"
+                                                        ScaleY="1.5"
+                                                        TranslateX="0" />
+                                </SymbolIcon.RenderTransform>
+                            </SymbolIcon>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+
+            <Grid Grid.Row="5"
+                  ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <CalendarDatePicker Grid.Column="0"
+                                    Header="Start Date"
+                                    Width="200" />
+                <CalendarDatePicker Grid.Column="1"
+                                    Header="End Date"
+                                    Width="200" />
+
+            </Grid>
+            <Grid Grid.Row="6"
+                  ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox Grid.Column="0"
+                          Header="Category"
+                          Width="200"
+                          IsEditable="True" />
+                <ComboBox Grid.Column="1"
+                          Header="Status"
+                          Width="200">
+                    <ComboBoxItem Content="🟢 Active"
+                                  Tag="Active" />
+                    <ComboBoxItem Content="🔴 Inactive"
+                                  Tag="Inactive" />
+                    <ComboBoxItem Content="🔵 Finished"
+                                  Tag="Finished" />
+                </ComboBox>
+
+
+
+            </Grid>
+            <StackPanel Grid.Row="7"
+                        Orientation="Horizontal"
+                        Spacing="10"
+                        HorizontalAlignment="Right">
+                <Button Content="Dismiss"
+                        Background="#B3C5C5C5"
+                        Padding="20,5,20,6" />
+                <Button Content="Create"
+                        Background="#FF038200"
+                        Foreground="#E4FFFFFF"
+                        Padding="20,5,20,6" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Page>

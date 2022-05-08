@@ -397,13 +397,17 @@
                 </Button>
             </Grid>
 
-            <TextBox Grid.Row="1"
-                     Header="Title" />
+            <TextBox x:Name="tb_projectTitle"
+                     Grid.Row="1"
+                     Header="Title"
+                     PlaceholderText="Project Title" />
 
-            <TextBox Grid.Row="2"
+            <TextBox x:Name="tb_projectDescription"
+                     Grid.Row="2"
                      Header="Description"
                      AcceptsReturn="True"
-                     Height="100" />
+                     Height="100"
+                     PlaceholderText="Project Description" />
 
             <StackPanel Grid.Row="3"
                         Spacing="10">
@@ -631,10 +635,12 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <CalendarDatePicker Grid.Column="0"
+                <CalendarDatePicker x:Name="date_Start"
+                                    Grid.Column="0"
                                     Header="Start Date"
                                     Width="200" />
-                <CalendarDatePicker Grid.Column="1"
+                <CalendarDatePicker x:Name="date_End"
+                                    Grid.Column="1"
                                     Header="End Date"
                                     Width="200" />
 
@@ -646,13 +652,16 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0"
+                <ComboBox x:Name="cb_Category"
+                          Grid.Column="0"
                           Header="Category"
                           Width="200"
                           IsEditable="True" />
-                <ComboBox Grid.Column="1"
+                <ComboBox x:Name="cb_Status"
+                          Grid.Column="1"
                           Header="Status"
-                          Width="200">
+                          Width="200"
+                          SelectedIndex="0">
                     <ComboBoxItem Content="🟢 Active"
                                   Tag="Active" />
                     <ComboBoxItem Content="🔴 Inactive"
@@ -672,7 +681,7 @@
                 <Button Content="Create"
                         Background="#FF038200"
                         Foreground="#E4FFFFFF"
-                        Padding="20,5,20,6" />
+                        Padding="20,5,20,6" x:Name="btn_createProject" Click="btn_createProject_Click"/>
             </StackPanel>
         </Grid>
     </ScrollViewer>

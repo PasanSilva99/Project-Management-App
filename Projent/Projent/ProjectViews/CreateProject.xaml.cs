@@ -46,6 +46,10 @@ namespace Projent.ProjectViews
                 Name = MainPage.LoggedUser.Name,
                 Email = MainPage.LoggedUser.Email,
             });
+
+            date_Start.Date = DateTime.Now;
+            date_End.Date = DateTime.Now.AddMonths(1);
+            cb_Category.Text = "General";
         }
 
         private async void SetManager(DirectUser user)
@@ -77,6 +81,12 @@ namespace Projent.ProjectViews
             basePage.OpenRightPanel(typeof(CreateProject));
         }
         List<PMServer1.User> AllDirectUsers = new List<PMServer1.User>();
+
+        /// <summary>
+        /// This function will update the User list according to the search string 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void tb_searchAssignee_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
         {
             List<DirectUser> directUsers = new List<DirectUser>();
@@ -85,10 +95,11 @@ namespace Projent.ProjectViews
             {
                 foreach (var user in AllDirectUsers)
                 {
+                    // Show the users who is not the logged user
                     if (user.Name != MainPage.LoggedUser.Name)
                     {
                         List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
-                        var AddedDRUControls = stack_assignees.Children;
+                        var AddedDRUControls = stack_assignees.Children; // already assigned users
                         foreach (var AddedDRUControl in AddedDRUControls)
                         {
                             var DRUControl = AddedDRUControl as Button;
@@ -97,6 +108,7 @@ namespace Projent.ProjectViews
                             AddedDirectUsersList.Add(DRU);
                         }
 
+                        // Filterout already assigned users and show only not assigned ones
                         if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
                         {
                             if (user.Name.ToLower().Trim().Contains(tb_searchAssignee.Text.ToLower().Trim()) || user.Email.ToLower().Trim().Contains(tb_searchAssignee.Text.ToLower().Trim()))
@@ -124,44 +136,79 @@ namespace Projent.ProjectViews
 
         private List<DirectUser> Assignees = new List<DirectUser>();
 
+        /// <summary>
+        /// This will add a new assignee to the list (Stack Panel)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AssigneeListItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            // Previously I set the loaded user to the Tag of this control as a DirectUser Object
+            // We will retrive that here 
             var user = (sender as ListViewItem).Tag as DirectUser;
             if (user != null)
             {
+                // if the user is not already assigned,
+                // Assign him/ her
                 if (!Assignees.Where(x => x.Name == user.Name).Any())
                     Assignees.Add(new DirectUser() { Name = user.Name, Email = user.Email });
             }
+            // This will koad them into view
             LoadDirectUsersAssignees();
+            // close the opened flyout
             fly_NewAssignee.Hide();
         }
 
+        /// <summary>
+        /// This function will check if there in any file in the required path
+        /// </summary>
+        /// <param name="fileName">Name of the File (file.extension)</param>
+        /// <param name="foldername">File path (C:/FolderName/)</param>
+        /// <returns>True if the File exists, False if not</returns>
         public async Task<bool> IsFilePresent(string fileName, string foldername)
         {
+            // Get the folder from the parameter
             StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(foldername, CreationCollisionOption.OpenIfExists);
+            // Try and get the file mentioned
             var item = await storageFolder.TryGetItemAsync(fileName);
+
+            // this will return true if the item is not null and
+            // return false if the item is null
             return item != null;
         }
 
-
+        /// <summary>
+        /// This will Loadd the users in to the view in the flyout
+        /// </summary>
         private async void LoadDirectUsersAssignees()
         {
+            // first clear all the loadedusers from the previous session
             stack_assignees.Children.Clear();
+            // This will hold the currently loaded users
+            // Got a seperate variable because it generated an error on yjhe foreach last time saying
+            // the list is updated on the run. 
             var DirectUserList = Assignees;
+
+            // Will continue if the list is not null and 
+            // it has valus
             if (DirectUserList != null && DirectUserList.Count > 0)
             {
                 foreach (var user in DirectUserList)
                 {
+                    // only show the users who is not the logged user
+                    // because created user is autometically assigened as the owner of thuis project. 
                     if (user.Name != MainPage.LoggedUser.Name)
                     {
+                        // this controll will hold our user and
+                        // will show it to the user as a button., 
                         Button directUserButton = new Button();
                         directUserButton.Style = Resources["UserButton"] as Style;
                         directUserButton.Tag = user;
 
-
-
                         var DirectUserImage = new Image();
 
+                        // will load thge image from the local cashe if exissts to save the loading time
+                        // this can save more than 5 seconds of loading time
                         if (!await IsFilePresent(user.Name + ".png", "Cache"))
                         {
                             var imageBuffer = await Server.MainServer.mainServiceClient.RequestUserImageAsync(user.Name);
@@ -194,8 +241,10 @@ namespace Projent.ProjectViews
 
                         directUserButton.Content = DirectUserImage;
                         directUserButton.Tapped += DirectUserButton_Tapped;
+                        // this will attach the user info flyout for this button. 
                         FlyoutBase.SetAttachedFlyout(directUserButton, Resources["Assigneeinfo"] as Flyout);
 
+                        // if the user is not shown already on the list, add it to the list
                         if (!stack_assignees.Children.Contains(directUserButton))
                             stack_assignees.Children.Add(directUserButton);
                     }
@@ -203,6 +252,13 @@ namespace Projent.ProjectViews
             }
         }
 
+        /// <summary>
+        /// This will invokke wen the user nutton tapped,
+        /// and populate the information of the attached user
+        /// to the UserInfo Flyout
+        /// </summary>
+        /// <param name="sender">User Button</param>
+        /// <param name="e"></param>
         private void DirectUserButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var user = (sender as Button).Tag as DirectUser;
@@ -260,6 +316,11 @@ namespace Projent.ProjectViews
             }
         }
 
+        /// <summary>
+        /// This will remove the assignee from the list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_removeAsignee_Click(object sender, RoutedEventArgs e)
         {
             var user = (sender as Button).Tag as DirectUser;
@@ -280,6 +341,13 @@ namespace Projent.ProjectViews
 
         DirectUser SelectedMnaager = null;
 
+        /// <summary>
+        /// this will call a flyout wish is similar to the add new assignee 
+        /// Except, this shows the logged user on the list too. 
+        /// A user can be the owner and the manager at the same time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void btn_ChangeManager_Click(object sender, RoutedEventArgs e)
         {
             list_Managers.Items.Clear();
@@ -306,6 +374,11 @@ namespace Projent.ProjectViews
             }
         }
 
+        /// <summary>
+        /// This will set the manager and update the UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ManagerListItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var user = (sender as ListViewItem).Tag as DirectUser;
@@ -314,6 +387,12 @@ namespace Projent.ProjectViews
             ManagerInfo.Hide();
         }
 
+        /// <summary>
+        /// This will show the manager info and a option to change manager as a flyout
+        /// Basically this populates the Customized User Info Flyout which is Attached to the sender
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btn_ProjectManager_Click(object sender, RoutedEventArgs e)
         {
             var user = (sender as Button).Tag as DirectUser;
@@ -323,6 +402,11 @@ namespace Projent.ProjectViews
             lbl_ManagerEmail.Text = user.Email;
         }
 
+        /// <summary>
+        /// This function will update the User list according to the search string 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void tb_searchManager_TextChanging(TextBox sender, TextBoxTextChangingEventArgs args)
         {
             List<DirectUser> directUsers = new List<DirectUser>();
@@ -355,6 +439,28 @@ namespace Projent.ProjectViews
             {
                 list_Managers.Items.Add("No Users Found!");
             }
+        }
+
+        /// <summary>
+        /// This will be triggered when the user clicked create project function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_createProject_Click(object sender, RoutedEventArgs e)
+        {
+            var project = new PMServer2.Project();
+            // first validate the info
+            var title = tb_projectTitle.Text;
+            var description = tb_projectDescription.Text;
+            var assignees = "";
+            var manager = SelectedMnaager.Name;
+            var startDate = date_Start.Date;
+            var endDate = date_End.Date;
+            var category = cb_Category.Text;
+            var status = cb_Status.Text;
+
+            
+
         }
     }
 }

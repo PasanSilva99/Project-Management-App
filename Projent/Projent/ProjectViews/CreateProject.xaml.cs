@@ -463,12 +463,16 @@ namespace Projent.ProjectViews
             var category = cb_Category.SelectedItem as ComboBoxItem;  // Mandatory - Auto Sets Genaral Category
             var status = cb_Status.SelectedItem as ComboBoxItem;  // Mandatory - Auto Sets Active
 
-            if(Assignees.Count > 0)
+            if(Assignees.Count > 1)
             {
                 foreach (var item in Assignees)
                 {
                     assignees.Add(item.Name);
                 }
+            }
+            if(Assignees.Count == 1)
+            {
+                assignees.Add(Assignees.ToArray()[0] + ",");
             }
 
             if (!string.IsNullOrWhiteSpace(title))

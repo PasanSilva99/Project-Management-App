@@ -50,7 +50,7 @@ namespace Projent
             list_projects.Items.Clear();
             var projectList = await DataStore.FetchAllProjectsAsync();
 
-            if(projectList == null)
+            if (projectList == null)
             {
                 projectList = new List<PMServer2.Project>();
             }
@@ -63,14 +63,14 @@ namespace Projent
 
             var selectedStatus = cmb_status.SelectedItem as ComboBoxItem;
             var status = "";
-            if(selectedStatus != null)
+            if (selectedStatus != null)
                 status = selectedStatus.Tag as string;
 
 
 
             var filteredProjects = new List<PMServer2.Project>();
 
-            if(allProjects)
+            if (allProjects)
             {
                 filteredProjects = projectList;
             }
@@ -116,7 +116,7 @@ namespace Projent
                     break;
                 default:
                     sortedProjects = filteredProjects;
-                    break ;
+                    break;
             }
 
             var statusfilteredProjects = new List<PMServer2.Project>();
@@ -131,7 +131,7 @@ namespace Projent
             cmb_category.Items.Clear();
             foreach (var project in sortedProjects)
             {
-                if(!cmb_category.Items.Contains(project.Category))
+                if (!cmb_category.Items.Contains(project.Category))
                     cmb_category.Items.Add(project.Category);
             }
 
@@ -171,7 +171,7 @@ namespace Projent
                 list_projects.Items.Add(projectListViewItem);
             }
             grid_projectsLoading.Visibility = Visibility.Collapsed;
-            if(projectList.Count == 0)
+            if (projectList.Count == 0)
             {
                 TextBlock textBlock = new TextBlock();
                 textBlock.Text = "📪 No Projects Available";
@@ -195,8 +195,12 @@ namespace Projent
             var tappedListItem = (UIElement)e.OriginalSource;
             var attachedMenuFlyout = (MenuFlyout)FlyoutBase.GetAttachedFlyout(sender as ListViewItem);
 
-            // open the flyout at the mouse location
-            attachedMenuFlyout.ShowAt(tappedListItem, e.GetPosition(tappedListItem));
+            Selectedproject = project;
+
+            // only if he is a manager or owner, he can delete
+            if (Selectedproject.ProjectManager == MainPage.LoggedUser.Name || Selectedproject.CreatedBy == MainPage.LoggedUser.Name)
+                // open the flyout at the mouse location
+                attachedMenuFlyout.ShowAt(tappedListItem, e.GetPosition(tappedListItem));
 
 
         }

@@ -17,13 +17,13 @@
             <Setter Property="Foreground"
                     Value="{ThemeResource ButtonForeground}" />
             <Setter Property="BorderBrush"
-                    Value="{ThemeResource ButtonBorderBrush}" />
+                    Value="Green" />
             <Setter Property="BorderThickness"
-                    Value="{ThemeResource ButtonBorderThemeThickness}" />
+                    Value="3" />
             <Setter Property="Padding"
-                    Value="0" />
+                    Value="{StaticResource ButtonPadding}" />
             <Setter Property="HorizontalAlignment"
-                    Value="Left" />
+                    Value="Center" />
             <Setter Property="VerticalAlignment"
                     Value="Center" />
             <Setter Property="FontFamily"
@@ -36,14 +36,14 @@
                     Value="{StaticResource UseSystemFocusVisuals}" />
             <Setter Property="FocusVisualMargin"
                     Value="-3" />
-            <Setter Property="CornerRadius"
-                    Value="55 55 55 55" />
             <Setter Property="Width"
                     Value="55" />
             <Setter Property="Height"
                     Value="55" />
-            <Setter Property="Margin"
-                    Value="0 0 10 0" />
+            <Setter Property="CornerRadius"
+                    Value="55 55 55 55" />
+            <Setter Property="Padding"
+                    Value="-5 -5 -5 -5" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -72,7 +72,7 @@
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                                            Storyboard.TargetProperty="Background">
                                                 <DiscreteObjectKeyFrame KeyTime="0"
-                                                                        Value="#D9D9D9" />
+                                                                        Value="{ThemeResource ButtonBackgroundPointerOver}" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter"
                                                                            Storyboard.TargetProperty="BorderBrush">
@@ -133,6 +133,208 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="DirectUserItem"
+               TargetType="ListViewItem">
+            <Setter Property="FontFamily"
+                    Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize"
+                    Value="{ThemeResource ControlContentThemeFontSize}" />
+            <Setter Property="Background"
+                    Value="Transparent" />
+            <Setter Property="Foreground"
+                    Value="{ThemeResource ListViewItemForeground}" />
+            <Setter Property="TabNavigation"
+                    Value="Local" />
+            <Setter Property="IsHoldingEnabled"
+                    Value="True" />
+            <Setter Property="Padding"
+                    Value="10 10 10 10" />
+            <Setter Property="HorizontalContentAlignment"
+                    Value="Left" />
+            <Setter Property="VerticalContentAlignment"
+                    Value="Center" />
+            <Setter Property="MinWidth"
+                    Value="{ThemeResource ListViewItemMinWidth}" />
+            <Setter Property="MinHeight"
+                    Value="{ThemeResource ListViewItemMinHeight}" />
+            <Setter Property="AllowDrop"
+                    Value="False" />
+            <Setter Property="UseSystemFocusVisuals"
+                    Value="{StaticResource UseSystemFocusVisuals}" />
+            <Setter Property="FocusVisualMargin"
+                    Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListViewItem">
+                        <ListViewItemPresenter x:Name="Root"
+                                               CheckMode="{ThemeResource ListViewItemCheckMode}"
+                                               CheckBoxBrush="{ThemeResource ListViewItemCheckBoxBrush}"
+                                               CheckBrush="{ThemeResource ListViewItemCheckBrush}"
+                                               ContentMargin="{TemplateBinding Padding}"
+                                               ContentTransitions="{TemplateBinding ContentTransitions}"
+                                               DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                                               DragBackground="{ThemeResource ListViewItemDragBackground}"
+                                               DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                                               DragForeground="{ThemeResource ListViewItemDragForeground}"
+                                               FocusVisualMargin="{TemplateBinding FocusVisualMargin}"
+                                               FocusBorderBrush="#a335f7"
+                                               FocusSecondaryBorderBrush="#a335f7"
+                                               HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                               Control.IsTemplateFocusTarget="True"
+                                               PlaceholderBackground="Transparent"
+                                               PointerOverBackground="#ebe5ff"
+                                               PointerOverForeground="{ThemeResource ListViewItemForegroundPointerOver}"
+                                               PressedBackground="#ffceff"
+                                               RevealBorderThickness="{ThemeResource ListViewItemRevealBorderThemeThickness}"
+                                               RevealBackground="Transparent"
+                                               RevealBorderBrush="#a335f7"
+                                               ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                                               SelectedForeground="{ThemeResource ListViewItemForegroundSelected}"
+                                               SelectedPointerOverBackground="#ebe5ff"
+                                               SelectionCheckMarkVisualEnabled="{ThemeResource ListViewItemSelectionCheckMarkVisualEnabled}"
+                                               SelectedBackground="Transparent"
+                                               SelectedPressedBackground="{ThemeResource ListViewItemBackgroundSelectedPressed}"
+                                               VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                               CornerRadius="10 10 10 10">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="Selected" />
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.(RevealBrush.State)"
+                                                    Value="PointerOver" />
+                                            <Setter Target="Root.RevealBorderBrush"
+                                                    Value="{ThemeResource ListViewItemRevealBorderBrushPointerOver}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOverSelected">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.(RevealBrush.State)"
+                                                    Value="PointerOver" />
+                                            <Setter Target="Root.RevealBorderBrush"
+                                                    Value="{ThemeResource ListViewItemRevealBorderBrushPointerOver}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOverPressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.(RevealBrush.State)"
+                                                    Value="Pressed" />
+                                            <Setter Target="Root.RevealBorderBrush"
+                                                    Value="{ThemeResource ListViewItemRevealBorderBrushPressed}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.(RevealBrush.State)"
+                                                    Value="Pressed" />
+                                            <Setter Target="Root.RevealBorderBrush"
+                                                    Value="{ThemeResource ListViewItemRevealBorderBrushPressed}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="PressedSelected">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.(RevealBrush.State)"
+                                                    Value="Pressed" />
+                                            <Setter Target="Root.RevealBorderBrush"
+                                                    Value="{ThemeResource ListViewItemRevealBorderBrushPressed}" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="DisabledStates">
+                                    <VisualState x:Name="Enabled" />
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="Root.RevealBorderThickness"
+                                                    Value="0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ListViewItemPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="FlyoutBackground"
+                             EndPoint="0.5,1"
+                             StartPoint="0.5,0">
+            <LinearGradientBrush.RelativeTransform>
+                <CompositeTransform CenterY="0.5"
+                                    CenterX="0.5"
+                                    Rotation="40.236" />
+            </LinearGradientBrush.RelativeTransform>
+            <GradientStop Color="#FFE3E6FF" />
+            <GradientStop Color="#FFF0D2FF"
+                          Offset="1" />
+        </LinearGradientBrush>
+
+        <Flyout x:Key="Assigneeinfo"
+                Placement="Right">
+            <Flyout.FlyoutPresenterStyle>
+                <Style TargetType="FlyoutPresenter">
+                    <Setter Property="CornerRadius"
+                            Value="10" />
+                    <Setter Property="Background"
+                            Value="{StaticResource FlyoutBackground}" />
+                </Style>
+            </Flyout.FlyoutPresenterStyle>
+
+            <Grid Padding="5 5 5 5"
+                  MinWidth="300">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Width="45"
+                        Height="45"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Margin="0 0 10 0"
+                        CornerRadius="45 45 45 45">
+                    <Image x:Name="img_directUserImage"
+                           Source="/Assets/Icons/user.png" />
+
+                </Border>
+
+                <StackPanel Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0 0 0 10">
+                    <TextBlock Text="username"
+                               FontWeight="Bold"
+                               x:Name="lbl_DirectUsername" />
+                    <TextBlock Text="email@email.email"
+                               x:Name="lbl_DirectUserEmail" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1"
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Spacing="10">
+
+                    <Button Content="Remove"
+                            Background="#EE6363"
+                            Foreground="#FFFFFF"
+                            CornerRadius="5 5 5 5"
+                            x:Name="btn_removeAsignee"
+                            Click="btn_removeAsignee_Click"
+                            Padding="10 2 10 2">
+
+                    </Button>
+                </StackPanel>
+
+            </Grid>
+
+        </Flyout>
+
+        
     </Page.Resources>
 
     <ScrollViewer>
@@ -208,71 +410,7 @@
                 <TextBlock Text="Assignees" />
                 <StackPanel x:Name="assignees"
                             Orientation="Horizontal">
-                    <StackPanel Orientation="Horizontal"
-                                x:Name="stack_assigees">
-                        <Button Style="{StaticResource UserButton}">
-                            <Button.Content>
-                                <Image Source="/Assets/Icons/user.png" />
-                            </Button.Content>
-                            <Button.Flyout>
-                                <Flyout Placement="BottomEdgeAlignedRight">
-                                    <Flyout.FlyoutPresenterStyle>
-                                        <Style TargetType="FlyoutPresenter">
-                                            <Setter Property="CornerRadius"
-                                                    Value="10" />
-                                            <Setter Property="Background"
-                                                    Value="White" />
-                                        </Style>
-                                    </Flyout.FlyoutPresenterStyle>
-
-                                    <Grid Padding="5 5 5 5"
-                                          MinWidth="300">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
-                                            <RowDefinition Height="auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Border Width="45"
-                                                Height="45"
-                                                Grid.Column="0"
-                                                Grid.Row="0"
-                                                Margin="0 0 10 0"
-                                                CornerRadius="45 45 45 45">
-                                            <Image x:Name="img_directUserImage"
-                                                   Source="/Assets/Icons/user.png" />
-
-                                        </Border>
-
-                                        <StackPanel Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    Margin="0 0 0 10">
-                                            <TextBlock Text="username"
-                                                       FontWeight="Bold"
-                                                       x:Name="lbl_DirectUsername" />
-                                            <TextBlock Text="email@email.email"
-                                                       x:Name="lbl_DirectUserEmail" />
-                                        </StackPanel>
-
-                                        <Button Content="Remove"
-                                                CornerRadius="5 5 5 5"
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                Background="#ffef5859"
-                                                Foreground="#ffffffff"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Bottom" />
-
-                                    </Grid>
-
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
-                    </StackPanel>
-                    <Button Style="{StaticResource UserButton}">
+                    <Button Style="{StaticResource UserButton}" Margin="10 0 0 0" Name="btn_ProjectManager" Click="btn_ProjectManager_Click">
                         <Button.Content>
                             <SymbolIcon Symbol="AddFriend"
                                         RenderTransformOrigin="0.5,0.5">
@@ -283,6 +421,125 @@
                                 </SymbolIcon.RenderTransform>
                             </SymbolIcon>
                         </Button.Content>
+                        <Button.Flyout>
+                            <Flyout x:Name="ManagerInfo"
+                                    Placement="Right">
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="CornerRadius"
+                                                Value="10" />
+                                        <Setter Property="Background"
+                                                Value="{StaticResource FlyoutBackground}" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+
+                                <Grid Padding="5 5 5 5"
+                                      MinWidth="300">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Border Width="45"
+                                            Height="45"
+                                            Grid.Column="0"
+                                            Grid.Row="0"
+                                            Margin="0 0 10 0"
+                                            CornerRadius="45 45 45 45">
+                                        <Image x:Name="img_ManagerImage"
+                                               Source="/Assets/Icons/user.png" />
+
+                                    </Border>
+
+                                    <StackPanel Grid.Row="0"
+                                                Grid.Column="1"
+                                                Margin="0 0 0 10">
+                                        <TextBlock Text="username"
+                                                   FontWeight="Bold"
+                                                   x:Name="lbl_ManagerUsername" />
+                                        <TextBlock Text="email@email.email"
+                                                   x:Name="lbl_ManagerEmail" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Spacing="10">
+
+                                        <Button Content="Change"
+                                                Background="#EE6363"
+                                                Foreground="#FFFFFF"
+                                                CornerRadius="5 5 5 5"
+                                                x:Name="btn_ChangeManager"
+                                                Click="btn_ChangeManager_Click"
+                                                Padding="10 2 10 2">
+                                            <Button.Flyout>
+                                                <Flyout x:Name="fly_NewManager"
+                                                        Placement="LeftEdgeAlignedTop">
+                                                    <Flyout.FlyoutPresenterStyle>
+                                                        <Style TargetType="FlyoutPresenter">
+                                                            <Setter Property="CornerRadius"
+                                                                    Value="10" />
+                                                            <Setter Property="Background"
+                                                                    Value="white" />
+                                                        </Style>
+                                                    </Flyout.FlyoutPresenterStyle>
+
+                                                    <Grid MinHeight="340"
+                                                          MinWidth="310"
+                                                          MaxHeight="380"
+                                                          MaxWidth="310">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="*" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid Grid.Row="0"
+                                                              Padding="2 3 5 3"
+                                                              Background="#FFEFEFEF"
+                                                              CornerRadius="10 10 10 10">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBox Grid.Column="0"
+                                                                     BorderThickness="0"
+                                                                     CornerRadius="10 10 10 10"
+                                                                     PlaceholderText="Search Users in Organization"
+                                                                     VerticalAlignment="Bottom"
+                                                                     Margin="0 0 10 0"
+                                                                     Background="Transparent"
+                                                                     Padding="15 5 0 0"
+                                                                     x:Name="tb_searchManager"
+                                                                     TextChanging="tb_searchManager_TextChanging" />
+                                                            <Image Grid.Column="1"
+                                                                   Height="20"
+                                                                   Width="20"
+                                                                   VerticalAlignment="Center"
+                                                                   Source="/Assets/Icons/search.png" />
+                                                        </Grid>
+
+                                                        <ListView Grid.Row="1"
+                                                                  Margin="0 10 0 0"
+                                                                  x:Name="list_Managers">
+                                                            <ListViewItem Style="{StaticResource DirectUserItem}">
+                                                            </ListViewItem>
+                                                        </ListView>
+                                                    </Grid>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                        </Button>
+                                    </StackPanel>
+
+                                </Grid>
+
+                            </Flyout>
+                        </Button.Flyout>
                     </Button>
                 </StackPanel>
             </StackPanel>
@@ -293,70 +550,12 @@
                 <StackPanel x:Name="manager"
                             Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal"
-                                x:Name="stack_projectManager">
-                        <Button Style="{StaticResource UserButton}">
-                            <Button.Content>
-                                <Image Source="/Assets/Icons/user.png" />
-                            </Button.Content>
-                            <Button.Flyout>
-                                <Flyout Placement="BottomEdgeAlignedRight">
-                                    <Flyout.FlyoutPresenterStyle>
-                                        <Style TargetType="FlyoutPresenter">
-                                            <Setter Property="CornerRadius"
-                                                    Value="10" />
-                                            <Setter Property="Background"
-                                                    Value="White" />
-                                        </Style>
-                                    </Flyout.FlyoutPresenterStyle>
-
-                                    <Grid Padding="5 5 5 5"
-                                          MinWidth="300">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
-                                            <RowDefinition Height="auto" />
-                                        </Grid.RowDefinitions>
-
-                                        <Border Width="45"
-                                                Height="45"
-                                                Grid.Column="0"
-                                                Grid.Row="0"
-                                                Margin="0 0 10 0"
-                                                CornerRadius="45 45 45 45">
-                                            <Image x:Name="img_managerImage"
-                                                   Source="/Assets/Icons/user.png" />
-
-                                        </Border>
-
-                                        <StackPanel Grid.Row="0"
-                                                    Grid.Column="1"
-                                                    Margin="0 0 0 10">
-                                            <TextBlock Text="username"
-                                                       FontWeight="Bold"
-                                                       x:Name="lbl_managerUsername" />
-                                            <TextBlock Text="email@email.email"
-                                                       x:Name="lbl_managerEmail" />
-                                        </StackPanel>
-
-                                        <Button Content="Remove"
-                                                CornerRadius="5 5 5 5"
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                Background="#ffef5859"
-                                                Foreground="#ffffffff"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Bottom" />
-
-                                    </Grid>
-
-                                </Flyout>
-                            </Button.Flyout>
-                        </Button>
+                                x:Name="stack_assignees"
+                                Spacing="10"
+                                Margin="0 0 10 0">
                     </StackPanel>
-                    <Button Style="{StaticResource UserButton}">
+                    <Button Style="{StaticResource UserButton}"
+                            Click="NewAssigneeButton_Click">
                         <Button.Content>
                             <SymbolIcon Symbol="AddFriend"
                                         RenderTransformOrigin="0.5,0.5">
@@ -367,6 +566,60 @@
                                 </SymbolIcon.RenderTransform>
                             </SymbolIcon>
                         </Button.Content>
+                        <Button.Flyout>
+                            <Flyout x:Name="fly_NewAssignee"
+                                    Placement="LeftEdgeAlignedTop">
+                                <Flyout.FlyoutPresenterStyle>
+                                    <Style TargetType="FlyoutPresenter">
+                                        <Setter Property="CornerRadius"
+                                                Value="10" />
+                                        <Setter Property="Background"
+                                                Value="white" />
+                                    </Style>
+                                </Flyout.FlyoutPresenterStyle>
+
+                                <Grid MinHeight="340"
+                                      MinWidth="310"
+                                      MaxHeight="380"
+                                      MaxWidth="310">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0"
+                                          Padding="2 3 5 3"
+                                          Background="#FFEFEFEF"
+                                          CornerRadius="10 10 10 10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 BorderThickness="0"
+                                                 CornerRadius="10 10 10 10"
+                                                 PlaceholderText="Search Users in Organization"
+                                                 VerticalAlignment="Bottom"
+                                                 Margin="0 0 10 0"
+                                                 Background="Transparent"
+                                                 Padding="15 5 0 0"
+                                                 x:Name="tb_searchAssignee"
+                                                 TextChanging="tb_searchAssignee_TextChanging" />
+                                        <Image Grid.Column="1"
+                                               Height="20"
+                                               Width="20"
+                                               VerticalAlignment="Center"
+                                               Source="/Assets/Icons/search.png" />
+                                    </Grid>
+
+                                    <ListView Grid.Row="1"
+                                              Margin="0 10 0 0"
+                                              x:Name="list_Assignees">
+                                        <ListViewItem Style="{StaticResource DirectUserItem}">
+                                        </ListViewItem>
+                                    </ListView>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
                     </Button>
                 </StackPanel>
             </StackPanel>
@@ -407,8 +660,6 @@
                     <ComboBoxItem Content="🔵 Finished"
                                   Tag="Finished" />
                 </ComboBox>
-
-
 
             </Grid>
             <StackPanel Grid.Row="7"

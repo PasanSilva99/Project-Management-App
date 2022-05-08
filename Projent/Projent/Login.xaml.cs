@@ -45,13 +45,20 @@ namespace Projent
         public Login()
         {
             this.InitializeComponent();
-            IntializeLocalDatabase(); // comes from dataStore Class
-            //# Server.PMServer1.IntializeDatabaseService1();
-            Server.MainServer.InitializeServer();
-            //# Server.PMServer2.IntializeDatabaseService1();
-            Server.ProjectServer.InitializeServer();
+            try
+            {
+                IntializeLocalDatabase(); // comes from dataStore Class
+                                          //# Server.PMServer1.IntializeDatabaseService1();
+                Server.MainServer.InitializeServer();
+                //# Server.PMServer2.IntializeDatabaseService1();
+                Server.ProjectServer.InitializeServer();
 
-            CheckConnectionAsync();
+                CheckConnectionAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -63,34 +70,42 @@ namespace Projent
 
         private async void CheckConnectionAsync()
         {
-            // Connectivity check is coming from DataStore Class
-            if (!CheckConnectivity())
+            try
             {
-                ContentDialog DialogConLost = new ContentDialog();
-                DialogConLost.Title = "Connectivity Lost";
-                DialogConLost.PrimaryButtonText = "Retry";
-                DialogConLost.CloseButtonText = "Continue with limited functions";
-                DialogConLost.DefaultButton = ContentDialogButton.Primary;
-                DialogConLost.Content = "Connection to ther server is not available. Please connect to the same network which is with the servers. If you continue without the connection, this app will swith to the offline mode.";
 
-                var DialogConLost_Result = await DialogConLost.ShowAsync();
-
-                if (DialogConLost_Result == ContentDialogResult.Primary)
+                // Connectivity check is coming from DataStore Class
+                if (!CheckConnectivity())
                 {
-                    CheckConnectionAsync();
+                    ContentDialog DialogConLost = new ContentDialog();
+                    DialogConLost.Title = "Connectivity Lost";
+                    DialogConLost.PrimaryButtonText = "Retry";
+                    DialogConLost.CloseButtonText = "Continue with limited functions";
+                    DialogConLost.DefaultButton = ContentDialogButton.Primary;
+                    DialogConLost.Content = "Connection to ther server is not available. Please connect to the same network which is with the servers. If you continue without the connection, this app will swith to the offline mode.";
+
+                    var DialogConLost_Result = await DialogConLost.ShowAsync();
+
+                    if (DialogConLost_Result == ContentDialogResult.Primary)
+                    {
+                        CheckConnectionAsync();
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Application Set to Offline Mode");
+                        GlobalServiceType = ServiceType.Offline;
+                    }
+
                 }
                 else
                 {
-                    Debug.WriteLine("Application Set to Offline Mode");
-                    GlobalServiceType = ServiceType.Offline;
+                    Debug.WriteLine("Application Set to Online Mode");
+                    GlobalServiceType = ServiceType.Online;
+
                 }
-
             }
-            else
+            catch(Exception ex)
             {
-                Debug.WriteLine("Application Set to Online Mode");
-                GlobalServiceType = ServiceType.Online;
-
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -102,72 +117,106 @@ namespace Projent
 
         private async void btn_login_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Login");
-            var email = tb_email.Text;
-            var password = GetHashString(tb_password.Password);
-
-            if (email != null && password != null)
+            try
             {
-                if (GlobalServiceType == ServiceType.Online)
-                {
-                    if (CheckConnectivity())
-                    {
-                        try
-                        {
-                            var isValidUser = await ValidateUser(email, password);
 
-                            if (isValidUser)
+                btn_login.IsEnabled = false;
+                btn_login.Content = "Login ⏳";
+                Debug.WriteLine("Login");
+                var email = tb_email.Text;
+                var password = GetHashString(tb_password.Password);
+
+                if (email != null && password != null)
+                {
+                    if (GlobalServiceType == ServiceType.Online)
+                    {
+                        if (CheckConnectivity() && await Server.MainServer.CheckConnectivity())
+                        {
+                            try
                             {
-                                ContinueToNavigator(email, password);
-                            }
-                            else
-                            {
-                                if (await IsUserRegistered(email))
+                                var isValidUser = await ValidateUser(email, password);
+
+                                if (isValidUser)
                                 {
-                                    ShowPasswordErrorDialog();
+                                    ContinueToNavigator(email, password);
                                 }
                                 else
                                 {
-                                    ShowRegisterDialog(email, tb_password.Password);
+                                    if (await IsUserRegistered(email))
+                                    {
+                                        ShowPasswordErrorDialog();
+                                    }
+                                    else
+                                    {
+                                        ShowRegisterDialog(email, tb_password.Password);
+                                    }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            ContentDialog RegistrationErrorDialog = new ContentDialog();
-                            RegistrationErrorDialog.Title = "UnSpecified Error";
-                            RegistrationErrorDialog.CloseButtonText = "Retry";
-                            RegistrationErrorDialog.DefaultButton = ContentDialogButton.Close;
-                            RegistrationErrorDialog.Content = $"Please Contact Administrator 0x008E +\n{ex.Message}";
-
-                            await RegistrationErrorDialog.ShowAsync();
-
-                            Debug.WriteLine(ex.Message);
-                        }
-
-                    }
-                    else
-                    {
-                        if (!isAutoLogin)
-                        {
-                            ContentDialog NotConnectedDialog = new ContentDialog();
-                            NotConnectedDialog.Title = "Not Connected to the network";
-                            NotConnectedDialog.PrimaryButtonText = "Retry";
-                            NotConnectedDialog.SecondaryButtonText = "Offline Login";
-                            NotConnectedDialog.CloseButtonText = "Ok";
-                            NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
-                            NotConnectedDialog.Content = "Press Retry after you connect to the network. If you want to continue with the cased data on your computer, press Offline Login";
-
-
-                            var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
-
-                            if (NotConnectedDialogResult == ContentDialogResult.Primary)
+                            catch (Exception ex)
                             {
-                                btn_login_Click(sender, e);
+                                ContentDialog RegistrationErrorDialog = new ContentDialog();
+                                RegistrationErrorDialog.Title = "UnSpecified Error";
+                                RegistrationErrorDialog.CloseButtonText = "Retry";
+                                RegistrationErrorDialog.DefaultButton = ContentDialogButton.Close;
+                                RegistrationErrorDialog.Content = $"Please Contact Administrator 0x008E +\n{ex.Message}";
 
+                                await RegistrationErrorDialog.ShowAsync();
+
+                                Debug.WriteLine(ex.Message);
                             }
-                            else if (NotConnectedDialogResult == ContentDialogResult.Secondary)
+
+                        }
+                        else
+                        {
+                            if (!isAutoLogin)
                             {
+                                ContentDialog NotConnectedDialog = new ContentDialog();
+                                NotConnectedDialog.Title = "Not Connected to the network";
+                                NotConnectedDialog.PrimaryButtonText = "Retry";
+                                NotConnectedDialog.SecondaryButtonText = "Offline Login";
+                                NotConnectedDialog.CloseButtonText = "Ok";
+                                NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
+                                NotConnectedDialog.Content = "Press Retry after you connect to the network. If you want to continue with the cased data on your computer, press Offline Login";
+
+
+                                var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
+
+                                if (NotConnectedDialogResult == ContentDialogResult.Primary)
+                                {
+                                    btn_login_Click(sender, e);
+
+                                }
+                                else if (NotConnectedDialogResult == ContentDialogResult.Secondary)
+                                {
+                                    GlobalServiceType = ServiceType.Offline;
+                                    var IsUserValid = ValidateUserLocal(email, password);
+
+                                    if (IsUserValid)
+                                    {
+                                        ContinueToNavigator(email, password);
+                                    }
+                                    else
+                                    {
+                                        if (await IsUserRegistered(email))
+                                        {
+                                            ShowPasswordErrorDialog();
+
+                                        }
+                                        else
+                                        {
+                                            ContentDialog NotRegisterDialog = new ContentDialog();
+                                            NotRegisterDialog.Title = "Not Connected to the network";
+                                            NotRegisterDialog.CloseButtonText = "Ok";
+                                            NotRegisterDialog.DefaultButton = ContentDialogButton.Primary;
+                                            NotRegisterDialog.Content = "Seems like you're not registered to the system. Please Retry to register after you connect to the network.";
+                                            await NotRegisterDialog.ShowAsync();
+                                        }
+                                    }
+                                }
+                            }
+                            else  // Approching heare means its offline
+                            {
+                                btn_login.Content = "Login";
                                 GlobalServiceType = ServiceType.Offline;
                                 var IsUserValid = ValidateUserLocal(email, password);
 
@@ -193,15 +242,19 @@ namespace Projent
                                     }
                                 }
                             }
-                        }
-                        else  // Approching heare means its offline
-                        {
-                            GlobalServiceType = ServiceType.Offline;
-                            var IsUserValid = ValidateUserLocal(email, password);
 
-                            if (IsUserValid)
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var result = ValidateUserLocal(email, password);
+
+                            if (result)
                             {
-                                ContinueToNavigator(email, password);
+                                MainPage.LoggedUser = FindUserLocal(email, password);
+                                mainPage.NavigateToNavigationBase();
                             }
                             else
                             {
@@ -221,43 +274,19 @@ namespace Projent
                                 }
                             }
                         }
-
-                    }
-                }
-                else
-                {
-                    try
-                    {
-                        var result = ValidateUserLocal(email, password);
-
-                        if (result)
+                        catch (Exception ex)
                         {
-                            MainPage.LoggedUser = FindUserLocal(email, password);
-                            mainPage.NavigateToNavigationBase();
-                        }
-                        else
-                        {
-                            if (await IsUserRegistered(email))
-                            {
-                                ShowPasswordErrorDialog();
-
-                            }
-                            else
-                            {
-                                ContentDialog NotRegisterDialog = new ContentDialog();
-                                NotRegisterDialog.Title = "Not Connected to the network";
-                                NotRegisterDialog.CloseButtonText = "Ok";
-                                NotRegisterDialog.DefaultButton = ContentDialogButton.Primary;
-                                NotRegisterDialog.Content = "Seems like you're not registered to the system. Please Retry to register after you connect to the network.";
-                                await NotRegisterDialog.ShowAsync();
-                            }
+                            Debug.WriteLine(ex.Message);
+                            btn_login.Content = "Login";
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                    }
                 }
+                btn_login.IsEnabled = true;
+                btn_login.Content = "Login";
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 

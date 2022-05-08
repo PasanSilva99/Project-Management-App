@@ -164,6 +164,7 @@ namespace Projent
                 projectListViewItem.Tag = project;
                 projectListViewItem.Content = projectListViewItemControl;
                 projectListViewItem.CornerRadius = new CornerRadius(10.0, 10.0, 10.0, 10.0);
+                FlyoutBase.SetAttachedFlyout(projectListViewItem, Resources["ProjectMenu"] as MenuFlyout);
                 projectListViewItem.Tapped += ProjectListViewItem_Tapped;
                 projectListViewItem.RightTapped += ProjectListViewItem_RightTapped;
 
@@ -189,6 +190,15 @@ namespace Projent
         {
             var listItem = sender as ListViewItem;
             var project = listItem.Tag as PMServer2.Project;
+
+            // set the flyout menu location manually
+            var tappedListItem = (UIElement)e.OriginalSource;
+            var attachedMenuFlyout = (MenuFlyout)FlyoutBase.GetAttachedFlyout(sender as ListViewItem);
+
+            // open the flyout at the mouse location
+            attachedMenuFlyout.ShowAt(tappedListItem, e.GetPosition(tappedListItem));
+
+
         }
 
 
@@ -279,6 +289,73 @@ namespace Projent
         {
             basePage.OpenRightPanel(typeof(ProjectViews.CreateProject));
             basePage.loadedProjectPage = this;
+        }
+
+        private async void DeleteProject_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedprojectID = Selectedproject.ProjectId;
+            // send the delete request to the server
+            try
+            {
+                if (await Server.ProjectServer.CheckConnectivity())
+                {
+                    var isSuccess = await Server.ProjectServer.projectServiceClient.DeleteProjectAsync(selectedprojectID, MainPage.LoggedUser.Name);
+                    
+                    if (isSuccess)
+                    {
+                        Loadprojects();
+                    }
+                    else
+                    {
+                        ContentDialog dialog = new ContentDialog();
+                        dialog.Title = "Something Went Wrong";
+                        dialog.PrimaryButtonText = "Retry";
+                        dialog.CloseButtonText = "Cancel";
+                        dialog.DefaultButton = ContentDialogButton.Close;
+                        dialog.Content = "Failed to Delete the project";
+
+                        var result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            DeleteProject_Click(sender, e);
+                        }
+                    }
+                }
+                else
+                {
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Not Connected";
+                    dialog.PrimaryButtonText = "Retry";
+                    dialog.CloseButtonText = "Cancel";
+                    dialog.DefaultButton = ContentDialogButton.Close;
+                    dialog.Content = "Failed to connect to the server. You have to be connected with the server to create/ delete or edit projects";
+
+                    var result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        DeleteProject_Click(sender, e);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                ContentDialog dialog = new ContentDialog();
+                dialog.Title = "Something Went Wrong";
+                dialog.PrimaryButtonText = "Retry";
+                dialog.CloseButtonText = "Cancel";
+                dialog.DefaultButton = ContentDialogButton.Close;
+                dialog.Content = "Failed to Delete the project";
+
+                var result = await dialog.ShowAsync();
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    DeleteProject_Click(sender, e);
+                }
+            }
         }
     }
 }

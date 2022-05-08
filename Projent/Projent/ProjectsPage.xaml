@@ -416,6 +416,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <MenuFlyout x:Key="ProjectMenu" x:Name="ProjectMenu">
+            <MenuFlyoutItem Text="Delete"
+                            Icon="Delete" Click="DeleteProject_Click"/>
+        </MenuFlyout>
 
     </Page.Resources>
 

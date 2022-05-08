@@ -119,14 +119,21 @@ namespace Projent
                         dialog.DefaultButton = ContentDialogButton.Primary;
                         dialog.Content = $"Unexpected Error Occured \n{ex.Message}";
 
-                        var result = await dialog.ShowAsync();  // show the messgae and get the result
-                        if (result == ContentDialogResult.Primary)
+                        try
                         {
-                            FetchMessages();
+                            var result = await dialog.ShowAsync();  // show the messgae and get the result
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                FetchMessages();
+                            }
+                            else
+                            {
+                                navigationBase.OpenChat(this);
+                            }
                         }
-                        else
+                        catch
                         {
-                            navigationBase.OpenChat(this);
+
                         }
                     }
                 }
@@ -413,16 +420,9 @@ namespace Projent
                     {
                         // fetch messages from the server
                         FetchMessages();
-                        // load the direct user panel. 
-                        // Direct users cannot be null if the chat pannel is not expanded after the launch
-                        // thats why we're loading it here
-                        LoadDirectUsers();
-                        /*Temp*/
-
 
                         // get the new messages list from the latest message time
                         var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(MainPage.LoggedUser.Name, latestMessageTime);
-
 
                         // Stop the timer to avoid duplicate messages
                         ChatTimer.Stop();
@@ -494,8 +494,8 @@ namespace Projent
                                     {
                                         var newDRU = new DirectUser { Name = message.sender, Email = await DataStore.GetEmail(message.sender, MainPage.LoggedUser.Name) };
                                         DataStore.NewDirectUser(newDRU, MainPage.LoggedUser.Name);
+                                        AddedDirectUsersList.Add(newDRU);
                                         LoadDirectUsers();
-
                                     }
 
                                     // show the user a notification about the message

@@ -14,6 +14,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Text;
+using Windows.UI.ViewManagement.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -151,21 +152,28 @@ namespace Projent
             }
             else
             {
-                ContentDialog dialog = new ContentDialog();
-                dialog.Title = "In Offline Mode";
-                dialog.PrimaryButtonText = "Retry";
-                dialog.SecondaryButtonText = "Dismiss";
-                dialog.DefaultButton = ContentDialogButton.Primary;
-                dialog.Content = "Application is unable to Send/ Receive messages while it is in offline mode. Please make sure you are connected to the network before proceding.";
+                try
+                {
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "In Offline Mode";
+                    dialog.PrimaryButtonText = "Retry";
+                    dialog.SecondaryButtonText = "Dismiss";
+                    dialog.DefaultButton = ContentDialogButton.Primary;
+                    dialog.Content = "Application is unable to Send/ Receive messages while it is in offline mode. Please make sure you are connected to the network before proceding.";
 
-                var result = await dialog.ShowAsync();  // show the messgae and get the result
-                if (result == ContentDialogResult.Primary)
-                {
-                    FetchMessages();
+                    var result = await dialog.ShowAsync();  // show the messgae and get the result
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        FetchMessages();
+                    }
+                    else
+                    {
+                        navigationBase.OpenChat(this);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    navigationBase.OpenChat(this);
+                    Debug.WriteLine(ex.Message);
                 }
             }
 
@@ -263,7 +271,6 @@ namespace Projent
 
         private async void SendMessage()
         {
-
             if (!string.IsNullOrWhiteSpace(tb_message.Text) && !isInCooldown)
             {
                 isInCooldown = true;
@@ -294,8 +301,6 @@ namespace Projent
                                     ProfileImage = navigationBase.profileImageSource,
                                     Time = message.Time
                                 };
-
-                                FetchMessages();
                                 tb_message.Text = "";
                                 isInCooldown = false;
                             }
@@ -309,7 +314,6 @@ namespace Projent
 
                                 await dialog.ShowAsync();
                             }
-
                         }
                         catch (Exception ex)
                         {
@@ -397,15 +401,21 @@ namespace Projent
         {
             try
             {
+                // Check wether the logged user is null. 
+                // this can happen if the user logged out and the time hit an delay of processing
                 if (MainPage.LoggedUser != null)
                 {
+                    // get the new messages from the server
                     var isNewMessagesAvailable = await Server.ProjectServer.projectServiceClient.CheckNewMessagesForAsync(MainPage.LoggedUser.Name, latestMessageTime);
+
+                    // if it is there any new messages
                     if (isNewMessagesAvailable)
                     {
-                        //latestMessageTime = DateTime.Now;
-                        // Requires Microsoft.Toolkit.Uwp.Notifications NuGet package version 7.0 or greater
-
+                        // fetch messages from the server
                         FetchMessages();
+                        // load the direct user panel. 
+                        // Direct users cannot be null if the chat pannel is not expanded after the launch
+                        // thats why we're loading it here
                         LoadDirectUsers();
                         /*Temp*/
 
@@ -414,39 +424,62 @@ namespace Projent
                         var newMessages = await Server.ProjectServer.projectServiceClient.FindDirectMessagesForAsync(MainPage.LoggedUser.Name, latestMessageTime);
 
 
-                        // show the toast notifications if the user is the receiver
+                        // Stop the timer to avoid duplicate messages
                         ChatTimer.Stop();
+
                         foreach (var message in newMessages)
                         {
                             if (message != null)
                             {
+                                // if the receiver is the user
                                 if (message.receiver == MainPage.LoggedUser.Name)
                                 {
+                                    // the cash folder
                                     StorageFolder storageFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
-                                    Uri imageURI;
+                                    // var to store the image location
+                                    Uri imageURI; 
+
+                                    // if the profile image is available
                                     if (await IsFilePresent(message.sender + ".png", "Cache"))
                                     {
                                         Debug.WriteLine("Has Sender Image");
+                                        // get the file 
                                         StorageFile imageFile = await storageFolder.GetFileAsync(message.sender + ".png");
 
+                                        // get its URI and set it
                                         imageURI = new Uri(imageFile.Path);
                                     }
                                     else
                                     {
+                                        // if the user image is not available locally,
                                         Debug.WriteLine("Requesting Sender Image");
+                                        // Request it from the server
+                                        // here we are saving it for more faster access in the future. 
                                         var image = await Server.MainServer.mainServiceClient.RequestUserImageAsync(message.sender);
+
+                                        // if the image is null , show the error as this
                                         Debug.WriteLine(image == null ? ":::Error:::" : ":::HasBuffer:::");
 
+                                        // Get the location to the cache folder
                                         var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
+                                        // create the file to save the profile pic
                                         var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(message.sender + ".png", CreationCollisionOption.ReplaceExisting);
 
+                                        // save the pic
                                         await FileIO.WriteBytesAsync(ProfilePicFile, image);
 
+                                        // save the image path
                                         imageURI = new Uri(ProfilePicFile.Path);
 
                                     }
+
+                                    // This list is to store the Loaded direct users
                                     List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
+                                    // Retrive the user controls from the users stack ( Direct Message Users )
                                     var AddedDRUControls = stack_users.Children;
+
+                                    // Apply them in to the view
+                                    // This loads the Direct Users in to the view
                                     foreach (var AddedDRUControl in AddedDRUControls)
                                     {
                                         var DRUControl = AddedDRUControl as Button;
@@ -455,30 +488,32 @@ namespace Projent
                                         AddedDirectUsersList.Add(DRU);
                                     }
 
+                                    // if the new message sender is not in the added list,
+                                    // autometically add the message to tehv view.
                                     if (AddedDirectUsersList.Where(u => u.Name == message.sender).Count() == 0)
                                     {
-                                        new ToastContentBuilder()
+                                        var newDRU = new DirectUser { Name = message.sender, Email = await DataStore.GetEmail(message.sender, MainPage.LoggedUser.Name) };
+                                        DataStore.NewDirectUser(newDRU, MainPage.LoggedUser.Name);
+                                        LoadDirectUsers();
+
+                                    }
+
+                                    // show the user a notification about the message
+                                    new ToastContentBuilder()
                                             .AddAppLogoOverride(imageURI)
                                             .AddArgument("action", "viewConversation")
                                             .AddArgument("conversationId", 9813)
                                             .AddText(message.sender)
                                             .AddText(message.MessageContent)
                                             .Show();
-
-
-
-                                        DataStore.NewDirectUser(new DirectUser { Name = message.sender, Email = await DataStore.GetEmail(message.sender, MainPage.LoggedUser.Name) },
-                                        MainPage.LoggedUser.Name);
-                                        LoadDirectUsers();
-                                    }
                                 }
                             }
                         }
+
+                        // continue the timer
                         ChatTimer.Start();
                     }
                 }
-                // if the user is the sender, and the selected receiver is the new message receiver update the message list
-                // 
 
             }
             catch (Exception ex)
@@ -490,33 +525,51 @@ namespace Projent
 
         private async void LoadDirectUsers()
         {
+            // get the function in to a cooldown state
+            // this prevents duplicate additions
             isInCooldown = true;
+            
+            // Clear all the user from the loaded list
             stack_users.Children.Clear();
+
+            // Fetch Saved direct users from the db
             var DirectUserList = DataStore.FetchDirectUsers(MainPage.LoggedUser.Name);
+
+            // send them back for navigation base for the further purposes
             navigationBase.directUsers = DirectUserList;
+
+            // if the list is not null and
+            // it has users
             if (DirectUserList != null && DirectUserList.Count > 0)
             {
+                // for all the users in the direct users
                 foreach (var user in DirectUserList)
                 {
+                    // if it is not the same user as the logged user
                     if (user.Name != MainPage.LoggedUser.Name)
                     {
+                        // create a new control to show it on the UI
                         Button directUserButton = new Button();
                         directUserButton.Style = Resources["UserButton"] as Style;
                         directUserButton.Tag = user;
 
 
-
+                        // this will hold the image of the user
                         var DirectUserImage = new Image();
 
+                        // check wether the users photo is in the cache folder.  (NOT)
                         if (!await IsFilePresent(user.Name + ".png"))
                         {
+                            // Request it from the server
                             var imageBuffer = await Server.MainServer.mainServiceClient.RequestUserImageAsync(user.Name);
 
+                            // Save it in the local cache folder
                             var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
                             var ProfilePicFile = await ProfilePicFolder.CreateFileAsync(user.Name + ".png", CreationCollisionOption.OpenIfExists);
 
                             await FileIO.WriteBytesAsync(ProfilePicFile, imageBuffer);
 
+                            // set it to the UI element
                             using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
                             {
                                 BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
@@ -527,27 +580,38 @@ namespace Projent
                         }
                         else
                         {
+                            // if it is already exists, 
+                            // directly load it from the file
                             var ProfilePicFolder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Cache", CreationCollisionOption.OpenIfExists);
                             var ProfilePicFile = await ProfilePicFolder.GetFileAsync(user.Name + ".png");
 
+                            // Load it to the Ui Element
                             using (var fileStream = await ProfilePicFile.OpenAsync(FileAccessMode.Read))
                             {
                                 BitmapImage bitmapImage = new BitmapImage();  // Creates a new bitmap file 
                                 await bitmapImage.SetSourceAsync(fileStream);  // Sets the loded file as the new bitmap source
                                 DirectUserImage.Source = bitmapImage;  // sets the created bitmap as an image source
                             }
+
+                            // directly loading it using the local file saves minimum of 10 Seconds of loading time
                         }
 
+                        // Apply the other contect to the UI elemnt
                         directUserButton.Content = DirectUserImage;
                         directUserButton.RightTapped += DirectUserButton_RightTapped;
                         directUserButton.Tapped += DirectUserButton_Tapped;
+                        // attach the flyout 
+                        // this flyout shows the user info
                         FlyoutBase.SetAttachedFlyout(directUserButton, Resources["UserInfo"] as Flyout);
 
+                        // if the user control is not in the Direct Users panel, add it as a new Item
                         if(!stack_users.Children.Contains(directUserButton))
                             stack_users.Children.Add(directUserButton);
                     }
                 }
             }
+
+            // turn off the cool down period
             isInCooldown = false;
         }
 
@@ -555,15 +619,17 @@ namespace Projent
         {
             try
             {
-
-
+                // This will load all the messages that is related to the direct user
                 grid_chatLoading.Visibility = Visibility.Visible;
                 isInCooldown = true;
                 list_messages.Items.Clear();
+                // set the selected user name for feathing messages
                 SelectedReceiver = ((sender as Button).Tag as DirectUser).Name;
 
+                // fetch messages
                 FetchMessages();
                 isInCooldown = false;
+                // this will hide the loading screen ans show the chat messages list
                 ShowMessagePannel(true);
             }
             catch (Exception ex)
@@ -574,33 +640,57 @@ namespace Projent
 
         private void DirectUserButton_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
+            // in the right tapped even,
+            // this will show the users info flyout which has be attached before. 
             var user = (sender as Button).Tag as DirectUser;
             lbl_DirectUserEmail.Text = user.Email;
             lbl_DirectUsername.Text = user.Name;
 
+            // image is directly taken from the Direct User UI element
+            // to save loading time
             img_directUserImage.Source = ((sender as Button).Content as Image).Source;
 
             btn_removeDirectuser.Tag = user;
             btn_removeClearChat.Tag = user;
 
+            // thisline will show the flyout
             FlyoutBase.ShowAttachedFlyout(sender as Button);
         }
+
+        // This will hold all the loaded Direct user temporary for faster loading
         List<PMServer1.User> AllDirectUsers = new List<PMServer1.User>();
         private async void NewDirectUser_Click(object sender, RoutedEventArgs e)
         {
+            // Clear all the loaded direct users in the flyout
             list_directUsers.Items.Clear();
+
+            // fetch the users from the server
             var users = await Server.MainServer.mainServiceClient.FetchUsersAsync();
+
+            // Save all of them in to a list for easy access
             AllDirectUsers = users.ToList();
+
+            // this will store the lirect users temporary for to 
+            // user to view and select
             List<DirectUser> directUsers = new List<DirectUser>();
 
+            // if the retrived user list it not 0 ot null
+            // this privents the null exception
             if (users != null && users.Count > 0)
             {
                 foreach (var user in users)
                 {
+                    // show the user on the list only if it is not the same as the 
+                    // currently logged user/ 
                     if (user.Name != MainPage.LoggedUser.Name)
                     {
+                        // this will hold the direct users 
                         List<DirectUser> AddedDirectUsersList = new List<DirectUser>();
+
+                        // retrived currently loaded direct users from the stack
                         var AddedDRUControls = stack_users.Children;
+                        
+                        // add them in to the list for filtering purposes
                         foreach (var AddedDRUControl in AddedDRUControls)
                         {
                             var DRUControl = AddedDRUControl as Button;
@@ -609,6 +699,7 @@ namespace Projent
                             AddedDirectUsersList.Add(DRU);
                         }
 
+                        // show all the users expect those currently added to the stack
                         if (AddedDirectUsersList.Where(u => u.Name == user.Name).Count() == 0)
                         {
                             var directUserControl = new DirectUserControl() { directUser = new DirectUser() { Name = user.Name, Email = user.Email } };
@@ -640,7 +731,6 @@ namespace Projent
                     {
                         btn.BorderBrush = GetColorForStatus(status);
                     }
-
             }
         }
 
@@ -661,7 +751,6 @@ namespace Projent
                 default: return null;
             }
         }
-
         private void DirectUserListItem_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var user = (sender as ListViewItem).Tag as DirectUser;
@@ -804,8 +893,6 @@ namespace Projent
                 var dr = btn.Tag as DirectUser;
                 if (dr.Name == user.Name)
                     stack_users.Children.Remove(DirectUserButton);
-
-
             }
 
             DataStore.RemoveDirectUser(user, MainPage.LoggedUser.Name);
@@ -870,6 +957,13 @@ namespace Projent
             {
                 list_directUsers.Items.Add("No Users Found!");
             }
+        }
+
+        private void btn_emogi_Click(object sender, RoutedEventArgs e)
+        {
+            tb_message.Focus(FocusState.Keyboard);
+            CoreInputView.GetForCurrentView().TryShow(CoreInputViewKind.Emoji);
+
         }
     }
 }

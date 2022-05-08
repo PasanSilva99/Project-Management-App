@@ -70,7 +70,7 @@ namespace Projent
         {
             await DataStore.SetUserStatus(MainPage.LoggedUser, userStatus);
 
-            if (CheckConnectivity())
+            if (CheckConnectivity() && await Server.MainServer.CheckConnectivity())
             {
                 GlobalServiceType = ServiceType.Online;
             }
@@ -222,26 +222,44 @@ namespace Projent
                 {
                     ContentDialog dialog = new ContentDialog();
                     dialog.Title = "Verification Failed";
+                    dialog.PrimaryButtonText = "Retry";
                     dialog.CloseButtonText = "Login Again";
                     dialog.DefaultButton = ContentDialogButton.Close;
                     dialog.Content = "Failed to verify User";
 
                     var result = await dialog.ShowAsync();
 
-                    LogoutUser();
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        ValidateLoggedUser();
+                    }
+                    else
+                    {
+                        LogoutUser();
+                    }
+
+                    
 
                 }
                 else if (!await this.ValidateUser(MainPage.LoggedUser.Email, MainPage.LoggedUser.Password))
                 {
                     ContentDialog dialog = new ContentDialog();
                     dialog.Title = "Verification Failed";
+                    dialog.PrimaryButtonText = "Retry";
                     dialog.CloseButtonText = "Login Again";
                     dialog.DefaultButton = ContentDialogButton.Close;
                     dialog.Content = "Failed to verify User";
 
                     var result = await dialog.ShowAsync();
 
-                    LogoutUser();
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        ValidateLoggedUser();
+                    }
+                    else
+                    {
+                        LogoutUser();
+                    }
                 }
                 else
                 {

@@ -382,10 +382,10 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Saving Project");
+                    Log("Saving Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText = 
-                        "INSET INTO project " +
+                        "INSERT INTO project " +
                         "VALUES( " +
                             "@projectId, " +
                             "@createdOn, " +
@@ -490,7 +490,7 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Updating Project");
+                    Log("Updating Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText =
                         "UPDATE project " +
@@ -599,7 +599,7 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Deleting Project");
+                    Log("Deleting Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText =
                         "DELETE FROM project " +

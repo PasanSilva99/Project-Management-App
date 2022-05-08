@@ -411,7 +411,7 @@
 
             <StackPanel Grid.Row="3"
                         Spacing="10">
-                <TextBlock Text="Assignees" />
+                <TextBlock Text="Manager" />
                 <StackPanel x:Name="assignees"
                             Orientation="Horizontal">
                     <Button Style="{StaticResource UserButton}" Margin="10 0 0 0" Name="btn_ProjectManager" Click="btn_ProjectManager_Click">
@@ -656,18 +656,21 @@
                           Grid.Column="0"
                           Header="Category"
                           Width="200"
-                          IsEditable="True" />
+                          IsEditable="True">
+                    <ComboBoxItem Content="General"
+                                  IsSelected="True" Tag="General"/>
+                </ComboBox>
                 <ComboBox x:Name="cb_Status"
                           Grid.Column="1"
                           Header="Status"
                           Width="200"
                           SelectedIndex="0">
                     <ComboBoxItem Content="🟢 Active"
-                                  Tag="Active" />
+                                  Tag="🟢 Active" IsSelected="True"/>
                     <ComboBoxItem Content="🔴 Inactive"
-                                  Tag="Inactive" />
+                                  Tag="🔴 Inactive" />
                     <ComboBoxItem Content="🔵 Finished"
-                                  Tag="Finished" />
+                                  Tag="🔵 Finished" />
                 </ComboBox>
 
             </Grid>

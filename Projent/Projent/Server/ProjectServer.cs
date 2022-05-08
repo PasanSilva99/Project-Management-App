@@ -26,6 +26,20 @@ namespace Projent.Server
             }
         }
 
+        public static async Task<bool> CheckConnectivity()
+        {
+            try
+            {
+                bool con = await projectServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+                return con;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
         internal static async Task SyncProjectsAsync()
         {
             try

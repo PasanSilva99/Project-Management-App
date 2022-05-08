@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -446,20 +447,111 @@ namespace Projent.ProjectViews
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btn_createProject_Click(object sender, RoutedEventArgs e)
+        private async void btn_createProject_Click(object sender, RoutedEventArgs e)
         {
+            btn_createProject.IsEnabled = false;
+            btn_createProject.Content = "Creating ⏳";
+
             var project = new PMServer2.Project();
             // first validate the info
-            var title = tb_projectTitle.Text;
+            var title = tb_projectTitle.Text;  // Mandatory
             var description = tb_projectDescription.Text;
-            var assignees = "";
-            var manager = SelectedMnaager.Name;
-            var startDate = date_Start.Date;
-            var endDate = date_End.Date;
-            var category = cb_Category.Text;
-            var status = cb_Status.Text;
+            var assignees = new List<string>();
+            var manager = SelectedMnaager.Name;  // Mandatory - Autosets Owner
+            var startDate = date_Start.Date.Value.DateTime;  // Mandatory - Autosets Todays Date
+            var endDate = date_End.Date.Value.DateTime;  // Mandatory - Autosets a month from Todays Date
+            var category = cb_Category.SelectedItem as ComboBoxItem;  // Mandatory - Auto Sets Genaral Category
+            var status = cb_Status.SelectedItem as ComboBoxItem;  // Mandatory - Auto Sets Active
 
-            
+            if(Assignees.Count > 0)
+            {
+                foreach (var item in Assignees)
+                {
+                    assignees.Add(item.Name);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                project.Title = title;
+                project.Description = description;
+                project.Assignees = new System.Collections.ObjectModel.ObservableCollection<string>(assignees.ToArray());
+                project.Status = status.Tag.ToString();
+                project.StartDate = startDate;
+                project.EndDate = endDate;
+                project.Category = category.Tag.ToString();
+                project.ProjectManager = manager;
+                // if the Logged user is null, seems like the function is delayed. 
+                // if it occured, set the owner as the manager
+                project.CreatedBy = MainPage.LoggedUser != null ? MainPage.LoggedUser.Name : manager;
+
+                try
+                {
+                    // check wether the server is connected
+                    if(await Server.ProjectServer.CheckConnectivity())
+                    {
+                        // send the new project to the server
+                        var isSuccess =  await Server.ProjectServer.projectServiceClient.CreateProjectAsync(project);
+                        if (isSuccess)
+                        {
+                            basePage.OpenRightPanel(typeof(CreateProject));
+                        }
+                        else
+                        {
+                            ContentDialog dialog = new ContentDialog();
+                            dialog.Title = "Something Went Wrong";
+                            dialog.PrimaryButtonText = "Retry";
+                            dialog.CloseButtonText = "Cancel";
+                            dialog.DefaultButton = ContentDialogButton.Close;
+                            dialog.Content = "Failed to Create the project";
+
+                            var result = await dialog.ShowAsync();
+
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                btn_createProject_Click(sender, e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ContentDialog dialog = new ContentDialog();
+                        dialog.Title = "Not Connected";
+                        dialog.PrimaryButtonText = "Retry";
+                        dialog.CloseButtonText = "Cancel";
+                        dialog.DefaultButton = ContentDialogButton.Close;
+                        dialog.Content = "Failed to connect to the server. You have to be connected with the server to create/ delete or edit projects";
+
+                        var result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            btn_createProject_Click(sender, e);
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    ContentDialog dialog = new ContentDialog();
+                    dialog.Title = "Something Went Wrong";
+                    dialog.PrimaryButtonText = "Retry";
+                    dialog.CloseButtonText = "Cancel";
+                    dialog.DefaultButton = ContentDialogButton.Close;
+                    dialog.Content = "Failed to Create the project";
+
+                    var result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        btn_createProject_Click(sender, e);
+                    }
+                }
+            }
+
+            btn_createProject.IsEnabled = true;
+            btn_createProject.Content = "Create";
 
         }
     }

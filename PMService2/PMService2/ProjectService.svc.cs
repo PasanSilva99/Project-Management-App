@@ -362,6 +362,35 @@ namespace PMService2
         }
 
         /// <summary>
+        /// To generate a random string
+        /// </summary>
+        private static Random random = new Random();
+        /// <summary>
+        /// Generates an new ransom string for the projects
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string RandomString()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, 5)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public string GenerateProjectID()
+        {
+            var ProjectId = RandomString(); // Generate a new Random ID
+
+            var existingProjects = FetchAllProjects("system");  // Get all the existing projects
+
+            // Check we the currently generated ID is duplicate
+            var isDuplicate = existingProjects.Where(p => p.ProjectId == ProjectId).Any();
+
+            // if it is duplicate,  Generate a New one or if it is not send it
+            return isDuplicate ? GenerateProjectID() : ProjectId;
+        }
+
+        /// <summary>
         /// Creates anew project in the database
         /// </summary>
         /// <param name="project">Project object with all details</param>
@@ -382,10 +411,10 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Saving Project");
+                    Log("Saving Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText = 
-                        "INSET INTO project " +
+                        "INSERT INTO project " +
                         "VALUES( " +
                             "@projectId, " +
                             "@createdOn, " +
@@ -422,9 +451,12 @@ namespace PMService2
                         else
                             assigneesString.Append("");
                     }
-                   
+
+                    
+
+
                     // set the parameters
-                    CMDSaveProject.Parameters.AddWithValue("@projectId", project.ProjectId);
+                    CMDSaveProject.Parameters.AddWithValue("@projectId", GenerateProjectID());
                     CMDSaveProject.Parameters.AddWithValue("@createdOn", project.CreatedOn.ToString("G"));
                     CMDSaveProject.Parameters.AddWithValue("@createdBy", project.CreatedBy);
                     CMDSaveProject.Parameters.AddWithValue("@title", project.Title);
@@ -490,7 +522,7 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Updating Project");
+                    Log("Updating Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText =
                         "UPDATE project " +
@@ -599,7 +631,7 @@ namespace PMService2
                     con.Open();
 
                     // Create the SQLite Command
-                    Console.WriteLine("Deleting Project");
+                    Log("Deleting Project");
                     SQLiteCommand CMDSaveProject = new SQLiteCommand();
                     CMDSaveProject.CommandText =
                         "DELETE FROM project " +

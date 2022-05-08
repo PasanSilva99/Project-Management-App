@@ -24,5 +24,19 @@ namespace Projent.Server
                 Debug.WriteLine(ex.ToString());
             }
         }
+
+        public static async Task<bool> CheckConnectivity()
+        {
+            try
+            {
+                bool con = await mainServiceClient.RequestStateAsync(DataStore.GetDefaultMacAddress());
+                return con;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+        }
     }
 }

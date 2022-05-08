@@ -831,13 +831,14 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
+                    <!--\/ Add Files Not Implemented Yet -->
                     <Button CornerRadius="25 25 25 25"
                             Width="25"
                             Height="25"
                             Padding="0,0,0,0"
                             Background="#FF63B5F6"
                             BorderThickness="0"
-                            Grid.Column="0">
+                            Grid.Column="0" Visibility="Collapsed">
                         <SymbolIcon Symbol="Add"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
@@ -850,6 +851,7 @@
                             </SymbolIcon.RenderTransform>
                         </SymbolIcon>
                     </Button>
+                    <!--/\ Add Files Not Implemented Yet -->
                     <TextBox Grid.Column="1"
                              MaxHeight="400"
                              BorderBrush="Transparent"
@@ -869,7 +871,7 @@
                             BorderThickness="0"
                             Grid.Column="2"
                             x:Name="btn_emogi"
-                            Visibility="Collapsed">
+                            Visibility="Collapsed" Click="btn_emogi_Click">
                         <Button.Content>
                             <Image Source="/Assets/Icons/emogi_icon.png" />
                         </Button.Content>

@@ -41,7 +41,7 @@ namespace Projent.Model
             using (HashAlgorithm algorithm = SHA256.Create())
                 return algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputString));
         }
- 
+
 
         private static async Task<bool> CheckProjectServerConnectivityAsync()
         {
@@ -230,11 +230,21 @@ namespace Projent.Model
         {
             if (CheckConnectivity())
             {
-                // Replace with this the server function
-                return await Server.MainServer.mainServiceClient.ValidateUserAsync(email, password);
+                if (await Server.MainServer.CheckConnectivity())
+                {
+                    GlobalProjectServiceType = ServiceType.Offline;
+                    return await Server.MainServer.mainServiceClient.ValidateUserAsync(email, password);
+                }
+                else
+                {
+                    GlobalProjectServiceType = ServiceType.Offline;
+                    return ValidateUserLocal(email, password);
+
+                }
             }
             else
             {
+                GlobalProjectServiceType = ServiceType.Offline;
                 Debug.WriteLine("Connectivity Error", "ERROR");
                 return false;
             }

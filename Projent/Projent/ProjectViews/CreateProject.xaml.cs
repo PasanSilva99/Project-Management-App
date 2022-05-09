@@ -470,20 +470,32 @@ namespace Projent.ProjectViews
                     assignees.Add(item.Name);
                 }
             }
-            if(Assignees.Count == 1)
-            {
-                assignees.Add(Assignees.ToArray()[0] + ",");
-            }
 
             if (!string.IsNullOrWhiteSpace(title))
             {
+
+                var cat = "";
+
+                if (category != null)
+                {
+                    cat = category.Tag.ToString();
+                }
+                else if (!string.IsNullOrWhiteSpace(cb_Category.Text))
+                {
+                    cat = cb_Category.Text;
+                }
+                else
+                {
+                    cat = "General";
+                }
+
                 project.Title = title;
                 project.Description = description;
                 project.Assignees = new System.Collections.ObjectModel.ObservableCollection<string>(assignees.ToArray());
                 project.Status = status.Tag.ToString();
                 project.StartDate = startDate;
                 project.EndDate = endDate;
-                project.Category = category.Tag.ToString();
+                project.Category = cat;
                 project.ProjectManager = manager;
                 // if the Logged user is null, seems like the function is delayed. 
                 // if it occured, set the owner as the manager

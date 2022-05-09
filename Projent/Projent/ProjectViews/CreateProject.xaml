@@ -407,7 +407,7 @@
                      Header="Description"
                      AcceptsReturn="True"
                      Height="100"
-                     PlaceholderText="Project Description" />
+                     PlaceholderText="Project Description" TextWrapping="Wrap"/>
 
             <StackPanel Grid.Row="3"
                         Spacing="10">

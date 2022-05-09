@@ -38,7 +38,53 @@ namespace Projent.ProjectViews
 
             basePage = e.Parameter as NavigationBase;
 
+            lbl_projectName.Text = ProjectsPage.Selectedproject.Title;
+            lbl_projectDescription.Text = ProjectsPage.Selectedproject.Description;
+            lbl_category.Text = ProjectsPage.Selectedproject.Category;
+            lbl_createdOn.Text = ProjectsPage.Selectedproject.StartDate.ToString("d");
+            lbl_endDate.Text = ProjectsPage.Selectedproject.EndDate.ToString("d");
+            lbl_startDate.Text = ProjectsPage.Selectedproject.StartDate.ToString("d");
+            lbl_status.Text = ProjectsPage.Selectedproject.Status;
+
+            SetProjetcOwner(ProjectsPage.Selectedproject.CreatedBy);
+            SetAssignees(ProjectsPage.Selectedproject.Assignees);
+
         }
 
+        private void SetProjetcOwner(string username)
+        {
+            user_owner.UserName = username;
+            user_owner.PermLevel = 0;
+        }
+
+        private void SetAssignees(System.Collections.ObjectModel.ObservableCollection<string> assignees)
+        {
+            stack_assignees.Children.Clear();
+            var assigneelist = new List<ProjectMemberControl>();
+            foreach(string assignee in assignees)
+            {
+                var newAssigneeControl = new ProjectMemberControl();
+                newAssigneeControl.UserName = assignee;
+                if(ProjectsPage.Selectedproject.ProjectManager == assignee)
+                {
+                    newAssigneeControl.PermLevel = 1;
+                }
+                else
+                {
+                    newAssigneeControl.PermLevel = 2;
+                }
+                assigneelist.Add(newAssigneeControl);
+            }
+
+            foreach (var assignee in assigneelist.OrderBy(x => x.PermLevel))
+            {
+                stack_assignees.Children.Add(assignee);
+            }
+        }
+
+        private void AllProjects_Click(object sender, RoutedEventArgs e)
+        {
+            basePage.NavigateToProjects();
+        }
     }
 }

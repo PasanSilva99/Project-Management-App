@@ -24,7 +24,7 @@
                     Background="#ffe3e3e4"
                     Padding="20 7 20 7"
                     BorderThickness="0"
-                    Margin="-20 0 0 0">
+                    Margin="-20 0 0 0" Click="AllProjects_Click">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="10">
@@ -169,7 +169,7 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0"
-                                       Text="Project Manager"
+                                       Text="Project Owner"
                                        Foreground="#bbbbbb"
                                        Margin="10 0 0 0" />
 
@@ -322,7 +322,7 @@
                                    Foreground="#bbbbbb"
                                    Margin="10 0 0 0" />
                         <ScrollViewer Grid.Row="1">
-                            <StackPanel x:Name="stack_assignees" />
+                            <StackPanel x:Name="stack_assignees" VerticalAlignment="Stretch" Spacing="10" Margin="0 10 0 0"/>
                         </ScrollViewer>
                     </Grid>
                 </controls:DropShadowPanel>

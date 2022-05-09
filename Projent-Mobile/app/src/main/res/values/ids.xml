@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="imageView" type="id" />
+    <item name="guideline2" type="id" />
+    <item name="imageView4" type="id" />
+    <item name="imageView5" type="id" />
+    <item name="btnBackL" type="id" />
+    <item name="textView2" type="id" />
+    <item name="inputEmail" type="id" />
+    <item name="guideline3" type="id" />
+    <item name="inputPassword" type="id" />
+    <item name="chkRememberMe" type="id" />
+    <item name="btnLogIn" type="id" />
+    <item name="errorEmailL" type="id" />
+    <item name="errorPasswordL" type="id" />
+    <item name="imageView7" type="id" />
+    <item name="imageView6" type="id" />
+    <item name="imageView9" type="id" />
+    <item name="guideline4" type="id" />
+    <item name="textView3" type="id" />
+    <item name="textView4" type="id" />
+    <item name="inputEmailR" type="id" />
+    <item name="guideline5" type="id" />
+    <item name="inputUsernameR" type="id" />
+    <item name="errorUsernameR" type="id" />
+    <item name="inputPasswordR" type="id" />
+    <item name="errorPasswordR" type="id" />
+    <item name="inputRePasswordR" type="id" />
+    <item name="errorRePasswordR" type="id" />
+    <item name="errorEmailR" type="id" />
+    <item name="btnBackR" type="id" />
+    <item name="imgUserR" type="id" />
+    <item name="btnAddPhotoR" type="id" />
+    <item name="btnRegisterR" type="id" />
+</resources>

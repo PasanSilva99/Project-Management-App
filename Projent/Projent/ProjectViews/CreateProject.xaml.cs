@@ -398,11 +398,7 @@ namespace Projent.ProjectViews
         {
             var user = (sender as Button).Tag as DirectUser;
 
-            try { img_ManagerImage.Source = ((sender as Button).Content as Image).Source; }
-            catch (Exception d) {
-                Console.WriteLine("project create exeception");
-            }
-
+            img_ManagerImage.Source = ((sender as Button).Content as Image).Source;
             lbl_ManagerUsername.Text = user.Name;
             lbl_ManagerEmail.Text = user.Email;
         }

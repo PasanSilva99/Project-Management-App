@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="135354bf-c78a-44c8-af8e-49140eee01c8" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="4c88f142-17eb-41fe-ac4e-acbc5223a176" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -21,14 +21,14 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://20.92.90.138:8086/mex" Protocol="mex" SourceId="1" />
+    <MetadataSource Address="http://20.92.239.229:8086/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="07a725f7-adfd-4990-825e-1fe86e459f95" SourceId="1" SourceUrl="http://20.92.90.138:8086/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="dc3caec7-d550-4919-802f-c77cec322a13" SourceId="1" SourceUrl="http://20.92.90.138:8086/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="aed6953b-cea8-4273-9c8d-1693890ea9f7" SourceId="1" SourceUrl="http://20.92.90.138:8086/mex" />
-    <MetadataFile FileName="PMService1.Model.xsd" MetadataType="Schema" ID="45046f15-9185-4277-ab30-e193cbeddf4e" SourceId="1" SourceUrl="http://20.92.90.138:8086/mex" />
-    <MetadataFile FileName="PMService1.xsd" MetadataType="Schema" ID="18fb7b1b-cb83-48c3-8398-8cb4a8b766e3" SourceId="1" SourceUrl="http://20.92.90.138:8086/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="c5b5e743-774e-453d-bffd-67f64f3c9ea8" SourceId="1" SourceUrl="http://20.92.239.229:8086/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="38b0df74-5d1e-4237-90a9-60ced0d47032" SourceId="1" SourceUrl="http://20.92.239.229:8086/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="cf20f063-57be-450f-850c-05c63dfeb739" SourceId="1" SourceUrl="http://20.92.239.229:8086/mex" />
+    <MetadataFile FileName="PMService1.Model.xsd" MetadataType="Schema" ID="220f66a4-7612-4b29-8ab8-0f3acebcb7fb" SourceId="1" SourceUrl="http://20.92.239.229:8086/mex" />
+    <MetadataFile FileName="PMService1.xsd" MetadataType="Schema" ID="c8d540e8-5cce-4bda-845c-cdc5379754f1" SourceId="1" SourceUrl="http://20.92.239.229:8086/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

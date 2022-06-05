@@ -194,39 +194,6 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-
-
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
-                            <Border CornerRadius="50 50 50 50">
-                                <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
-                            </Border>
-                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Marin Lafitte"/>
-                        </StackPanel>
-
-                        <TextBlock Text="marinlafitte@gmail.com
-" Grid.Column="1"  VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
-                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center"/>
-
-                        <TextBlock Text="Offline" Grid.Column="5"  VerticalAlignment="Center"/>
-
-
-                    </Grid>
-
-                </ListViewItem.Content>
-            </ListViewItem>
-
-
-            <ListViewItem HorizontalContentAlignment="Stretch">
-                <ListViewItem.Content>
-
-                    <Grid  Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
 
 
@@ -237,6 +204,7 @@
                             <Border CornerRadius="50 50 50 50">
                                 <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
                             </Border>
+
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Marin Lafitte"/>
                         </StackPanel>
 
@@ -342,7 +310,7 @@
                             <TextBlock Grid.Column="0" VerticalAlignment="Center" SelectionChanged="TextBlock_SelectionChanged_1" Text="Christie Cate"/>
                         </StackPanel>
 
-                        <TextBlock Grid.Column="1"  VerticalAlignment="Center" SelectionChanged="TextBlock_SelectionChanged_3" Text="christiecate@gmail.com"/>
+                        <TextBlock Grid.Column="1"  VerticalAlignment="Center" Text="christiecate@gmail.com"/>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" Text="6/5/2022" />
                         <TextBlock Text="Manager" Grid.Column="3"  VerticalAlignment="Center"/>
 

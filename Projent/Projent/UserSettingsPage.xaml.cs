@@ -254,7 +254,6 @@ namespace Projent
 
                         await RegistrationErrorDialog.ShowAsync();
 
-
                     }
                 }
                 else

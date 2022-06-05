@@ -31,5 +31,10 @@ namespace Projent
         {
 
         }
+
+        private void TextBlock_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

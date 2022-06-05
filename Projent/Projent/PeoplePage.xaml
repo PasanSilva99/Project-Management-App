@@ -83,7 +83,7 @@
             </Setter>
         </Style>
     </Page.Resources>
- 
+
     <Grid Padding="10 10 10 10" Margin="-1,0,1,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -135,20 +135,19 @@
 
         <Grid Grid.Row="2" Margin="10 0 10 10" Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="427*"/>
+                <ColumnDefinition Width="427*"/>
+                <ColumnDefinition Width="285*"/>
+                <ColumnDefinition Width="284*"/>
+                <ColumnDefinition Width="142*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Name" Grid.Column="0" Foreground="#FFA0A0A0"/>
-            <TextBlock Text="Email" Grid.Column="1" Foreground="#FFA0A0A0"/>
-            <TextBlock Text="Assigned Date" Grid.Column="2" Foreground="#FFA0A0A0" />
-            <TextBlock Text="Role" Grid.Column="3" Foreground="#FFA0A0A0"/>
-            <TextBlock Text="Activity" Grid.Column="4" Foreground="#FFA0A0A0"/>
-            <TextBlock Text="Status" Grid.Column="5" Foreground="#FFA0A0A0"/>
+            <TextBlock Text="Name" Grid.Column="0" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,406,20"/>
+            <TextBlock Text="Email" Grid.Column="1" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,264,20"/>
+            <TextBlock Text="Assigned Date" Grid.Column="2" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,264,20" />
+            <TextBlock Text="Role" Grid.Column="3" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,39,20"/>
+      
+            <TextBlock Text="Status" Grid.Column="6" Foreground="#FFA0A0A0" Margin="20,10,-21,20"/>
         </Grid>
 
 
@@ -162,7 +161,6 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
@@ -170,18 +168,92 @@
                             <Border CornerRadius="50 50 50 50">
                                 <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
                             </Border>
-                            <TextBlock Text="Name" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBlock Text="LIly Ki
+" Grid.Column="0" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <TextBlock Text="Email" Grid.Column="1"  VerticalAlignment="Center"/>
-                        <TextBlock Text="Assigned Date" Grid.Column="2"  VerticalAlignment="Center" />
-                        <TextBlock Text="Role" Grid.Column="3"  VerticalAlignment="Center"/>
-                        <TextBlock Text="Activity" Grid.Column="4" VerticalAlignment="Center"/>
-                        <TextBlock Text="Status" Grid.Column="5"  VerticalAlignment="Center"/>
+                        <TextBlock Text="lilyki@gmail.com
+" Grid.Column="1"  VerticalAlignment="Center"/>
+                        <TextBlock Text="6/6/2022" Grid.Column="2"  VerticalAlignment="Center" SelectionChanged="TextBlock_SelectionChanged" />
+                        <TextBlock Grid.Column="3"  VerticalAlignment="Center"><Run Text="Manager"/><LineBreak/><Run/></TextBlock>
+
+                        <TextBlock Grid.Column="5"  VerticalAlignment="Center"><Run Text="Online"/><LineBreak/><Run/></TextBlock>
+
+
                     </Grid>
 
                 </ListViewItem.Content>
             </ListViewItem>
+
+
+            <ListViewItem HorizontalContentAlignment="Stretch">
+                <ListViewItem.Content>
+
+                    <Grid  Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                            <Border CornerRadius="50 50 50 50">
+                                <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
+                            </Border>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Marin Lafitte"/>
+                        </StackPanel>
+
+                        <TextBlock Text="marinlafitte@gmail.com
+" Grid.Column="1"  VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
+                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center"/>
+
+                        <TextBlock Text="Offline" Grid.Column="5"  VerticalAlignment="Center"/>
+
+
+                    </Grid>
+
+                </ListViewItem.Content>
+            </ListViewItem>
+
+
+            <ListViewItem HorizontalContentAlignment="Stretch">
+                <ListViewItem.Content>
+
+                    <Grid  Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Spacing="10">
+                            <Border CornerRadius="50 50 50 50">
+                                <Image Width="35" Height ="35" Source="/Assets/Images/image.png" />
+                            </Border>
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Sophie Landresse"/>
+                        </StackPanel>
+
+                        <TextBlock Text="sophielandewss@gmail.com" Grid.Column="1"  VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
+                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center"/>
+
+                        <TextBlock Text="Online" Grid.Column="5"  VerticalAlignment="Center"/>
+
+
+                    </Grid>
+
+                </ListViewItem.Content>
+            </ListViewItem>
+            
+            
+
         </ListView>
 
 

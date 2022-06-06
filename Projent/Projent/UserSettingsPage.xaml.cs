@@ -254,7 +254,6 @@ namespace Projent
 
                         await RegistrationErrorDialog.ShowAsync();
 
-
                     }
                 }
                 else
@@ -265,7 +264,6 @@ namespace Projent
                     NotConnectedDialog.CloseButtonText = "Cancel";
                     NotConnectedDialog.DefaultButton = ContentDialogButton.Primary;
                     NotConnectedDialog.Content = "Press Retry after you connect to the network. You must be connected to the server to make changes";
-
 
                     var NotConnectedDialogResult = await NotConnectedDialog.ShowAsync();
 

@@ -122,7 +122,7 @@
         app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.594" />
+        app:layout_constraintVertical_bias="0.75" />
 
     <EditText
         android:id="@+id/inputPassword"
@@ -141,7 +141,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/inputEmail"
         app:layout_constraintTop_toTopOf="@+id/inputEmail"
-        app:layout_constraintVertical_bias="0.345"
+        app:layout_constraintVertical_bias="0.26"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <CheckBox
@@ -188,7 +188,7 @@
         android:text="Error"
         android:textColor="#F86055"
         android:textSize="10sp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/inputPassword"
         app:layout_constraintEnd_toEndOf="@+id/inputEmail"
         app:layout_constraintHorizontal_bias="0.0"
@@ -204,7 +204,7 @@
         android:text="Error"
         android:textColor="#F86055"
         android:textSize="10sp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/inputPassword"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/inputPassword"

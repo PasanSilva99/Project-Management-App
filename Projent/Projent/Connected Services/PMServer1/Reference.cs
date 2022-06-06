@@ -156,79 +156,61 @@ namespace Projent.PMServer1 {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
-        
         public MainServiceClient(EndpointConfiguration endpointConfiguration, string remoteAddress) : 
                 base(MainServiceClient.GetBindingForEndpoint(endpointConfiguration), new System.ServiceModel.EndpointAddress(remoteAddress)) {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
-        
         public MainServiceClient(EndpointConfiguration endpointConfiguration, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(MainServiceClient.GetBindingForEndpoint(endpointConfiguration), remoteAddress) {
             this.Endpoint.Name = endpointConfiguration.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
-        
         public MainServiceClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
-        
         public System.Threading.Tasks.Task IntializeDatabaseServiceAsync() {
             return base.Channel.IntializeDatabaseServiceAsync();
         }
-        
         public System.Threading.Tasks.Task GetSqliteVersionAsync() {
             return base.Channel.GetSqliteVersionAsync();
         }
-        
         public System.Threading.Tasks.Task<bool> RequestStateAsync(string DeviceID) {
             return base.Channel.RequestStateAsync(DeviceID);
         }
-        
         public System.Threading.Tasks.Task<bool> SetUserStatusAsync(Projent.PMServer1.User user, Projent.PMServer1.Status status) {
             return base.Channel.SetUserStatusAsync(user, status);
         }
-        
         public System.Threading.Tasks.Task<System.Nullable<Projent.PMServer1.Status>> GetUserStatusAsync(string email) {
             return base.Channel.GetUserStatusAsync(email);
         }
-        
         public System.Threading.Tasks.Task<bool> RegisterUserAsync(string email, string name, byte[] imageBuffer, string password) {
             return base.Channel.RegisterUserAsync(email, name, imageBuffer, password);
         }
-        
         public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer1.User>> FetchUsersAsync() {
             return base.Channel.FetchUsersAsync();
         }
-        
         public System.Threading.Tasks.Task<bool> ValidateUserAsync(string email, string password) {
             return base.Channel.ValidateUserAsync(email, password);
         }
-        
         public System.Threading.Tasks.Task<bool> IsUserRegisteredAsync(string email) {
             return base.Channel.IsUserRegisteredAsync(email);
         }
-        
         public System.Threading.Tasks.Task<Projent.PMServer1.User> GetUserAsync(string email, string password) {
             return base.Channel.GetUserAsync(email, password);
         }
-        
         public System.Threading.Tasks.Task<bool> UpdateUserAsync(Projent.PMServer1.User loggedUser, Projent.PMServer1.User tempUser, byte[] image) {
             return base.Channel.UpdateUserAsync(loggedUser, tempUser, image);
         }
-        
         public System.Threading.Tasks.Task<byte[]> RequestUserImageAsync(string username) {
             return base.Channel.RequestUserImageAsync(username);
         }
-        
         public virtual System.Threading.Tasks.Task OpenAsync() {
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginOpen(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndOpen));
         }
-        
         public virtual System.Threading.Tasks.Task CloseAsync() {
             return System.Threading.Tasks.Task.Factory.FromAsync(((System.ServiceModel.ICommunicationObject)(this)).BeginClose(null, null), new System.Action<System.IAsyncResult>(((System.ServiceModel.ICommunicationObject)(this)).EndClose));
         }
-        
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IMainService)) {
                 System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
@@ -247,7 +229,6 @@ namespace Projent.PMServer1 {
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
-        
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration) {
             if ((endpointConfiguration == EndpointConfiguration.BasicHttpBinding_IMainService)) {
                 return new System.ServiceModel.EndpointAddress("http://20.92.239.229:8086/MainServiceReference");
@@ -257,7 +238,6 @@ namespace Projent.PMServer1 {
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }
-        
         public enum EndpointConfiguration {
             
             BasicHttpBinding_IMainService,

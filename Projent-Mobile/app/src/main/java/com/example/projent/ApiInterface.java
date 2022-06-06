@@ -19,5 +19,8 @@ public interface ApiInterface {
     @GET("assignees")
     Call<List<AssigneesPojo>> getAssignees();
 
+    @GET("tasks")
+    Call<List<TasksPojo>> getTasks();
+
 
 }

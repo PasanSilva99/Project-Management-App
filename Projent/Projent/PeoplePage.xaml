@@ -97,26 +97,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-
-            <Button Style="{StaticResource NaviButton}" Grid.Column="0">
-                <Button.Content>
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <Image Width="25" Height="25" Source="/Assets/Icons/back.png"/>
-                        <TextBlock Text="All Projects" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" Spacing="15">
-                <TextBlock Text="DS Project Management Application" VerticalAlignment="Center" FontSize="18" FontWeight="SemiBold"/>
-                <Button Style="{StaticResource NaviButton}" Click="Button_Click" >
-                    <Button.Content>
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Image Width="20" Height="20" Source="/Assets/Icons/github.png"/>
-                            <TextBlock Text="GitHub" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button.Content>
-                </Button>
-            </StackPanel>
+            <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Center" Spacing="15"/>
 
             <Button Style="{StaticResource NaviButton}"  Grid.Column="2" Padding="15,2,15,3">
                 <Button.Content>
@@ -129,23 +110,23 @@
 
         </Grid>
 
-        <TextBlock Grid.Row="1" Text="Manage People"
+        <TextBlock Grid.Row="1" Text="Peoples"
                    FontSize="18"
-                   FontWeight="SemiBold" Margin="30 10 0 20"/>
+                   FontWeight="SemiBold" Margin="30 10 0 20" SelectionChanged="TextBlock_SelectionChanged_3"/>
 
         <Grid Grid.Row="2" Margin="10 0 10 10" Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="427*"/>
                 <ColumnDefinition Width="427*"/>
                 <ColumnDefinition Width="285*"/>
-                <ColumnDefinition Width="284*"/>
+ 
                 <ColumnDefinition Width="142*"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="Name" Grid.Column="0" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,406,20"/>
             <TextBlock Text="Email" Grid.Column="1" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,264,20"/>
             <TextBlock Text="Assigned Date" Grid.Column="2" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,264,20" />
-            <TextBlock Text="Role" Grid.Column="3" Foreground="#FFA0A0A0" Grid.ColumnSpan="2" Margin="20,10,39,20"/>
+           
       
             <TextBlock Text="Status" Grid.Column="6" Foreground="#FFA0A0A0" Margin="20,10,-21,20"/>
         </Grid>
@@ -160,7 +141,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                            
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
@@ -175,7 +156,7 @@
                         <TextBlock Text="lilyki@gmail.com
 " Grid.Column="1"  VerticalAlignment="Center"/>
                         <TextBlock Text="6/6/2022" Grid.Column="2"  VerticalAlignment="Center" SelectionChanged="TextBlock_SelectionChanged" />
-                        <TextBlock Grid.Column="3"  VerticalAlignment="Center"><Run Text="Manager"/><LineBreak/><Run/></TextBlock>
+                      
 
                         <TextBlock Grid.Column="5"  VerticalAlignment="Center"><Run Text="Online"/><LineBreak/><Run/></TextBlock>
 
@@ -196,7 +177,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                           
 
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -212,7 +193,7 @@
                         <TextBlock Text="marinlafitte@gmail.com
 " Grid.Column="1"  VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
-                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center"/>
+                        
 
                         <TextBlock Text="Offline" Grid.Column="5"  VerticalAlignment="Center"/>
 
@@ -231,7 +212,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                            
                             
 
                             <ColumnDefinition Width="*"/>
@@ -246,7 +227,7 @@
 
                         <TextBlock Text="sophielandewss@gmail.com" Grid.Column="1"  VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
-                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center"/>
+                        
 
                         <TextBlock Text="Online" Grid.Column="5"  VerticalAlignment="Center"/>
 
@@ -264,7 +245,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                           
 
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -278,7 +259,7 @@
 
                         <TextBlock Grid.Column="1"  VerticalAlignment="Center" Text="christiecate@gmail.com"/>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" Text="6/5/2022" />
-                        <TextBlock Text="Manager" Grid.Column="3"  VerticalAlignment="Center"/>
+                        
 
                         <TextBlock Text="Ofline" Grid.Column="5"  VerticalAlignment="Center"/>
 
@@ -298,7 +279,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                           
 
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -312,8 +293,7 @@
 
                         <TextBlock Grid.Column="1"  VerticalAlignment="Center"><Run/><LineBreak/><Run Text="marianaganawa@gmail.com.com"/><LineBreak/><Run/></TextBlock>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" Text="6/5/2022" />
-                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center" SelectionChanged="TextBlock_SelectionChanged_2"/>
-
+                     
                         <TextBlock Text="Online" Grid.Column="5"  VerticalAlignment="Center"/>
 
 
@@ -331,7 +311,7 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                            
 
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
@@ -345,7 +325,7 @@
 
                         <TextBlock Text="aoikoga@gmail.com" Grid.Column="1"  VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
-                        <TextBlock Text="Assignee" Grid.Column="3"  VerticalAlignment="Center"/>
+                
 
                         <TextBlock Text="Offline" Grid.Column="5"  VerticalAlignment="Center"/>
 

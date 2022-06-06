@@ -28,4 +28,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu"
         tools:layout_editor_absoluteX="1dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

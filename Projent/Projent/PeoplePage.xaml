@@ -156,9 +156,9 @@
                         <TextBlock Text="lilyki@gmail.com
 " Grid.Column="1"  VerticalAlignment="Center"/>
                         <TextBlock Text="6/6/2022" Grid.Column="2"  VerticalAlignment="Center" SelectionChanged="TextBlock_SelectionChanged" />
-                      
 
-                        <TextBlock Grid.Column="5"  VerticalAlignment="Center"><Run Text="Online"/><LineBreak/><Run/></TextBlock>
+
+                        <TextBlock Grid.Column="5"  VerticalAlignment="Center" Text="Offline"/>
 
 
                     </Grid>
@@ -227,9 +227,9 @@
 
                         <TextBlock Text="sophielandewss@gmail.com" Grid.Column="1"  VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" ><Run Text="6/6/2022"/><LineBreak/><Run/></TextBlock>
-                        
 
-                        <TextBlock Text="Online" Grid.Column="5"  VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="5"  VerticalAlignment="Center"><Run Text="Offline"/><LineBreak/><Run/></TextBlock>
 
 
                     </Grid>
@@ -261,7 +261,7 @@
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" Text="6/5/2022" />
                         
 
-                        <TextBlock Text="Ofline" Grid.Column="5"  VerticalAlignment="Center"/>
+                        <TextBlock Text="Offline" Grid.Column="5"  VerticalAlignment="Center"/>
 
 
                     </Grid>
@@ -294,7 +294,9 @@
                         <TextBlock Grid.Column="1"  VerticalAlignment="Center"><Run/><LineBreak/><Run Text="marianaganawa@gmail.com.com"/><LineBreak/><Run/></TextBlock>
                         <TextBlock Grid.Column="2"  VerticalAlignment="Center" Text="6/5/2022" />
                      
-                        <TextBlock Text="Online" Grid.Column="5"  VerticalAlignment="Center"/>
+
+                        <TextBlock Text="Offline" Grid.Column="5"  VerticalAlignment="Center"/>
+
 
 
                     </Grid>

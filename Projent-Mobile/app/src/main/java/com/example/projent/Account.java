@@ -124,5 +124,22 @@ public class Account extends AppCompatActivity {
 
             }
         });
+
+        apiInterface.getTasks().enqueue(new Callback<List<TasksPojo>>() {
+            @Override
+            public void onResponse(Call<List<TasksPojo>> call, Response<List<TasksPojo>> response) {
+                if (response.body().size()>0){
+                }
+                else {
+                    Toast.makeText(Account.this,"Tasks not Found!", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TasksPojo>> call, Throwable t) {
+                Toast.makeText(Account.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 }

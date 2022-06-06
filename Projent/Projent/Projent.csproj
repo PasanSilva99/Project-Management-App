@@ -265,10 +265,12 @@
     <Content Include="Assets\Icons\sned.png" />
     <Content Include="Assets\Icons\StickyNoteIcon.png" />
     <Content Include="Assets\Icons\user.png" />
+    <Content Include="Assets\Images\dashboard-bg.png" />
     <Content Include="Assets\Images\image.png" />
     <Content Include="Assets\Images\login-bg.jpg" />
     <Content Include="Assets\Images\logo.png" />
     <Content Include="Assets\Images\logo_white.png" />
+    <Content Include="Assets\Images\promotion.png" />
     <Content Include="Assets\Images\top_logo.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />

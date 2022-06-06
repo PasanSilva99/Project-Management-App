@@ -336,6 +336,9 @@ namespace Projent.PMServer2 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/SyncAllProjects", ReplyAction="http://tempuri.org/IProjectService/SyncAllProjectsResponse")]
         System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Project>> SyncAllProjectsAsync(string username);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IProjectService/GetProjectProgress", ReplyAction="http://tempuri.org/IProjectService/GetProjectProgressResponse")]
+        System.Threading.Tasks.Task<float> GetProjectProgressAsync(string ProjectID);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -417,6 +420,10 @@ namespace Projent.PMServer2 {
         
         public System.Threading.Tasks.Task<System.Collections.ObjectModel.ObservableCollection<Projent.PMServer2.Project>> SyncAllProjectsAsync(string username) {
             return base.Channel.SyncAllProjectsAsync(username);
+        }
+        
+        public System.Threading.Tasks.Task<float> GetProjectProgressAsync(string ProjectID) {
+            return base.Channel.GetProjectProgressAsync(ProjectID);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync() {

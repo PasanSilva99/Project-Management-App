@@ -220,6 +220,12 @@
     <Compile Include="ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReportViews\DetailedReport.xaml.cs">
+      <DependentUpon>DetailedReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ReportViews\ReportDiscussion.xaml.cs">
+      <DependentUpon>ReportDiscussion.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SendMessageControl.xaml.cs">
       <DependentUpon>SendMessageControl.xaml</DependentUpon>
     </Compile>
@@ -469,6 +475,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ReportsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportViews\DetailedReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ReportViews\ReportDiscussion.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

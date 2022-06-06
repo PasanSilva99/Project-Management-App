@@ -48,7 +48,24 @@ namespace Projent.ProjectViews
 
             SetProjetcOwner(ProjectsPage.Selectedproject.CreatedBy);
             SetAssignees(ProjectsPage.Selectedproject.Assignees);
+            SetProjectProgress(ProjectsPage.Selectedproject.ProjectId);
+        }
 
+        private async void SetProjectProgress(string prID)
+        {
+            var projectProgress = await Server.ProjectServer.projectServiceClient.GetProjectProgressAsync(prID);
+            lbl_prg_overall.Text = projectProgress.ToString() + "%";
+            ring_overallProgress.Value = projectProgress;
+
+            // Not impl yet
+            lbl_issues_fixed.Text = "0%";
+            lbl_issues_todo.Text = "0%";
+            lbl_prg_issues.Text = "0%";
+            lbl_prg_tasks.Text = "0%";
+            lbl_tasks_todo.Text = "0";
+            lbl_task_compl.Text = "0";
+            ring_issues.Value = 100.00;
+            ring_tasks.Value = 100.00;
         }
 
         private void SetProjetcOwner(string username)

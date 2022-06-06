@@ -137,7 +137,7 @@
                                                 Value="46"
                                                 IsIndeterminate="False"
                                                 Background="#FFC6E3F9"
-                                                Foreground="#FF5A73F1" />
+                                                Foreground="#FF5A73F1" x:Name="ring_overallProgress"/>
                             <TextBlock Text="Completed"
                                        HorizontalAlignment="Center"
                                        FontSize="22"
@@ -149,7 +149,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    FontSize="42"
-                                   Margin="11 0 0 40" />
+                                   Margin="11 0 0 40" x:Name="lbl_prg_overall"/>
 
                     </Grid>
                 </controls:DropShadowPanel>
@@ -207,14 +207,14 @@
                                     <TextBlock Text="Completed:"
                                                FontSize="18" />
                                     <TextBlock Text="16"
-                                               FontSize="18" />
+                                               FontSize="18" x:Name="lbl_task_compl"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal"
                                             Spacing="10">
                                     <TextBlock Text="To-Do:"
                                                FontSize="18" />
                                     <TextBlock Text="25"
-                                               FontSize="18" />
+                                               FontSize="18" x:Name="lbl_tasks_todo"/>
                                 </StackPanel>
 
                             </StackPanel>
@@ -228,7 +228,7 @@
                                                Value="65"
                                                IsIndeterminate="False"
                                                Background="#FFC6E3F9"
-                                               Foreground="#AF5AF1" />
+                                               Foreground="#AF5AF1" x:Name="ring_tasks"/>
 
                             <TextBlock Grid.Column="1"
                                        Grid.Row="0"
@@ -237,7 +237,7 @@
                                        Text="65%"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Margin="0 0 6 0" />
+                                       Margin="0 0 6 0" x:Name="lbl_prg_tasks"/>
                         </Grid>
                     </controls:DropShadowPanel>
                     <controls:DropShadowPanel BlurRadius="20"
@@ -271,14 +271,14 @@
                                     <TextBlock Text="Fixed:"
                                                FontSize="18" />
                                     <TextBlock Text="10"
-                                               FontSize="18" />
+                                               FontSize="18" x:Name="lbl_issues_fixed"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal"
                                             Spacing="10">
                                     <TextBlock Text="To-Do:"
                                                FontSize="18" />
                                     <TextBlock Text="24"
-                                               FontSize="18" />
+                                               FontSize="18" x:Name="lbl_issues_todo"/>
                                 </StackPanel>
 
                             </StackPanel>
@@ -292,7 +292,7 @@
                                                Value="48"
                                                IsIndeterminate="False"
                                                Background="#FFC6E3F9"
-                                               Foreground="#F15A91" />
+                                               Foreground="#F15A91" x:Name="ring_issues"/>
 
                             <TextBlock Grid.Column="1"
                                        Grid.Row="0"
@@ -301,7 +301,7 @@
                                        Text="48%"
                                        HorizontalAlignment="Center"
                                        VerticalAlignment="Center"
-                                       Margin="0 0 6 0" />
+                                       Margin="0 0 6 0" x:Name="lbl_prg_issues"/>
                         </Grid>
                     </controls:DropShadowPanel>
                 </StackPanel>

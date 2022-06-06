@@ -112,7 +112,7 @@
 
         <TextBlock Grid.Row="1" Text="Peoples"
                    FontSize="18"
-                   FontWeight="SemiBold" Margin="30 10 0 20" SelectionChanged="TextBlock_SelectionChanged_3"/>
+                   FontWeight="SemiBold" Margin="30 10 0 20" />
 
         <Grid Grid.Row="2" Margin="10 0 10 10" Background="#fff9f9f9" Padding="20 10 10 20" CornerRadius="10 10 10 10">
             <Grid.ColumnDefinitions>

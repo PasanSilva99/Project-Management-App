@@ -103,6 +103,12 @@
   <wsdl:message name="IProjectService_SyncAllProjects_OutputMessage">
     <wsdl:part name="parameters" element="tns:SyncAllProjectsResponse" />
   </wsdl:message>
+  <wsdl:message name="IProjectService_GetProjectProgress_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetProjectProgress" />
+  </wsdl:message>
+  <wsdl:message name="IProjectService_GetProjectProgress_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetProjectProgressResponse" />
+  </wsdl:message>
   <wsdl:portType name="IProjectService">
     <wsdl:operation name="IntializeDatabaseService">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/IntializeDatabaseService" message="tns:IProjectService_IntializeDatabaseService_InputMessage" />
@@ -147,6 +153,10 @@
     <wsdl:operation name="SyncAllProjects">
       <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/SyncAllProjects" message="tns:IProjectService_SyncAllProjects_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/SyncAllProjectsResponse" message="tns:IProjectService_SyncAllProjects_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectProgress">
+      <wsdl:input wsaw:Action="http://tempuri.org/IProjectService/GetProjectProgress" message="tns:IProjectService_GetProjectProgress_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IProjectService/GetProjectProgressResponse" message="tns:IProjectService_GetProjectProgress_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="BasicHttpBinding_IProjectService" type="tns:IProjectService">
@@ -250,6 +260,15 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetProjectProgress">
+      <soap:operation soapAction="http://tempuri.org/IProjectService/GetProjectProgress" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="NetTcpBinding_IProjectService" type="tns:IProjectService">
     <wsp:PolicyReference URI="#NetTcpBinding_IProjectService_policy" />
@@ -346,6 +365,15 @@
     </wsdl:operation>
     <wsdl:operation name="SyncAllProjects">
       <soap12:operation soapAction="http://tempuri.org/IProjectService/SyncAllProjects" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectProgress">
+      <soap12:operation soapAction="http://tempuri.org/IProjectService/GetProjectProgress" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

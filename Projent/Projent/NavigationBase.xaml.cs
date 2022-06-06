@@ -305,6 +305,8 @@ namespace Projent
             {
                 loadedChatPanel.ChatTimer.Start();
             }
+
+            NavigateToDashboard();
         }
 
         private void NavigateTo(object sender, RoutedEventArgs e)

@@ -948,7 +948,10 @@ namespace Projent.Model
             {
                 try
                 {
-                    ProjectsPage.projectServerError.IsOpen = false;
+                    if (ProjectsPage.projectServerError != null)
+                        ProjectsPage.projectServerError.IsOpen = false;
+                    if (ReportsPage.projectServerError != null)
+                        ReportsPage.projectServerError.IsOpen = false;
 
                     GlobalProjectServiceType = ServiceType.Online;
                     var projectlistCollection = await Server.ProjectServer.projectServiceClient.FetchAllProjectsAsync(MainPage.LoggedUser.Name);
@@ -958,7 +961,10 @@ namespace Projent.Model
                 }
                 catch (Exception ex)
                 {
-                    ProjectsPage.projectServerError.IsOpen = true;
+                    if (ProjectsPage.projectServerError != null)
+                        ProjectsPage.projectServerError.IsOpen = true;
+                    if (ReportsPage.projectServerError != null)
+                        ReportsPage.projectServerError.IsOpen = true;
 
                     GlobalProjectServiceType = ServiceType.Offline;
                     Debug.WriteLine(ex);
@@ -967,7 +973,10 @@ namespace Projent.Model
             }
             else
             {
-                ProjectsPage.projectServerError.IsOpen = true;
+                if (ProjectsPage.projectServerError != null)
+                    ProjectsPage.projectServerError.IsOpen = true;
+                if (ReportsPage.projectServerError != null)
+                    ReportsPage.projectServerError.IsOpen = true;
                 GlobalProjectServiceType = ServiceType.Offline;
                 return await FetchAllLocalProjectsAsync();
             }
